@@ -21,14 +21,11 @@ export default function Page({
     page?: string;
   };
 }) {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
   const [users, setUsers] = useState<iMember[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
-
+  const router = useRouter();
   useEffect(() => {
     async function loadUsers() {
       try {
@@ -38,29 +35,17 @@ export default function Page({
       } catch (error) {
         toast({
           title: "Error",
-          description: "Failed to fetch books.",
+          description: "Failed to fetch users.",
           variant: "destructive",
         });
       }
     }
 
     loadUsers();
-   
   }, [query, currentPage]);
-
-  const handleSignOut = () => {
-    signOut({ callbackUrl: "/login" });
+  const handleEdit = (id: number) => {
+    router.push(`/admin/${id}/edit`);
   };
-
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
-
-  if (!session) {
-    router.push("/login");
-    return null;
-  }
-
   return (
     <div className="w-full mr-4">
       <div className="my-4">
@@ -75,17 +60,17 @@ export default function Page({
         <AddUser />
       </div>
       <div className="mt-6">
-        <AdminUserTable users={users} />
+        <AdminUserTable
+          users={users}
+          onEdit={handleEdit}
+          onDelete={function (id: number): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </div>
       <div className="mt-8 flex justify-center">
         <Pagination currentPage={currentPage} totalPages={totalPages} />
       </div>
-      <button
-        onClick={handleSignOut}
-        className="mt-4 bg-red-500 text-white p-2 rounded"
-      >
-        Sign Out
-      </button>
     </div>
   );
 }

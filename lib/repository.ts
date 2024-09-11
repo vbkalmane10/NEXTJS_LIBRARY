@@ -104,8 +104,17 @@ export async function fetchAllRequests(page = 1, limit = 10) {
   try {
     const offset = (page - 1) * limit;
     const requests = await db
-      .select()
+      .select({
+        id: requestsTable.id,
+        bookId: requestsTable.bookId,
+        bookTitle: requestsTable.bookTitle,
+        isbnNo: requestsTable.isbnNo,
+        status: requestsTable.status,
+        memberId: requestsTable.memberId,
+        firstName: membersTable.firstName,
+      })
       .from(requestsTable)
+      .innerJoin(membersTable, eq(requestsTable.memberId, membersTable.id))
       .offset(offset)
       .limit(limit)
       .execute();
@@ -408,4 +417,75 @@ export async function getRequestStatistics(
   } catch (error: any) {
     throw new Error("Error fetching request statistics: " + error.message);
   }
+}
+export async function getRecentApprovedRequestsWithBooks(userId: number) {
+  const requestsWithBooks = await db
+    .select({
+      requestId: requestsTable.id,
+      bookId: requestsTable.bookId,
+      bookTitle: booksTable.title,
+    })
+    .from(requestsTable)
+    .leftJoin(booksTable, eq(requestsTable.bookId, booksTable.id))
+    .where(
+      and(
+        eq(requestsTable.memberId, userId),
+        eq(requestsTable.status, "Approved")
+      )
+    )
+
+    .limit(3);
+
+  return requestsWithBooks;
+}
+export async function getUserByEmail(email: string): Promise<iMember | null> {
+  try {
+    const [member] = await db
+      .select()
+      .from(membersTable)
+      .where(eq(membersTable.email, email));
+    return member || null;
+  } catch (error) {
+    throw new Error("Error while getting user by email");
+  }
+}
+export async function getUserById(id: number): Promise<iMember | null> {
+  try {
+    const [member] = await db
+      .select()
+      .from(membersTable)
+      .where(eq(membersTable.id, id));
+    return member || null;
+  } catch (error) {
+    throw new Error("Error while getting user by id");
+  }
+}
+export async function updateMember(
+  id: number,
+  data: iMemberBase
+): Promise<iMember | null> {
+  const existingMembers = await db
+    .select()
+    .from(membersTable)
+    .where(eq(membersTable.id, id))
+    .execute();
+
+  if (existingMembers.length === 0) {
+    console.log("NO MEMBERS FOUND");
+    return null;
+  }
+
+  const existingMember = existingMembers[0];
+  const updatedMember = {
+    ...existingMember,
+    ...data,
+  };
+
+  await db
+    .update(membersTable)
+    .set(updatedMember)
+    .where(eq(membersTable.id, id))
+    .execute();
+
+  return updatedMember as iMember;
 }

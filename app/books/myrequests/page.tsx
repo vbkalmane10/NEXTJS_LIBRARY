@@ -1,46 +1,35 @@
-// src/app/books/myrequests/page.tsx
-"use client";
-
 import { useEffect, useState } from "react";
 import RequestCard from "@/components/RequestCard";
 import { useSession } from "next-auth/react";
 import { fetchUserRequest } from "@/lib/actions";
-
+import { getServerSession } from "next-auth";
 import { Request } from "@/lib/types";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-const MyRequestsPage = () => {
-  const { data: session, status } = useSession();
-  const [requests, setRequests] = useState<Request[]>([]);
-  const [loading, setLoading] = useState(true);
+const MyRequestsPage = async () => {
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id;
 
-  useEffect(() => {
-    const loadRequests = async () => {
-      if (!session?.user?.id) {
-        setLoading(false);
-        return;
-      }
+  let requests: Request[] = [];
+  let loading = false;
 
-      try {
-        const userRequests = await fetchUserRequest(session.user.id);
-        setRequests(userRequests);
-      } catch (error) {
-        console.error("Failed to fetch user requests:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  if (userId) {
+    try {
+      requests = await fetchUserRequest(userId);
+    } catch (error) {
+      console.error("Failed to fetch user requests:", error);
+    }
+  } else {
+    loading = false;
+  }
 
-    loadRequests();
-  }, [session]);
-
-  if (status === "loading" || loading) {
+  if (loading) {
     return <p>Loading requests...</p>;
   }
 
   if (requests.length === 0) {
     return <p>No requests found for your account.</p>;
   }
-
   return (
     <div className="p-4">
       <h1 className="text-2xl font-semibold mb-4">My Book Requests</h1>

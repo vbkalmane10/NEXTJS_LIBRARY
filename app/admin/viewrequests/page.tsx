@@ -19,6 +19,8 @@ const ViewRequestPage: React.FC = () => {
       try {
         const fetchedRequests = await getRequests(page);
         setRequests(fetchedRequests.data);
+        
+       
         setTotalPages(fetchedRequests.totalPages);
         setLoading(false);
       } catch (error: any) {

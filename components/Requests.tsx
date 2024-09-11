@@ -31,7 +31,7 @@ const RequestTable: React.FC<RequestTableProps> = ({
                       {index + 1}. {request.bookTitle}
                     </p>
                     <p className="text-sm text-gray-500">
-                      User ID: {request.memberId}
+                      User: {request.firstName}
                     </p>
                     <p className="text-sm text-gray-500">
                       Book ID: {request.bookId}
@@ -69,7 +69,7 @@ const RequestTable: React.FC<RequestTableProps> = ({
             <thead className="rounded-lg text-left text-sm font-normal bg-gray-200">
               <tr>
                 <th className="px-4 py-5 font-medium">S.No</th>
-                <th className="px-4 py-5 font-medium">User ID</th>
+                <th className="px-4 py-5 font-medium">User</th>
                 <th className="px-4 py-5 font-medium">Book ID</th>
                 <th className="px-4 py-5 font-medium">Book Title</th>
                 <th className="px-4 py-5 font-medium">ISBN Number</th>
@@ -87,7 +87,7 @@ const RequestTable: React.FC<RequestTableProps> = ({
                     {index + 1}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {request.memberId}
+                    {request.firstName}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {request.bookId}

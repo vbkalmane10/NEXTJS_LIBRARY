@@ -2,12 +2,23 @@
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { NotebookTabs, ChevronRight, ShieldCheck, Clock } from "lucide-react";
+import {
+  NotebookTabs,
+  ChevronRight,
+  ShieldCheck,
+  Clock,
+  BookOpen,
+  Star,
+} from "lucide-react";
 import Header from "@/components/Header";
 import { JSX, SVGProps, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { fetchRequestStatistics } from "@/lib/actions";
+import {
+  fetchRecentlyBorrowedBooks,
+  fetchRequestStatistics,
+} from "@/lib/actions";
 import { RequestStatistics } from "@/lib/types";
+
 export default function DisplayProfile() {
   const { data: session, status } = useSession();
   const [statistics, setStatistics] = useState<RequestStatistics>({
@@ -15,12 +26,15 @@ export default function DisplayProfile() {
     approvedRequests: 0,
     pendingRequests: 0,
   });
-
+  const [recentBooks, setRecentBooks] = useState([]);
   useEffect(() => {
+    console.log(session);
     const loadStatistics = async () => {
       if (session?.user?.id) {
         try {
           const stats = await fetchRequestStatistics(session.user.id);
+          const books = await fetchRecentlyBorrowedBooks(session.user.id);
+          setRecentBooks(books);
           setStatistics(stats);
         } catch (error) {
           console.error("Error fetching request statistics:", error);
@@ -30,16 +44,15 @@ export default function DisplayProfile() {
 
     loadStatistics();
   }, [session]);
+
   return (
     <div>
-      <Header />
       <div className="flex min-h-screen">
         <div className="flex-1 max-w-[800px] mx-auto p-6 md:p-10">
           <Card>
             <CardHeader className="bg-muted/20 p-8">
               <div className="flex items-center gap-6">
                 <Avatar className="h-16 w-16">
-                  <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
                   <AvatarFallback>
                     {session?.user?.name
                       ? session.user.name.substring(0, 2).toUpperCase()
@@ -94,7 +107,29 @@ export default function DisplayProfile() {
                 </div>
               </div>
               <Separator />
+
               <div className="grid gap-4">
+                <h3 className="text-xl font-semibold">Recent Transactions</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <Card>
+                    <CardContent className="flex flex-col p-4">
+                      <h4 className="text-lg font-semibold">
+                        Recently Borrowed
+                      </h4>
+                      <ul className="list-disc pl-5 mt-2">
+                        {recentBooks.map((book) => (
+                          <li key={book.bookId}>{book.bookTitle}</li>
+                        ))}
+                        {recentBooks.length === 0 && (
+                          <li>No recent borrowings.</li>
+                        )}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+              <Separator />
+              {/* <div className="grid gap-4">
                 <h3 className="text-xl font-semibold">Profile Details</h3>
                 <div className="grid gap-2">
                   <Card className="flex flex-row items-center justify-between p-4">
@@ -121,7 +156,7 @@ export default function DisplayProfile() {
                     <ChevronRight className="h-5 w-5 text-muted-foreground" />
                   </Card>
                 </div>
-              </div>
+              </div> */}
             </CardContent>
           </Card>
         </div>
@@ -130,64 +165,4 @@ export default function DisplayProfile() {
   );
 }
 
-function FilePenIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 22h6a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v10" />
-      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-      <path d="M10.4 12.6a2 2 0 1 1 3 3L8 21l-4 1 1-4Z" />
-    </svg>
-  );
-}
 
-function LockIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-    </svg>
-  );
-}
-
-function LogOutIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16 17 21 12 16 7" />
-      <line x1="21" x2="9" y1="12" y2="12" />
-    </svg>
-  );
-}

@@ -51,10 +51,16 @@ export default function Header() {
               Book Requests
             </Link>
             <Link
-              href="/books/due-today"
+              href="/admin/due-today"
               className={linkClassName("/books/due-today")}
             >
               Due Today
+            </Link>
+            <Link
+              href="/admin/viewmember"
+              className={linkClassName("/admin/viewmember")}
+            >
+              View Members
             </Link>
           </>
         ) : (
@@ -78,7 +84,7 @@ export default function Header() {
             <DropdownMenuTrigger>
               <button onClick={toggleMenu} className="flex items-center gap-2">
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                 
                   <AvatarFallback>
                     {session?.user?.name
                       ? session.user.name.substring(0, 2).toUpperCase()

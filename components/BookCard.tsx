@@ -28,7 +28,7 @@ interface Book {
 
 interface BookCardProps {
   book: Book;
-  userId: number | undefined;
+  userId: number | undefined ;
 }
 export default function BookCard({ book, userId }: BookCardProps) {
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
@@ -62,6 +62,7 @@ export default function BookCard({ book, userId }: BookCardProps) {
           description: result.message,
           variant: "destructive",
           duration: 1000,
+          className: "bg-green-600 text-white",
         });
       } else {
         setError(result.message || "Failed to create request");
@@ -92,7 +93,7 @@ export default function BookCard({ book, userId }: BookCardProps) {
 
       <div className="flex gap-2 mt-4">
         <AlertDialog>
-          <AlertDialogTrigger className="bg-black text-white px-3 py-1 rounded hover:bg-blue-600 transition flex-grow">
+          <AlertDialogTrigger className="bg-black text-white px-3 py-1 rounded hover:bg-blue-100 hover:text-black transition flex-grow">
             Borrow
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -104,10 +105,7 @@ export default function BookCard({ book, userId }: BookCardProps) {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleConfirm}
-                className="bg-blue-400"
-              >
+              <AlertDialogAction onClick={handleConfirm} className="bg-black">
                 Continue
               </AlertDialogAction>
             </AlertDialogFooter>

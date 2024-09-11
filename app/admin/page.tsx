@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import Search from "@/components/search";
 import Pagination from "@/components/Pagination";
 import { fetchBooks, handleDeleteBook } from "@/lib/actions";
-import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import AdminBookTable from "@/components/AdminBookCard";
 import AddBook from "@/components/AddBook";
 import { toast } from "@/hooks/use-toast";
 import { iBook } from "@/lib/types";
+import { useRouter } from "next/navigation";
+
 
 export default function Page({
   searchParams,
@@ -19,14 +20,12 @@ export default function Page({
     page?: string;
   };
 }) {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
   const [books, setBooks] = useState<iBook[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
-
+  const router = useRouter();
+ 
   async function loadBooks() {
     try {
       const { books, totalPages } = await fetchBooks(query, currentPage, 8);
@@ -40,16 +39,12 @@ export default function Page({
       });
     }
   }
-  useEffect(() => {
-    if (status === "authenticated") {
-      if (session!.user?.role !== "admin") {
-        router.push("/login");
-      } else {
-        loadBooks();
-      }
-    }
-  }, [query, currentPage, router, session]);
 
+  useEffect(() => {
+    loadBooks();
+  }, [query, currentPage]);
+
+  // Handle the deletion of a book
   const handleDelete = async (isbnNo: string) => {
     try {
       const result = await handleDeleteBook(isbnNo);
@@ -75,22 +70,15 @@ export default function Page({
     }
   };
 
+  
   const handleEdit = (isbnNo: string) => {
     router.push(`/admin/${isbnNo}/edit`);
   };
 
+  // Handle signing out
   const handleSignOut = () => {
     signOut({ callbackUrl: "/" });
   };
-
-  if (status === "loading") {
-    return <p>Loading...</p>;
-  }
-
-  if (!session) {
-    router.push("/login");
-    return null;
-  }
 
   return (
     <div className="w-full mr-4">
@@ -115,12 +103,6 @@ export default function Page({
       <div className="mt-8 flex justify-center">
         <Pagination currentPage={currentPage} totalPages={totalPages} />
       </div>
-      <button
-        onClick={handleSignOut}
-        className="mt-4 bg-red-500 text-white p-2 rounded"
-      >
-        Sign Out
-      </button>
     </div>
   );
 }

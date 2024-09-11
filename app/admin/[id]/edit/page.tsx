@@ -2,46 +2,52 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { iBook } from "@/lib/types";
-import EditBookForm from "@/components/EditBook";
-import { fetchBookDetails, handleBookUpdate } from "@/lib/actions";
-import { toast } from "@/hooks/use-toast";
+import { iMember } from "../../../../lib/types";
+import EditUserForm from "../../../../components/EditUser";
+import {
+  fetchBookDetails,
+  fetchUserDetails,
+  handleBookUpdate,
+  handleUserUpdate,
+} from "../../../../lib/actions";
+import { toast } from "../../../../hooks/use-toast";
+import React from "react";
 
-const EditBookPage = ({ params }: { params: { isbnNo: string } }) => {
-  const { isbnNo } = params;
+const EditBookPage = ({ params }: { params: { id: number } }) => {
+  const { id } = params;
   const router = useRouter();
-  const [book, setBook] = useState<iBook | null>(null);
+  const [user, setUser] = useState<iMember | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const fetchedBook = await fetchBookDetails(isbnNo);
-        if (fetchedBook) {
-          setBook(fetchedBook);
+        const fetchedUser = await fetchUserDetails(id);
+        if (fetchedUser) {
+          setUser(fetchedUser);
         } else {
           toast({
             title: "Error",
-            description: "Failed to load book details.",
+            description: "Failed to load user details.",
             variant: "destructive",
           });
         }
       } catch (error) {
         toast({
           title: "Error",
-          description: "An error occurred while fetching book details.",
+          description: "An error occurred while fetching user details.",
           variant: "destructive",
         });
       }
     };
 
     fetchDetails();
-  }, [isbnNo]);
+  }, [id]);
 
-  const handleEditSubmit = async (updatedBook: iBook) => {
+  const handleEditSubmit = async (updatedUser: iMember) => {
     setIsSubmitting(true);
     try {
-      const result = await handleBookUpdate(isbnNo, updatedBook);
+      const result = await handleUserUpdate(id, updatedUser);
       if (result.success) {
         toast({
           title: "Success",
@@ -72,12 +78,12 @@ const EditBookPage = ({ params }: { params: { isbnNo: string } }) => {
     router.push("/admin");
   };
 
-  if (!book) return <p>Loading book details...</p>;
+  if (!user) return <p>Loading user details...</p>;
 
   return (
     <div>
-      <EditBookForm
-        book={book}
+      <EditUserForm
+        user={user}
         onClose={handleEditClose}
         onSubmit={handleEditSubmit}
         isPending={isSubmitting}

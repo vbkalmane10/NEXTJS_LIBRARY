@@ -1,7 +1,6 @@
 "use client";
 
 import { signIn, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Card,
@@ -15,40 +14,45 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { PulseLoader } from "react-spinners";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { FaGoogle } from "react-icons/fa";
+import Header from "@/components/Header";
+
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const router = useRouter();
-  const { data: session, status } = useSession();
+
   useEffect(() => {
     if (status === "authenticated") {
-      if (session!.user?.role === "admin") {
+      const role = session?.user?.role;
+      if (role === "admin") {
         router.push("/admin");
       } else {
         router.push("/books");
       }
     }
   }, [status, session, router]);
-  const handleLogin = async (e: React.FormEvent) => {
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const provider = formData.get("provider")?.toString();
 
     setLoading(true);
     setErrorMessage(null);
+
     try {
-      const result = await signIn("credentials", {
+      const result = await signIn(provider || "credentials", {
         redirect: false,
-        email,
-        password,
+        email: formData.get("email"),
+        password: formData.get("password"),
       });
 
       if (result?.ok) {
-        router.push("/books");
+        router.refresh();
       } else if (result?.error) {
         switch (result.error) {
           case "CredentialsSignin":
@@ -60,25 +64,19 @@ const LoginPage = () => {
         }
       }
     } catch (error) {
-      setErrorMessage("Login failed. Please check your credentials.");
+      setErrorMessage("An error occurred during login. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-  const handleOAuthLogin = async (provider: string) => {
+
+  const handleGoogleLogin = async () => {
     setLoading(true);
-    setErrorMessage(null);
-
     try {
-      const result = await signIn(provider, { redirect: false });
-
-      if (result?.ok) {
-        router.push("/books");
-      } else {
-        setErrorMessage("OAuth login failed. Please try again.");
-      }
+      await signIn("google", { redirect: false });
+      router.refresh();
     } catch (error) {
-      setErrorMessage("OAuth login failed.");
+      setErrorMessage("An error occurred during Google login.");
     } finally {
       setLoading(false);
     }
@@ -86,15 +84,9 @@ const LoginPage = () => {
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <header className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
+      {/* <header className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
         <div className="text-2xl font-bold text-black">BookSphere</div>
         <nav className="hidden md:flex gap-4">
-          {/* <Link href="/" className="hover:text-blue-500">
-            Home
-          </Link>
-          <Link href="/books" className="hover:text-blue-500">
-            Books
-          </Link> */}
           <Link href="/login" className="hover:text-blue-500">
             Login
           </Link>
@@ -102,44 +94,29 @@ const LoginPage = () => {
             Register
           </Link>
         </nav>
-        <button
-          className="md:hidden text-blue-500"
-          onClick={() => setIsNavOpen(!isNavOpen)}
-        ></button>
-        {isNavOpen && (
-          <nav className="absolute right-6 top-16 bg-white shadow-lg p-4 rounded-md flex flex-col gap-2 md:hidden">
-            <Link href="/" className="hover:text-blue-500">
-              Home
-            </Link>
-            <Link href="/books" className="hover:text-blue-500">
-              Books
-            </Link>
-            <Link href="/login" className="hover:text-blue-500">
-              Login
-            </Link>
-            <Link href="/signup" className="hover:text-blue-500">
-              Register
-            </Link>
-          </nav>
-        )}
-      </header>
+      </header> */}
+   
+
       <main className="flex-1 flex items-center justify-center px-4 md:px-6 bg-gray-100">
-        <form className="max-w-md w-full space-y-6 rounded-lg shadow-md p-7 bg-white" onSubmit={handleLogin}>
+        <form
+          onSubmit={handleFormSubmit}
+          className="max-w-md w-full space-y-6 rounded-lg shadow-md p-7 bg-white"
+        >
           <div className="space-y-2 text-center">
             <h1 className="text-3xl font-bold">Login</h1>
             <p className="text-muted-foreground">
               Enter your email and password to access your account.
             </p>
           </div>
+
           <div className="space-y-4">
+            {/* Email and Password Fields */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 name="email"
                 required
               />
@@ -160,16 +137,14 @@ const LoginPage = () => {
                 type="password"
                 placeholder="Enter your password"
                 name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
+
             {errorMessage && (
-              <div className="space-y-2">
-                <p className="text-red-500 text-sm">{errorMessage}</p>
-              </div>
+              <p className="text-red-500 text-sm">{errorMessage}</p>
             )}
+
             {loading ? (
               <div className="flex justify-center mt-4">
                 <PulseLoader color="#3498db" />
@@ -179,9 +154,25 @@ const LoginPage = () => {
                 Sign in
               </Button>
             )}
+
+            <div className="relative my-4">
+              <Separator />
+              <span className="absolute left-1/2 transform -translate-x-1/2 -top-2 bg-white px-2 text-xs text-gray-500">
+                OR CONTINUE WITH
+              </span>
+            </div>
+
+            <Button
+              type="button"
+              onClick={handleGoogleLogin}
+              className="flex items-center justify-center h-12 w-12 mx-auto bg-white border border-gray-300 rounded-full shadow-md hover:shadow-lg focus:outline-none"
+            >
+              <FaGoogle className="text-2xl text-gray-600" />
+            </Button>
           </div>
+
           <p className="text-center text-sm text-muted-foreground">
-            Don't have a account ? {""}
+            Don't have an account?{" "}
             <Link
               href="/signup"
               className="underline hover:text-primary"

@@ -21,9 +21,12 @@ import {
   deleteBook,
   getBooksByIsbn,
   updateBook,
+  updateMember,
   fetchUsers,
   getUserRequests,
   getRequestStatistics,
+  getRecentApprovedRequestsWithBooks,
+  getUserById,
 } from "./repository";
 
 export async function getUserId(email: string): Promise<number | null> {
@@ -199,3 +202,23 @@ export async function fetchRequestStatistics(
     throw new Error("Error while fetching request statistics.");
   }
 }
+export async function fetchRecentlyBorrowedBooks(userId: number) {
+  try {
+    const recentBooks = await getRecentApprovedRequestsWithBooks(userId);
+    return recentBooks;
+  } catch (error) {
+    throw new Error("Error while fetching recent requests");
+  }
+}
+export const fetchUserDetails = async (id: number): Promise<iMember | null> => {
+  return await getUserById(id);
+};
+export const handleUserUpdate = async (id: number, updatedUser: iMember) => {
+  try {
+    await updateMember(id, updatedUser);
+    return { success: true, message: "User updated successfully!" };
+  } catch (error) {
+    console.error("Error updating book:", error);
+    return { success: false, message: "Failed to update the user." };
+  }
+};

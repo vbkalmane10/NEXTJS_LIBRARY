@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { PulseLoader } from "react-spinners";
 import { addBook, createMember } from "@/lib/actions";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/router";
+
 export default function AddBook() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -54,7 +54,7 @@ export default function AddBook() {
           title: "Success",
           description: result.message,
           variant: "destructive",
-          color: "#000000",
+          className: "bg-green-700",
           duration: 1000,
         });
         setIsModalOpen(false);
@@ -67,7 +67,6 @@ export default function AddBook() {
           membershipStatus: "active",
           password: "",
         });
-        
       }
     } catch (error) {
       console.error("Error adding user:", error);
@@ -82,14 +81,11 @@ export default function AddBook() {
       setLoading(false);
     }
   };
-  const modalReset = async () => {
-    setIsModalOpen(false);
-    setResponseMessage(null);
-  };
+
   return (
     <>
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="bg-black text-white px-4 py-2 rounded hover:bg-blue-600"
         onClick={() => setIsModalOpen(true)}
       >
         + Add User
@@ -190,7 +186,7 @@ export default function AddBook() {
                       <PulseLoader color="#3498db" />
                     </div>
                   ) : (
-                    <Button type="submit" className="w-50 bg-blue-400">
+                    <Button type="submit" className="w-50 bg-black">
                       Add User
                     </Button>
                   )}

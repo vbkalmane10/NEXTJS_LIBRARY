@@ -44,7 +44,7 @@ const SignupPage = () => {
       });
 
       if (newMember) {
-        setSuccessMessage("Registration successful! Redirecting...");
+        setSuccessMessage(newMember.message);
         router.push("/login");
       } else {
         setErrorMessage("Member already exists.");
@@ -57,7 +57,6 @@ const SignupPage = () => {
   };
 
   return (
-   
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <Card className="w-full max-w-xl">
         <CardHeader className="pb-6">

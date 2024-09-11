@@ -1,11 +1,12 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
 import { db } from "@/db";
 import { membersTable } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import GoogleProvider from "next-auth/providers/google";
-import { iMember, Session, SessionUser, Token } from "@/lib/types";
+
+import { iMember, Session, Token } from "@/lib/types";
+import { getUserByEmail } from "@/lib/repository";
 
 const authOptions = {
   providers: [
@@ -16,14 +17,14 @@ const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials) return null;
+        if (!credentials || !credentials.email || !credentials.password) {
+          return null;
+        }
 
-        const [user] = await db
-          .select()
-          .from(membersTable)
-          .where(eq(membersTable.email, credentials.email));
-
-        if (!user) return null;
+        const user = await getUserByEmail(credentials.email);
+        if (!user || !user.password) {
+          return null;
+        }
 
         const isValid = await bcrypt.compare(
           credentials.password,
@@ -35,6 +36,7 @@ const authOptions = {
           id: user.id,
           email: user.email,
           firstName: user.firstName,
+          lastName: user.lastName || "",
           role: user.role,
         };
       },
@@ -42,52 +44,59 @@ const authOptions = {
     GoogleProvider({
       clientId: process.env.CLIENT_ID || "",
       clientSecret: process.env.CLIENT_SECRET || "",
+      authorization: {
+        params: {
+          scope: "profile email",
+        },
+      },
     }),
   ],
   callbacks: {
-    async session({ session, token }: { session: Session; token: Token }) {
-      session.user = {
-        ...session.user,
-        id: token.user?.id,
-        name: token.user?.firstName,
-        role: token.user?.role,
-      };
-      return session;
-    },
-    async jwt({ token, user }: { token: Token; user?: iMember }) {
+    async jwt({ token, user }: { token: Token; user?: any }) {
       if (user) {
-        token.user = user;
+        token.id = user.id;
+        token.email = user.email;
+        token.name = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+        token.role = user.role;
       }
+
       return token;
     },
-    async redirect({
-      url,
-      baseUrl,
-      token,
-    }: {
-      url: string;
-      baseUrl: string;
-      token: Token;
-    }) {
-      return url.startsWith(baseUrl) ? `${baseUrl}/books` : baseUrl;
+    async session({ session, token }: { session: Session; token: Token }) {
+      session.user = {
+        id: token.id as number,
+        email: token.email as string,
+        name: token.name as string,
+        role: token.role as string,
+      };
+
+      return session;
     },
-    async signIn({ user, account }: { user: iMember; account: any }) {
+    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
+      if (url.startsWith(`${baseUrl}/admin`) && url.includes("admin")) {
+        return baseUrl;
+      }
+      if (url.startsWith(baseUrl)) {
+        return `${baseUrl}/books`;
+      }
+      return baseUrl;
+    },
+    async signIn({ user, account }: { user: any; account: any }) {
       if (account.provider === "google") {
         const email = user.email;
-        console.log(user);
+        const fullName = user.name || "";
+        const [firstName, ...lastNameParts] = fullName.split(" ");
+        const lastName = lastNameParts.join(" ");
+
         if (!email) return false;
 
-        const existingUsers = await db
-          .select()
-          .from(membersTable)
-          .where(eq(membersTable.email, email))
-          .execute();
+        const existingUsers = await getUserByEmail(email);
 
-        if (existingUsers.length === 0) {
+        if (!existingUsers) {
           const newUser: iMember = {
             email,
-            firstName: user.firstName || "",
-            lastName: "",
+            firstName: firstName || "",
+            lastName: lastName || "",
             password: "",
             membershipStatus: "active",
             phoneNumber: "",
@@ -97,12 +106,10 @@ const authOptions = {
           };
 
           await db.insert(membersTable).values(newUser).execute();
-          console.log("New user created in database");
         }
 
         return true;
       }
-
       return true;
     },
   },

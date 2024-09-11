@@ -3,14 +3,14 @@
 import Header from "@/components/Header";
 import Link from "next/link";
 import { useState } from "react";
-// import { ChevronDownIcon } from "@heroicons/react/outline";
+
 
 export default function LandingPage() {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <Header />
+     
 
       <section className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20  text-black">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">

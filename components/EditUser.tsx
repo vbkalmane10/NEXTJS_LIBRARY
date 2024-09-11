@@ -1,26 +1,26 @@
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { iBook } from "@/lib/types";
-import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
+import { iMember } from "../lib/types";
+import { useRouter } from "next/navigation";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 
-interface EditBookFormProps {
-  book: iBook;
+interface EditUserFormProps {
+  user: iMember;
   onClose: () => void;
-  onSubmit: (updatedBook: iBook) => void; // Adjust to handle async operation
+  onSubmit: (updatedUser: iMember) => void;
   isPending: boolean;
 }
 
-const EditBookForm: React.FC<EditBookFormProps> = ({
-  book,
+const EditBookForm: React.FC<EditUserFormProps> = ({
+  user,
   onClose,
   onSubmit,
   isPending,
 }) => {
-  const [formData, setFormData] = useState<iBook>({ ...book });
-  const router = useRouter(); 
+  const [formData, setFormData] = useState<iMember>({ ...user });
+  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,91 +38,61 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
 
   return (
     <div className="w-full max-w-3xl p-6 bg-white rounded-lg shadow-md mx-auto mt-6">
-      <h2 className="text-2xl font-semibold text-center">Edit Book</h2>
+      <h2 className="text-2xl font-semibold text-center">Edit User</h2>
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="firstName">Firstname</Label>
             <Input
               type="text"
-              name="title"
-              value={formData.title}
+              name="firstName"
+              value={formData.firstName}
               onChange={handleChange}
-              placeholder="Title"
+              placeholder="First Name"
               required
             />
           </div>
           <div>
-            <Label htmlFor="author">Author</Label>
+            <Label htmlFor="lastName">Lastname</Label>
             <Input
               type="text"
-              name="author"
-              value={formData.author}
+              name="lastName"
+              value={formData.lastName}
               onChange={handleChange}
               placeholder="Author"
               required
             />
           </div>
           <div>
-            <Label htmlFor="publisher">Publisher</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
               type="text"
               name="publisher"
-              value={formData.publisher}
+              value={formData.email}
               onChange={handleChange}
               placeholder="Publisher"
               required
             />
           </div>
           <div>
-            <Label htmlFor="genre">Genre</Label>
+            <Label htmlFor="phoneNumber">Phone Number</Label>
             <Input
               type="text"
-              name="genre"
-              value={formData.genre}
+              name="phoneNumber"
+              value={formData.phoneNumber}
               onChange={handleChange}
-              placeholder="Genre"
+              placeholder="Phone Number"
             />
           </div>
           <div>
-            <Label htmlFor="isbnNo">ISBN</Label>
+            <Label htmlFor="address">Address</Label>
             <Input
               type="text"
-              name="isbnNo"
-              value={formData.isbnNo}
+              name="address"
+              value={formData.address}
               onChange={handleChange}
-              placeholder="ISBN Number"
+              placeholder="Address"
               disabled
-            />
-          </div>
-          <div>
-            <Label htmlFor="pages">Pages</Label>
-            <Input
-              type="number"
-              name="pages"
-              value={formData.pages}
-              onChange={handleChange}
-              placeholder="Pages"
-            />
-          </div>
-          <div>
-            <Label htmlFor="totalCopies">Total Copies</Label>
-            <Input
-              type="number"
-              name="totalCopies"
-              value={formData.totalCopies}
-              onChange={handleChange}
-              placeholder="Total Copies"
-            />
-          </div>
-          <div>
-            <Label htmlFor="availableCopies">Available Copies</Label>
-            <Input
-              type="number"
-              name="availableCopies"
-              value={formData.availableCopies}
-              onChange={handleChange}
-              placeholder="Available Copies"
             />
           </div>
         </div>

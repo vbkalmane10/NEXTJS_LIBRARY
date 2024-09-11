@@ -1,3 +1,5 @@
+import { JWT } from "next-auth/jwt";
+import NextAuth from "next-auth";
 export interface iMemberBase {
   firstName: string;
   lastName: string | null;
@@ -18,15 +20,16 @@ export interface Token {
 }
 
 export interface SessionUser {
-  id: number;
+  id: number | undefined;
   email: string;
-  name: string;
-  role: string;
+  name: string | undefined;
+  role: string | undefined;
 }
 
 export interface Session {
   user: SessionUser;
 }
+
 export interface iBookBase {
   title: string;
   author: string;
@@ -57,9 +60,36 @@ export interface Request {
   bookTitle: string;
   isbnNo: string;
   status: string | null;
+  firstName?: string | null;
 }
 export interface RequestStatistics {
   totalRequests: number;
   approvedRequests: number;
   pendingRequests: number;
+}
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: number;
+      email: string;
+      name: string;
+      role: string;
+    };
+  }
+
+  interface User {
+    id: number;
+    email: string;
+    firstName: string;
+    role: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: number;
+    email: string;
+    name: string;
+    role: string;
+  }
 }

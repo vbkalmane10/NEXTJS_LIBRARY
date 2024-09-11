@@ -24,9 +24,15 @@ import {
 } from "@/components/ui/alert-dialog";
 interface AdminUserTableProps {
   users: iMember[];
+  onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
 }
 
-const AdminUserTable: React.FC<AdminUserTableProps> = ({ users }) => {
+const AdminUserTable: React.FC<AdminUserTableProps> = ({
+  users,
+  onEdit,
+  onDelete,
+}) => {
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -52,20 +58,20 @@ const AdminUserTable: React.FC<AdminUserTableProps> = ({ users }) => {
                     </p>
                   </div>
 
-                  {/* <div className="flex gap-2">
+                  <div className="flex gap-2">
                     <button
-                      onClick={() => onEdit(book.isbnNo)}
+                      onClick={() => onEdit(user.id)}
                       className="hover:bg-green-400 p-2 rounded"
                     >
                       <Edit />
                     </button>
                     <button
-                      onClick={() => onDelete(book.isbnNo)}
+                      onClick={() => onDelete(user.id)}
                       className="hover:bg-red-400 p-2 rounded"
                     >
                       <Trash2 />
                     </button>
-                  </div> */}
+                  </div>
                 </div>
               </div>
             ))}
@@ -85,6 +91,7 @@ const AdminUserTable: React.FC<AdminUserTableProps> = ({ users }) => {
                 <TableHead className="px-4 py-5 font-medium">
                   Membership Status
                 </TableHead>
+                <TableHead className="px-4 py-5 font-medium">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <tbody className="bg-white">
@@ -110,9 +117,9 @@ const AdminUserTable: React.FC<AdminUserTableProps> = ({ users }) => {
                     {user.membershipStatus}
                   </TableCell>
                   <TableCell className="whitespace-nowrap py-3  pr-3">
-                    {/* <div className="flex justify-start gap-2">
+                    <div className="flex justify-start gap-2">
                       <button
-                        onClick={() => onEdit(book.isbnNo)}
+                        onClick={() => onEdit(user.id)}
                         className="hover:bg-green-400 p-2 rounded"
                       >
                         <Edit size={16} />
@@ -130,13 +137,13 @@ const AdminUserTable: React.FC<AdminUserTableProps> = ({ users }) => {
                               Are you absolutely sure?
                             </AlertDialogTitle>
                             <AlertDialogDescription>
-                              {book.title} will be deleted from our database
+                              {user.firstName} will be deleted from our database
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() => onDelete(book.isbnNo)}
+                              onClick={() => onDelete(user.id)}
                               className="bg-blue-400"
                             >
                               Continue
@@ -144,7 +151,7 @@ const AdminUserTable: React.FC<AdminUserTableProps> = ({ users }) => {
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
-                    </div> */}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
