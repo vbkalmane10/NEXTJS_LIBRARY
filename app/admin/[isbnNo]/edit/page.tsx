@@ -47,7 +47,7 @@ const EditBookPage = ({ params }: { params: { isbnNo: string } }) => {
           title: "Success",
           description: result.message,
           duration: 1000,
-          className: "bg-green-600",
+          className: "bg-green-700 text-white",
         });
         router.push("/admin");
       } else {

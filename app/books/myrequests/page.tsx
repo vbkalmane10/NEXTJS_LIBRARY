@@ -31,8 +31,8 @@ const MyRequestsPage = async () => {
     return <p>No requests found for your account.</p>;
   }
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-semibold mb-4">My Book Requests</h1>
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">My Book Requests</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {requests.map((request) => (
           <RequestCard key={request.id} request={request} />

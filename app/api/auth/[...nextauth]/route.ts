@@ -72,15 +72,15 @@ const authOptions = {
 
       return session;
     },
-    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
-      if (url.startsWith(`${baseUrl}/admin`) && url.includes("admin")) {
-        return baseUrl;
-      }
-      if (url.startsWith(baseUrl)) {
-        return `${baseUrl}/books`;
-      }
-      return baseUrl;
-    },
+    // async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
+    //   if (url.startsWith(`${baseUrl}/admin`) && url.includes("admin")) {
+    //     return baseUrl;
+    //   }
+    //   if (url.startsWith(baseUrl)) {
+    //     return `${baseUrl}/books`;
+    //   }
+    //   return baseUrl;
+    // },
     async signIn({ user, account }: { user: any; account: any }) {
       if (account.provider === "google") {
         const email = user.email;

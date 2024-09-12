@@ -85,7 +85,7 @@ export default function AddBook() {
   return (
     <>
       <button
-        className="bg-black text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="bg-black text-white px-4 py-2 rounded"
         onClick={() => setIsModalOpen(true)}
       >
         + Add User
@@ -158,7 +158,7 @@ export default function AddBook() {
                     required
                   />
                 </div>
-                <div className="space-y-1">
+                {/* <div className="space-y-1">
                   <Label htmlFor="membershipStatus">Membership Status</Label>
                   <Input
                     type="text"
@@ -168,18 +168,19 @@ export default function AddBook() {
                     onChange={handleChange}
                     required
                   />
-                  <div className="space-y-1">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                      type="password"
-                      name="password"
-                      placeholder="Password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+                </div> */}
+                <div className="space-y-1">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
+
                 <div className="flex justify-between">
                   {loading ? (
                     <div className="flex justify-center mt-4">

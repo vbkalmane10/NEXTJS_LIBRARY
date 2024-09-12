@@ -12,7 +12,7 @@ export default function LandingPage() {
     <div className="flex flex-col min-h-[100dvh]">
      
 
-      <section className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20  text-black">
+      <section className="flex-1 flex flex-col items-center justify-center text-center px-6 mt-12  text-black">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">
           Welcome to Digital Library
         </h1>

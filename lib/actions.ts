@@ -90,7 +90,6 @@ export async function createMember(member: iMemberBase) {
     const newMember = await create(member);
     return newMember;
   } catch (error) {
-    console.error("Error creating member:", error);
     throw new Error("Failed to create member");
   }
 }
@@ -213,7 +212,10 @@ export async function fetchRecentlyBorrowedBooks(userId: number) {
 export const fetchUserDetails = async (id: number): Promise<iMember | null> => {
   return await getUserById(id);
 };
-export const handleUserUpdate = async (id: number, updatedUser: iMember) => {
+export const handleUserUpdate = async (
+  id: number,
+  updatedUser: iMember
+) => {
   try {
     await updateMember(id, updatedUser);
     return { success: true, message: "User updated successfully!" };

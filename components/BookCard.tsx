@@ -3,7 +3,7 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { handleCreateRequest } from "@/lib/actions";
 import { createRequest } from "@/lib/repository";
-import { HeartIcon } from "@heroicons/react/24/outline";
+
 import { getServerSession } from "next-auth";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { iBook } from "@/lib/types";
 interface Book {
   id: number;
   title: string;
@@ -27,8 +28,8 @@ interface Book {
 }
 
 interface BookCardProps {
-  book: Book;
-  userId: number | undefined ;
+  book: iBook;
+  userId: number | undefined;
 }
 export default function BookCard({ book, userId }: BookCardProps) {
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
@@ -55,7 +56,7 @@ export default function BookCard({ book, userId }: BookCardProps) {
 
       const result = await handleCreateRequest(request);
 
-      if (result.request) {
+      if (result.success) {
         setSuccessMessage(result.message);
         toast({
           title: "Success",
@@ -85,7 +86,12 @@ export default function BookCard({ book, userId }: BookCardProps) {
     <div className="p-4 border rounded-lg shadow-md flex flex-col justify-between h-56">
       <div className="flex-grow">
         <h2 className="text-lg font-semibold line-clamp-2">{book.title}</h2>
-        <p className="text-sm text-gray-600 line-clamp-1">{book.author}</p>
+        <p className="text-sm text-gray-600 line-clamp-1">
+          Author: {book.author}
+        </p>
+        <p className="text-sm text-gray-600 line-clamp-1">
+          Publisher: {book.publisher}
+        </p>
         <p className="text-sm text-gray-500 line-clamp-1">
           ISBN: {book.isbnNo}
         </p>
@@ -115,9 +121,7 @@ export default function BookCard({ book, userId }: BookCardProps) {
         <button
           onClick={handleFavorite}
           className="bg-white text-red-500 p-2 rounded-full  transition flex items-center justify-center"
-        >
-          <HeartIcon className="h-5 w-5" />
-        </button>
+        ></button>
       </div>
       {showConfirm && (
         <div className="fixed inset-0  bg-opacity-50 flex justify-center items-center">

@@ -2,9 +2,15 @@
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { iMember } from "../lib/types";
-import { useRouter } from "next/navigation";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "./ui/select";
 
 interface EditUserFormProps {
   user: iMember;
@@ -13,14 +19,13 @@ interface EditUserFormProps {
   isPending: boolean;
 }
 
-const EditBookForm: React.FC<EditUserFormProps> = ({
+const EditUserForm: React.FC<EditUserFormProps> = ({
   user,
   onClose,
   onSubmit,
   isPending,
 }) => {
   const [formData, setFormData] = useState<iMember>({ ...user });
-  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,9 +35,15 @@ const EditBookForm: React.FC<EditUserFormProps> = ({
     });
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleStatusChange = (value: string) => {
+    setFormData({
+      ...formData,
+      membershipStatus: value,
+    });
+  };
+  
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-
     onSubmit(formData);
   };
 
@@ -59,18 +70,18 @@ const EditBookForm: React.FC<EditUserFormProps> = ({
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              placeholder="Author"
+              placeholder="Last Name"
               required
             />
           </div>
           <div>
             <Label htmlFor="email">Email</Label>
             <Input
-              type="text"
-              name="publisher"
+              type="email"
+              name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Publisher"
+              placeholder="Email"
               required
             />
           </div>
@@ -92,8 +103,20 @@ const EditBookForm: React.FC<EditUserFormProps> = ({
               value={formData.address}
               onChange={handleChange}
               placeholder="Address"
-              disabled
+              
             />
+          </div>
+          <div>
+            <Label htmlFor="membershipStatus">Membership Status</Label>
+             <Select value={formData.membershipStatus} onValueChange={handleStatusChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="expired">Expired</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <div className="flex justify-end gap-4 mt-6">
@@ -117,4 +140,4 @@ const EditBookForm: React.FC<EditUserFormProps> = ({
   );
 };
 
-export default EditBookForm;
+export default EditUserForm;

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Edit, Trash2, Trash } from "lucide-react";
-import { iBook } from "@/lib/types"; 
+import { iBook } from "@/lib/types";
 import {
   Table,
   TableBody,
@@ -123,7 +123,7 @@ const AdminBookTable: React.FC<AdminBookTableProps> = ({
 
                       <AlertDialog>
                         <AlertDialogTrigger>
-                          <button className="hover:bg-green-400 p-2 rounded">
+                          <button className="hover:bg-red-400 p-2 rounded">
                             <Trash2 size={16} />
                           </button>
                         </AlertDialogTrigger>

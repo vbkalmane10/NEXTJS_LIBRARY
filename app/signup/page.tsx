@@ -43,7 +43,7 @@ const SignupPage = () => {
         address,
       });
 
-      if (newMember) {
+      if (newMember !== undefined) {
         setSuccessMessage(newMember.message);
         router.push("/login");
       } else {

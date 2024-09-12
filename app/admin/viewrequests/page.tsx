@@ -1,12 +1,12 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
-import RequestTable from "@/components/Requests"; 
-import { getRequests, handleApproveRequest } from "@/lib/actions"; 
+import RequestTable from "@/components/Requests";
+import { getRequests, handleApproveRequest } from "@/lib/actions";
 import { Request } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 import { useSearchParams } from "next/navigation";
 import Pagination from "@/components/Pagination";
+import Header from "@/components/Header";
 const ViewRequestPage: React.FC = () => {
   const searchParams = useSearchParams();
   const [requests, setRequests] = useState<Request[]>([]);
@@ -15,12 +15,11 @@ const ViewRequestPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   useEffect(() => {
-    const fetchRequests = async (page:number) => {
+    const fetchRequests = async (page: number) => {
       try {
         const fetchedRequests = await getRequests(page);
         setRequests(fetchedRequests.data);
-        
-       
+
         setTotalPages(fetchedRequests.totalPages);
         setLoading(false);
       } catch (error: any) {
@@ -36,7 +35,6 @@ const ViewRequestPage: React.FC = () => {
     try {
       const result = await handleApproveRequest(request);
       if (result) {
-       
         setRequests((prevRequests) =>
           prevRequests.map((req) =>
             req.id === request.id ? { ...req, status: "Approved" } : req
@@ -57,22 +55,21 @@ const ViewRequestPage: React.FC = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">View Requests</h1>
-      {requests.length === 0 ? (
-        <p>No requests found.</p>
-      ) : (
-        <RequestTable
-          requests={requests}
-          onApprove={handleApprove}
-          onReject={handleReject}
-        />
-        
-      )}
-      <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
+    <div className="flex flex-col w-full min-h-screen">
+      <Header />
+      <div className="p-8">
+        <h1 className="text-2xl font-bold mb-4">View Requests</h1>
+        {requests.length === 0 ? (
+          <p>No requests found.</p>
+        ) : (
+          <RequestTable
+            requests={requests}
+            onApprove={handleApprove}
+            onReject={handleReject}
           />
+        )}
+        <Pagination currentPage={currentPage} totalPages={totalPages} />
+      </div>
     </div>
   );
 };

@@ -12,7 +12,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body>
         <SessionProvider>
-          <Header />
           {children}
           <Toaster />
         </SessionProvider>
@@ -22,8 +21,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 }
 function SessionWrapper({ children }: { children: ReactNode }) {
   const { status } = useSession({ required: true });
-
- 
 
   if (status !== "authenticated") {
     return <ForbiddenPage />;

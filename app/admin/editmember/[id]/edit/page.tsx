@@ -1,17 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { iMember } from "../../../../lib/types";
-import EditUserForm from "../../../../components/EditUser";
-import {
-  fetchBookDetails,
-  fetchUserDetails,
-  handleBookUpdate,
-  handleUserUpdate,
-} from "../../../../lib/actions";
-import { toast } from "../../../../hooks/use-toast";
-import React from "react";
+import { iBook, iMember } from "@/lib/types";
+import EditUserForm from "@/components/EditUser";
+import { fetchUserDetails, handleUserUpdate } from "@/lib/actions";
+import { toast } from "@/hooks/use-toast";
 
 const EditBookPage = ({ params }: { params: { id: number } }) => {
   const { id } = params;
@@ -45,17 +39,19 @@ const EditBookPage = ({ params }: { params: { id: number } }) => {
   }, [id]);
 
   const handleEditSubmit = async (updatedUser: iMember) => {
+    console.log("This is in the handleEditSubmit ", updatedUser);
     setIsSubmitting(true);
     try {
       const result = await handleUserUpdate(id, updatedUser);
+
       if (result.success) {
         toast({
           title: "Success",
           description: result.message,
           duration: 1000,
-          className: "bg-green-600",
+          className: "bg-green-700 text-white",
         });
-        router.push("/admin");
+        router.push("/admin/viewmember");
       } else {
         toast({
           title: "Error",
@@ -66,7 +62,7 @@ const EditBookPage = ({ params }: { params: { id: number } }) => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update the book. Please try again.",
+        description: "Failed to update the user. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -75,7 +71,7 @@ const EditBookPage = ({ params }: { params: { id: number } }) => {
   };
 
   const handleEditClose = () => {
-    router.push("/admin");
+    router.push("/admin/viewmember");
   };
 
   if (!user) return <p>Loading user details...</p>;

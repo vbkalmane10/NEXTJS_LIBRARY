@@ -23,7 +23,7 @@ export default function AddBook() {
     publisher: "",
     genre: "",
     isbnNo: "",
-    pages: 0,
+    pages: 1,
     totalCopies: 1,
     availableCopies: 1,
   });
@@ -58,13 +58,18 @@ export default function AddBook() {
     setErrorMessage(null);
 
     try {
+      if (formData.isbnNo.length !== 13) {
+        setErrorMessage("ISBN should be 13 digits");
+        return;
+      }
       const result = await addBook(formData);
       if (result) {
         toast({
           title: "Success",
           description: result.message,
           variant: "destructive",
-          color: "#000000",
+          className: "bg-green-500",
+          duration: 1000,
         });
         setIsModalOpen(false);
         setFormData({
@@ -73,7 +78,7 @@ export default function AddBook() {
           publisher: "",
           genre: "",
           isbnNo: "",
-          pages: 0,
+          pages: 1,
           totalCopies: 1,
           availableCopies: 1,
         });
@@ -90,10 +95,7 @@ export default function AddBook() {
       setLoading(false);
     }
   };
-  const modalReset = async () => {
-    setIsModalOpen(false);
-    setResponseMessage(null);
-  };
+
   return (
     <>
       <button
@@ -202,6 +204,7 @@ export default function AddBook() {
                       required
                     />
                   </div>
+                  <p className="text-red-600 font-semibold">{errorMessage}</p>
                 </div>
                 <div className="flex justify-between">
                   {loading ? (

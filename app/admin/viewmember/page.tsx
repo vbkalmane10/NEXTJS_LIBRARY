@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import { iBook, iMember } from "@/lib/types";
 import AdminUserTable from "@/components/ViewMember";
 import AddUser from "@/components/AddUser";
+import Header from "@/components/Header";
 
 export default function Page({
   searchParams,
@@ -44,32 +45,30 @@ export default function Page({
     loadUsers();
   }, [query, currentPage]);
   const handleEdit = (id: number) => {
-    router.push(`/admin/${id}/edit`);
+    router.push(`/admin/editmember/${id}/edit`);
   };
   return (
-    <div className="w-full mr-4">
-      <div className="my-4">
-        <h1 className="text-3xl font-bold">Welcome, Admin</h1>
-      </div>
-      <div className="flex w-full items-center justify-between">
+    <div className="flex flex-col w-full min-h-screen">
+      <Header />
+      <div className="w-full p-8">
         <h1 className="text-2xl font-bold">Users</h1>
-      </div>
 
-      <div className="mt-4 flex gap-4 items-center">
-        <Search placeholder="Search Users..." />
-        <AddUser />
-      </div>
-      <div className="mt-6">
-        <AdminUserTable
-          users={users}
-          onEdit={handleEdit}
-          onDelete={function (id: number): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
-      </div>
-      <div className="mt-8 flex justify-center">
-        <Pagination currentPage={currentPage} totalPages={totalPages} />
+        <div className="mt-4 flex gap-4 items-center">
+          <Search placeholder="Search Users..." />
+          <AddUser />
+        </div>
+        <div className="mt-6">
+          <AdminUserTable
+            users={users}
+            onEdit={handleEdit}
+            onDelete={function (id: number): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
+        </div>
+        <div className="mt-8 flex justify-center">
+          <Pagination currentPage={currentPage} totalPages={totalPages} />
+        </div>
       </div>
     </div>
   );

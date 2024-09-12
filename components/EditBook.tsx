@@ -2,14 +2,14 @@
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { iBook } from "@/lib/types";
-import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
+import { useRouter } from "next/navigation"; 
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 
 interface EditBookFormProps {
   book: iBook;
   onClose: () => void;
-  onSubmit: (updatedBook: iBook) => void; // Adjust to handle async operation
+  onSubmit: (updatedBook: iBook) => void; 
   isPending: boolean;
 }
 
@@ -137,7 +137,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
           <button
             type="submit"
             disabled={isPending}
-            className="px-4 py-2 text-white bg-black rounded hover:bg-blue-600"
+            className="px-4 py-2 text-white bg-black rounded"
           >
             {isPending ? "Saving..." : "Save Changes"}
           </button>

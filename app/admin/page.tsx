@@ -10,7 +10,8 @@ import AddBook from "@/components/AddBook";
 import { toast } from "@/hooks/use-toast";
 import { iBook } from "@/lib/types";
 import { useRouter } from "next/navigation";
-
+import SideNav from "@/components/SideNav";
+import Header from "@/components/Header";
 
 export default function Page({
   searchParams,
@@ -25,10 +26,10 @@ export default function Page({
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const router = useRouter();
- 
+
   async function loadBooks() {
     try {
-      const { books, totalPages } = await fetchBooks(query, currentPage, 8);
+      const { books, totalPages } = await fetchBooks(query, currentPage, 7);
       setBooks(books);
       setTotalPages(totalPages);
     } catch (error) {
@@ -70,22 +71,24 @@ export default function Page({
     }
   };
 
-  
   const handleEdit = (isbnNo: string) => {
     router.push(`/admin/${isbnNo}/edit`);
   };
 
-  // Handle signing out
+
   const handleSignOut = () => {
     signOut({ callbackUrl: "/" });
   };
 
   return (
-    <div className="w-full mr-4">
-      <div className="my-4">
-        <h1 className="text-3xl font-bold">Welcome, Admin</h1>
-      </div>
-      <div className="flex w-full items-center justify-between">
+    <div className="flex flex-col w-full min-h-screen">
+   
+    <Header />
+
+    <div className="p-8 flex-grow">
+      <h1 className="text-3xl font-bold">Welcome, Admin</h1>
+
+      <div className="flex w-full items-center justify-between mt-4">
         <h1 className="text-2xl font-bold">Books</h1>
       </div>
 
@@ -93,6 +96,7 @@ export default function Page({
         <Search placeholder="Search books..." />
         <AddBook />
       </div>
+
       <div className="mt-6">
         <AdminBookTable
           books={books}
@@ -100,9 +104,11 @@ export default function Page({
           onDelete={handleDelete}
         />
       </div>
+
       <div className="mt-8 flex justify-center">
         <Pagination currentPage={currentPage} totalPages={totalPages} />
       </div>
     </div>
+  </div>
   );
 }

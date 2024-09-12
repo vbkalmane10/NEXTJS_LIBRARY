@@ -2,13 +2,7 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -52,7 +46,7 @@ const LoginPage = () => {
       });
 
       if (result?.ok) {
-        router.refresh();
+        router.push("/books");
       } else if (result?.error) {
         switch (result.error) {
           case "CredentialsSignin":
@@ -84,19 +78,6 @@ const LoginPage = () => {
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      {/* <header className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
-        <div className="text-2xl font-bold text-black">BookSphere</div>
-        <nav className="hidden md:flex gap-4">
-          <Link href="/login" className="hover:text-blue-500">
-            Login
-          </Link>
-          <Link href="/register" className="hover:text-blue-500">
-            Register
-          </Link>
-        </nav>
-      </header> */}
-   
-
       <main className="flex-1 flex items-center justify-center px-4 md:px-6 bg-gray-100">
         <form
           onSubmit={handleFormSubmit}
@@ -110,7 +91,6 @@ const LoginPage = () => {
           </div>
 
           <div className="space-y-4">
-            {/* Email and Password Fields */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -122,7 +102,7 @@ const LoginPage = () => {
               />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
                 <Link
                   href="#"
@@ -131,7 +111,7 @@ const LoginPage = () => {
                 >
                   Forgot password?
                 </Link>
-              </div>
+              </div> */}
               <Input
                 id="password"
                 type="password"

@@ -9,15 +9,25 @@ import {
   Clock,
   BookOpen,
   Star,
+  CheckIcon,
+  PencilIcon,
+  LogOut,
 } from "lucide-react";
 import Header from "@/components/Header";
-import { JSX, SVGProps, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
 import {
   fetchRecentlyBorrowedBooks,
   fetchRequestStatistics,
+  fetchUserDetails,
 } from "@/lib/actions";
-import { RequestStatistics } from "@/lib/types";
+import { iMember, RequestStatistics } from "@/lib/types";
+import { Input } from "@/components/ui/input";
+import { Label } from "@radix-ui/react-label";
+import { Button } from "@/components/ui/button";
+import { handleUserUpdate } from "@/lib/actions";
+import { useToast } from "@/hooks/use-toast";
+import { revalidatePath } from "next/cache";
 
 export default function DisplayProfile() {
   const { data: session, status } = useSession();
@@ -26,14 +36,29 @@ export default function DisplayProfile() {
     approvedRequests: 0,
     pendingRequests: 0,
   });
+  const { toast } = useToast();
+  const [isEditing, setIsEditing] = useState(false);
   const [recentBooks, setRecentBooks] = useState([]);
+  const [userInfo, setUserInfo] = useState({
+    id: 0,
+    firstName: "",
+    lastName: "",
+    email: "",
+    address: "",
+    phoneNumber: "",
+    membershipStatus: "",
+    role: "",
+    password: "",
+  });
+
   useEffect(() => {
-    console.log(session);
     const loadStatistics = async () => {
       if (session?.user?.id) {
         try {
           const stats = await fetchRequestStatistics(session.user.id);
           const books = await fetchRecentlyBorrowedBooks(session.user.id);
+          const user = await fetchUserDetails(session?.user.id);
+          setUserInfo(user);
           setRecentBooks(books);
           setStatistics(stats);
         } catch (error) {
@@ -45,124 +70,191 @@ export default function DisplayProfile() {
     loadStatistics();
   }, [session]);
 
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+  };
+
+  const toggleEdit = async () => {
+    if (isEditing) {
+      try {
+        console.log("This is the userInfo", userInfo.membershipStatus);
+        const response = await handleUserUpdate(session!.user.id, userInfo);
+        if (!response.success) {
+          toast({
+            title: "Error updating user info",
+            description: response.message,
+            className: "bg-red-700 text-white",
+          });
+        } else {
+          toast({
+            title: "Success",
+            description: response.message,
+            className: "bg-green-400 text-white",
+            duration: 1000,
+          });
+        }
+      } catch (error) {
+        throw new Error("Error updating user");
+      }
+    }
+    setIsEditing(!isEditing);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserInfo((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
-    <div>
-      <div className="flex min-h-screen">
-        <div className="flex-1 max-w-[800px] mx-auto p-6 md:p-10">
-          <Card>
-            <CardHeader className="bg-muted/20 p-8">
-              <div className="flex items-center gap-6">
-                <Avatar className="h-16 w-16">
-                  <AvatarFallback>
+    <div className="flex justify-center items-center h-screen">
+      <Card className="w-full max-w-4xl mx-auto overflow-hidden">
+        <CardContent className="p-0">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col md:w-1/3 bg-black text-white p-6 flex-1 justify-between">
+              <div className=" flex flex-col justify-center items-center">
+                <Avatar className="w-32 h-32 mb-4 border-2 border-white">
+                  <AvatarImage src="/placeholder.svg?height=128&width=128" />
+                  <AvatarFallback className="text-black font-semibold border border-black text-3xl">
                     {session?.user?.name
                       ? session.user.name.substring(0, 2).toUpperCase()
                       : "U"}
                   </AvatarFallback>
                 </Avatar>
-                <div className="grid gap-1">
-                  <h2 className="text-2xl font-bold">{session?.user?.name}</h2>
-                  <p className="text-muted-foreground">
-                    {session?.user?.email}
-                  </p>
-                </div>
+                <h2 className="text-2xl font-bold text-center mb-4">
+                  {session?.user.name}
+                </h2>
+                <Button
+                  onClick={toggleEdit}
+                  variant="outline"
+                  className={`w-full text-black hover:bg-gray-200 ${
+                    isEditing
+                      ? "bg-green-500 text-white hover:bg-green-600"
+                      : "bg-white"
+                  }`}
+                >
+                  {isEditing ? (
+                    <>
+                      <CheckIcon className="w-4 h-4 mr-2" />
+                      Save Profile
+                    </>
+                  ) : (
+                    <>
+                      <PencilIcon className="w-4 h-4 mr-2" />
+                      Edit Profile
+                    </>
+                  )}
+                </Button>
               </div>
-            </CardHeader>
-            <CardContent className="p-8 grid gap-6">
-              <div className="grid gap-4">
-                <h3 className="text-xl font-semibold">Transactions</h3>
-                <div className="grid grid-cols-3 gap-4">
-                  <Card>
-                    <CardContent className="flex flex-col items-center justify-center p-4">
-                      <NotebookTabs className="h-8 w-8 text-primary" />
-                      <div className="text-2xl font-bold mt-2">
-                        {statistics.totalRequests}
-                      </div>
-                      <p className="text-muted-foreground text-sm">
-                        Total books requested
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="flex flex-col items-center justify-center p-4">
-                      <ShieldCheck className="h-8 w-8 text-green-500" />
-                      <div className="text-2xl font-bold mt-2">
-                        {statistics.approvedRequests}
-                      </div>
-                      <p className="text-muted-foreground text-sm">
-                        Approved requests
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="flex flex-col items-center justify-center p-4">
-                      <Clock className="h-8 w-8 text-yellow-500" />
-                      <div className="text-2xl font-bold mt-2">
-                        {statistics.pendingRequests}
-                      </div>
-                      <p className="text-muted-foreground text-sm">
-                        Pending requests
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
+              <div className="mt-auto">
+                <Button
+                  onClick={handleLogout}
+                  className="flex items-center w-full px-4 py-2 text-white bg-red-500 rounded-md transition-colors duration-200 hover:bg-red-700"
+                >
+                  <LogOut size={20} className="mr-3" />
+                  Logout
+                </Button>
               </div>
-              <Separator />
+            </div>
 
-              <div className="grid gap-4">
-                <h3 className="text-xl font-semibold">Recent Transactions</h3>
-                <div className="grid grid-cols-1 gap-4">
-                  <Card>
-                    <CardContent className="flex flex-col p-4">
-                      <h4 className="text-lg font-semibold">
-                        Recently Borrowed
-                      </h4>
-                      <ul className="list-disc pl-5 mt-2">
-                        {recentBooks.map((book) => (
-                          <li key={book.bookId}>{book.bookTitle}</li>
-                        ))}
-                        {recentBooks.length === 0 && (
-                          <li>No recent borrowings.</li>
-                        )}
-                      </ul>
-                    </CardContent>
-                  </Card>
+            <div className="md:w-2/3 p-6 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    name="firstName"
+                    value={userInfo.firstName}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    name="lastName"
+                    value={userInfo.lastName}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                  />
                 </div>
               </div>
-              <Separator />
-              {/* <div className="grid gap-4">
-                <h3 className="text-xl font-semibold">Profile Details</h3>
-                <div className="grid gap-2">
-                  <Card className="flex flex-row items-center justify-between p-4">
-                    <CardContent className="flex items-center gap-4">
-                      <FilePenIcon className="h-7 w-7 text-primary" />
-                      <div className="text-lg font-bold">
-                        Edit basic details
-                      </div>
-                    </CardContent>
-                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                  </Card>
-                  <Card className="flex flex-row items-center justify-between p-4">
-                    <CardContent className="flex items-center gap-4">
-                      <LockIcon className="h-7 w-7 text-yellow-500" />
-                      <div className="text-lg font-bold">Forgot password</div>
-                    </CardContent>
-                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                  </Card>
-                  <Card className="flex flex-row items-center justify-between p-4">
-                    <CardContent className="flex items-center gap-4">
-                      <LogOutIcon className="h-7 w-7 text-red-500" />
-                      <div className="text-lg font-bold">Logout</div>
-                    </CardContent>
-                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                  </Card>
-                </div>
-              </div> */}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={userInfo.email}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  name="address"
+                  value={userInfo.address}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Input
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={userInfo.phoneNumber}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+              </div>
+
+              <div className="mt-6">
+                <CardContent className="p-4 grid gap-4">
+                  <h3 className="text-xl font-semibold">Transactions</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <Card className="flex-1">
+                      <CardContent className="flex flex-col items-center justify-center p-2">
+                        <NotebookTabs className="h-6 w-6 text-primary" />
+                        <div className="text-lg font-bold mt-1">
+                          {statistics.totalRequests}
+                        </div>
+                        <p className="text-muted-foreground text-sm">
+                          Total books requested
+                        </p>
+                      </CardContent>
+                    </Card>
+                    <Card className="flex-1">
+                      <CardContent className="flex flex-col items-center justify-center p-2">
+                        <ShieldCheck className="h-6 w-6 text-green-500" />
+                        <div className="text-lg font-bold mt-1">
+                          {statistics.approvedRequests}
+                        </div>
+                        <p className="text-muted-foreground text-sm">
+                          Approved requests
+                        </p>
+                      </CardContent>
+                    </Card>
+                    <Card className="flex-1">
+                      <CardContent className="flex flex-col items-center justify-center p-2">
+                        <Clock className="h-6 w-6 text-yellow-500" />
+                        <div className="text-lg font-bold mt-1">
+                          {statistics.pendingRequests}
+                        </div>
+                        <p className="text-muted-foreground text-sm">
+                          Pending requests
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CardContent>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
-
-
