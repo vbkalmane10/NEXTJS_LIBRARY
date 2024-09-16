@@ -11,11 +11,11 @@ export default async function Layout({
 }) {
   const session = await getServerSession(authOptions);
   const navItems = [
-    { href: "/admin", icon: "BookOpenText", text: "Books" },
-    { href: "/admin/viewrequests", icon: "LibraryBig", text: "Book Requests" },
-    { href: "/admin/due-today", icon: "HelpCircle", text: "Due Today" },
-    { href: "/admin/viewmember", icon: "Users", text: "View Members" },
-    { href: "/profile", icon: "UserRoundCog", text: "View Profile" },
+    { href: "/admin", text: "Books" },
+    { href: "/admin/viewrequests", text: "Book Requests" },
+    { href: "/admin/due-today", text: "Due Today" },
+    { href: "/admin/viewmember", text: "View Members" },
+    { href: "/profile", text: "View Profile" },
   ];
   return (
     <div className="flex h-screen w-full">

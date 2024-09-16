@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import SideNav from "@/components/SideNav";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
-
+import * as LucideIcons from "lucide-react";
 export default async function Layout({
   children,
 }: {
@@ -11,11 +11,15 @@ export default async function Layout({
 }) {
   const session = await getServerSession(authOptions);
   const navItems = [
-    { href: "/books", icon: "Home", text: "Books" },
-    { href: "/books/myrequests", icon: "LibraryBig", text: "My Requests" },
-    { href: "/books/mybooks", icon: "HelpCircle", text: "My Books" },
-    { href: "/books/favorites", icon: "Heart", text: "My Favorites" },
-    { href: "/profile", icon: "Bookmark", text: "My Profile" },
+    { href: "/books", text: "Books" },
+    {
+      href: "/books/myrequests",
+
+      text: "My Requests",
+    },
+    { href: "/books/mybooks", text: "My Books" },
+    { href: "/books/favorites", text: "My Favorites" },
+    { href: "/profile", text: "My Profile" },
   ];
   return (
     <div className="flex h-screen w-full">

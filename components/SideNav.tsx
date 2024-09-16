@@ -1,16 +1,12 @@
-"use client";
-
 import React, { useState } from "react";
 import * as LucideIcons from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, User } from "lucide-react";
 
-// Explicit typing for the icon mapping
-type IconName = keyof typeof LucideIcons;
 interface NavItem {
   href: string;
-  icon: IconName;
+
   text: string;
 }
 
@@ -40,7 +36,7 @@ const SideNav: React.FC<SideNavProps> = ({ navItems, userName }) => {
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
           onClick={toggleSidebar}
-        ></div>
+        />
       )}
 
       <div
@@ -59,7 +55,6 @@ const SideNav: React.FC<SideNavProps> = ({ navItems, userName }) => {
           <div className="flex flex-col flex-grow px-4 mt-4 py-4">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
-              const IconComponent = LucideIcons[item.icon];
 
               return (
                 <Link
@@ -71,10 +66,6 @@ const SideNav: React.FC<SideNavProps> = ({ navItems, userName }) => {
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
-                  {/* <IconComponent
-                    size={20}
-                    className={isActive ? "text-blue-700" : "text-gray-700"}
-                  /> */}
                   <span className={`ml-3 ${isActive ? "font-medium" : ""}`}>
                     {item.text}
                   </span>
