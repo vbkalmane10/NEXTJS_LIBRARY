@@ -6,9 +6,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import GenreMenu from "@/components/Genre";
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import SideNav from "@/components/SideNav";
-import Header from "@/components/Header";
-import { Home, Settings, HelpCircle, Bookmark } from "lucide-react";
+
 
 export default async function Page({
   searchParams,

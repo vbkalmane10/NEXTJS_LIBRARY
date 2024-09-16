@@ -30,7 +30,7 @@ interface Book {
 interface BookCardProps {
   book: iBook;
   userId: number | undefined;
-  username: string;
+  username: string | undefined;
 }
 export default function BookCard({ book, userId, username }: BookCardProps) {
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
