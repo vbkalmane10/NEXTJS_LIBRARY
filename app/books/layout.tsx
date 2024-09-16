@@ -1,9 +1,9 @@
 import Header from "@/components/Header";
-import NavBar from "@/components/Navbar";
+
 import SideNav from "@/components/SideNav";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
-export const experimental_ppr = true;
+
 export default async function Layout({
   children,
 }: {
