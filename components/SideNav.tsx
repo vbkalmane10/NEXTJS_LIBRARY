@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import * as LucideIcons from "lucide-react";
 import Link from "next/link";
