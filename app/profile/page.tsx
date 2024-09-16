@@ -58,7 +58,21 @@ export default function DisplayProfile() {
           const stats = await fetchRequestStatistics(session.user.id);
           const books = await fetchRecentlyBorrowedBooks(session.user.id);
           const user = await fetchUserDetails(session?.user.id);
-          setUserInfo(user);
+          if (user) {
+            setUserInfo({
+              id: user.id,
+              firstName: user.firstName || "",  
+              lastName: user.lastName || "",    
+              email: user.email,
+              address: user.address || "",      
+              phoneNumber: user.phoneNumber || "", 
+              membershipStatus: user.membershipStatus || "",
+              role: user.role || "",
+              password: "",  
+            });
+          } else {
+            console.error("User not found");
+          }
           setRecentBooks(recentBooks);
           setStatistics(stats);
         } catch (error) {
