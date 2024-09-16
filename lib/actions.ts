@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/db";
-import { membersTable, booksTable, requestsTable } from "@/db/schema";
+import { membersTable, booksTable } from "@/db/schema";
 import { eq, like, and, gt } from "drizzle-orm";
 import {
   iBook,
@@ -212,10 +212,7 @@ export async function fetchRecentlyBorrowedBooks(userId: number) {
 export const fetchUserDetails = async (id: number): Promise<iMember | null> => {
   return await getUserById(id);
 };
-export const handleUserUpdate = async (
-  id: number,
-  updatedUser: iMember
-) => {
+export const handleUserUpdate = async (id: number, updatedUser: iMember) => {
   try {
     await updateMember(id, updatedUser);
     return { success: true, message: "User updated successfully!" };

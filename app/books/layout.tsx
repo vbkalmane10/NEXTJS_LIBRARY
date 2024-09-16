@@ -12,9 +12,9 @@ export default async function Layout({
   const session = await getServerSession(authOptions);
   const navItems = [
     { href: "/books", icon: "Home", text: "Books" },
-    { href: "/books/myrequests", icon: "Settings", text: "My Requests" },
+    { href: "/books/myrequests", icon: "LibraryBig", text: "My Requests" },
     { href: "/books/mybooks", icon: "HelpCircle", text: "My Books" },
-    { href: "/books/favorites", icon: "Bookmark", text: "My Favorites" },
+    { href: "/books/favorites", icon: "Heart", text: "My Favorites" },
     { href: "/profile", icon: "Bookmark", text: "My Profile" },
   ];
   return (

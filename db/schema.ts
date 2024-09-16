@@ -9,7 +9,6 @@ export const membersTable = mysqlTable("members", {
   address: varchar("address", { length: 255 }),
   membershipStatus: varchar("membershipStatus", { length: 255 }).notNull(),
   role: varchar("role", { length: 255 }).notNull(),
-  // refreshToken: varchar("refreshToken", { length: 255 }),
 });
 export const booksTable = mysqlTable("books", {
   id: int("id").primaryKey().autoincrement(),
@@ -26,23 +25,28 @@ export const transactionsTable = mysqlTable("transactions", {
   id: int("id").primaryKey().autoincrement(),
   bookId: int("bookId")
     .notNull()
-    .references(() => booksTable.id), // Foreign key reference to booksTable
-  memberId: int("memberId")
-    .notNull()
-    .references(() => membersTable.id), // Foreign key reference to membersTable
-  issueDate: varchar("issueDate", { length: 25 }).notNull(),
-  returnDate: varchar("returnDate", { length: 25 }),
-  dueDate: varchar("dueDate", { length: 255 }).notNull(),
-});
-export const requestsTable = mysqlTable("requests", {
-  id: int("id").primaryKey().autoincrement(),
-  memberId: int("memberId")
-    .notNull()
-    .references(() => membersTable.id),
-  bookId: int("bookId")
-    .notNull()
     .references(() => booksTable.id),
   bookTitle: varchar("bookTitle", { length: 255 }).notNull(),
   isbnNo: varchar("isbnNo", { length: 13 }).notNull(),
+  memberId: int("memberId")
+    .notNull()
+    .references(() => membersTable.id),
+
+  issueDate: varchar("issueDate", { length: 25 }),
+  returnDate: varchar("returnDate", { length: 25 }),
+  dueDate: varchar("dueDate", { length: 255 }),
+  firstName: varchar("firstName", { length: 255 }),
   status: varchar("status", { length: 255 }),
 });
+// export const requestsTable = mysqlTable("requests", {
+//   id: int("id").primaryKey().autoincrement(),
+//   memberId: int("memberId")
+//     .notNull()
+//     .references(() => membersTable.id),
+//   bookId: int("bookId")
+//     .notNull()
+//     .references(() => booksTable.id),
+//   bookTitle: varchar("bookTitle", { length: 255 }).notNull(),
+//   isbnNo: varchar("isbnNo", { length: 13 }).notNull(),
+//   status: varchar("status", { length: 255 }),
+// });

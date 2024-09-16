@@ -2,7 +2,7 @@ import { iBook, iBookBase, iMember, iMemberBase, iTransaction } from "./types";
 import {
   booksTable,
   membersTable,
-  requestsTable,
+
   transactionsTable,
 } from "@/db/schema";
 import { z } from "zod";
@@ -105,22 +105,25 @@ export async function fetchAllRequests(page = 1, limit = 10) {
     const offset = (page - 1) * limit;
     const requests = await db
       .select({
-        id: requestsTable.id,
-        bookId: requestsTable.bookId,
-        bookTitle: requestsTable.bookTitle,
-        isbnNo: requestsTable.isbnNo,
-        status: requestsTable.status,
-        memberId: requestsTable.memberId,
+        id: transactionsTable.id,
+        bookId: transactionsTable.bookId,
+        bookTitle: transactionsTable.bookTitle,
+        isbnNo: transactionsTable.isbnNo,
+        status: transactionsTable.status,
+        memberId: transactionsTable.memberId,
         firstName: membersTable.firstName,
+        issueDate: transactionsTable.issueDate,
+        dueDate: transactionsTable.dueDate,
+        returnDate: transactionsTable.returnDate,
       })
-      .from(requestsTable)
-      .innerJoin(membersTable, eq(requestsTable.memberId, membersTable.id))
+      .from(transactionsTable)
+      .innerJoin(membersTable, eq(transactionsTable.memberId, membersTable.id))
       .offset(offset)
       .limit(limit)
       .execute();
     const totalRequests = await db
       .select({ count: count() })
-      .from(requestsTable);
+      .from(transactionsTable);
     const totalCount = totalRequests[0]?.count || 0;
     const totalPages = Math.ceil(totalCount / limit);
     return {
@@ -182,9 +185,13 @@ export async function createRequest(
       bookTitle: request.bookTitle,
       isbnNo: request.isbnNo,
       status: "Pending",
+      issueDate: null,
+      dueDate: null,
+      returnDate: null,
+      firstName: request.firstName,
     };
 
-    await db.insert(requestsTable).values(newRequest).execute();
+    await db.insert(transactionsTable).values(newRequest).execute();
 
     return {
       message: "Request created successfully",
@@ -211,8 +218,8 @@ export async function approveRequest(
     await db.transaction(async (trx) => {
       const request = await trx
         .select()
-        .from(requestsTable)
-        .where(eq(requestsTable.id, req.id))
+        .from(transactionsTable)
+        .where(eq(transactionsTable.id, req.id))
         .execute();
       if (!request) {
         throw new Error("Request not found");
@@ -232,22 +239,27 @@ export async function approveRequest(
         throw new Error("No available copies");
       }
       await trx
-        .update(requestsTable)
-        .set({ status: "Approved" })
-        .where(eq(requestsTable.id, req.id));
+        .update(transactionsTable)
+        .set({
+          status: "Approved",
+          returnDate: null,
+          dueDate: formattedDueDate,
+          issueDate: formattedBorrowDate,
+        })
+        .where(eq(transactionsTable.id, req.id));
       await trx
         .update(booksTable)
         .set({ availableCopies: availableCopies - 1 })
         .where(eq(booksTable.id, req.bookId));
 
-      newTransaction = {
-        bookId: req.bookId,
-        memberId: req.memberId,
-        returnDate: null,
-        dueDate: formattedDueDate,
-        issueDate: formattedBorrowDate,
-      };
-      await trx.insert(transactionsTable).values(newTransaction).execute();
+      // newTransaction = {
+      //   bookId: req.bookId,
+      //   memberId: req.memberId,
+      //   returnDate: null,
+      //   dueDate: formattedDueDate,
+      //   issueDate: formattedBorrowDate,
+      // };
+      // await trx.insert(transactionsTable).values(newTransaction).execute();
     });
     return {
       message: "Transaction Successful",
@@ -369,8 +381,8 @@ export async function getUserRequests(userId: number) {
   try {
     const requests = await db
       .select()
-      .from(requestsTable)
-      .where(eq(requestsTable.memberId, userId));
+      .from(transactionsTable)
+      .where(eq(transactionsTable.memberId, userId));
     return requests;
   } catch (error) {
     throw new Error("Error while fetching the requests");
@@ -381,30 +393,30 @@ export async function getRequestStatistics(
 ): Promise<RequestStatistics> {
   try {
     const totalRequestsResult = await db
-      .select({ count: count(requestsTable.id) })
-      .from(requestsTable)
-      .where(eq(requestsTable.memberId, memberId))
+      .select({ count: count(transactionsTable.id) })
+      .from(transactionsTable)
+      .where(eq(transactionsTable.memberId, memberId))
       .execute();
     const totalRequests = totalRequestsResult[0]?.count ?? 0;
     const approvedRequestsResult = await db
-      .select({ count: count(requestsTable.id) })
-      .from(requestsTable)
+      .select({ count: count(transactionsTable.id) })
+      .from(transactionsTable)
       .where(
         and(
-          eq(requestsTable.memberId, memberId),
-          eq(requestsTable.status, "Approved")
+          eq(transactionsTable.memberId, memberId),
+          eq(transactionsTable.status, "Approved")
         )
       )
       .execute();
     const approvedRequests = approvedRequestsResult[0]?.count ?? 0;
 
     const pendingRequestsResult = await db
-      .select({ count: count(requestsTable.id) })
-      .from(requestsTable)
+      .select({ count: count(transactionsTable.id) })
+      .from(transactionsTable)
       .where(
         and(
-          eq(requestsTable.memberId, memberId),
-          eq(requestsTable.status, "pending")
+          eq(transactionsTable.memberId, memberId),
+          eq(transactionsTable.status, "pending")
         )
       )
       .execute();
@@ -421,16 +433,16 @@ export async function getRequestStatistics(
 export async function getRecentApprovedRequestsWithBooks(userId: number) {
   const requestsWithBooks = await db
     .select({
-      requestId: requestsTable.id,
-      bookId: requestsTable.bookId,
+      requestId:transactionsTable.id,
+      bookId:transactionsTable.bookId,
       bookTitle: booksTable.title,
     })
-    .from(requestsTable)
-    .leftJoin(booksTable, eq(requestsTable.bookId, booksTable.id))
+    .from(transactionsTable)
+    .leftJoin(booksTable, eq(transactionsTable.bookId, booksTable.id))
     .where(
       and(
-        eq(requestsTable.memberId, userId),
-        eq(requestsTable.status, "Approved")
+        eq(transactionsTable.memberId, userId),
+        eq(transactionsTable.status, "Approved")
       )
     )
 

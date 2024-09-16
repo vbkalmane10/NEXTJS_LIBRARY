@@ -61,6 +61,9 @@ export interface Request {
   isbnNo: string;
   status: string | null;
   firstName?: string | null;
+  issueDate: string | null;
+  returnDate: string | null;
+  dueDate: string | null;
 }
 export interface RequestStatistics {
   totalRequests: number;

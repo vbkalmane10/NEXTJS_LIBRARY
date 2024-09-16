@@ -102,16 +102,16 @@ const LoginPage = () => {
               />
             </div>
             <div className="space-y-2">
-              {/* <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <Link
+                {/* <Link
                   href="#"
                   className="text-sm text-muted-foreground hover:underline"
                   prefetch={false}
                 >
                   Forgot password?
-                </Link>
-              </div> */}
+                </Link> */}
+              </div>
               <Input
                 id="password"
                 type="password"
@@ -152,7 +152,7 @@ const LoginPage = () => {
           </div>
 
           <p className="text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
+            Dont have a account ?{""}
             <Link
               href="/signup"
               className="underline hover:text-primary"

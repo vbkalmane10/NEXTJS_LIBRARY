@@ -25,6 +25,7 @@ export default async function Page({
   }
 
   const userId = session.user?.id;
+  const userName = session.user?.name;
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const booksPerPage = 8;
@@ -54,7 +55,12 @@ export default async function Page({
 
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {books.map((book) => (
-          <BookCard key={book.id} book={book} userId={userId} />
+          <BookCard
+            key={book.id}
+            book={book}
+            userId={userId}
+            username={userName}
+          />
         ))}
       </div>
 

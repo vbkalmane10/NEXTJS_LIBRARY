@@ -49,7 +49,7 @@ const EditBookPage = ({ params }: { params: { id: number } }) => {
           title: "Success",
           description: result.message,
           duration: 1000,
-          className: "bg-green-700 text-white",
+          className: "bg-green-400 text-white",
         });
         router.push("/admin/viewmember");
       } else {

@@ -30,8 +30,9 @@ interface Book {
 interface BookCardProps {
   book: iBook;
   userId: number | undefined;
+  username: string;
 }
-export default function BookCard({ book, userId }: BookCardProps) {
+export default function BookCard({ book, userId, username }: BookCardProps) {
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +53,10 @@ export default function BookCard({ book, userId }: BookCardProps) {
         bookTitle: book.title,
         isbnNo: book.isbnNo,
         status: "Pending",
+        issueDate: null,
+        returnDate: null,
+        dueDate: null,
+        firstName: username,
       };
 
       const result = await handleCreateRequest(request);
