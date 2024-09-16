@@ -41,7 +41,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
       membershipStatus: value,
     });
   };
-  
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
@@ -68,7 +68,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
             <Input
               type="text"
               name="lastName"
-              value={formData.lastName}
+              value={formData.lastName ?? ""}
               onChange={handleChange}
               placeholder="Last Name"
               required
@@ -90,7 +90,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
             <Input
               type="text"
               name="phoneNumber"
-              value={formData.phoneNumber}
+              value={formData.phoneNumber ?? ""}
               onChange={handleChange}
               placeholder="Phone Number"
             />
@@ -100,15 +100,17 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
             <Input
               type="text"
               name="address"
-              value={formData.address}
+              value={formData.address ?? ""}
               onChange={handleChange}
               placeholder="Address"
-              
             />
           </div>
           <div>
             <Label htmlFor="membershipStatus">Membership Status</Label>
-             <Select value={formData.membershipStatus} onValueChange={handleStatusChange}>
+            <Select
+              value={formData.membershipStatus}
+              onValueChange={handleStatusChange}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Status" />
               </SelectTrigger>
