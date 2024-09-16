@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 import GenreMenu from "@/components/Genre";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 
-
 export default async function Page({
   searchParams,
 }: {
