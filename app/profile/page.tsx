@@ -14,7 +14,7 @@ import {
   LogOut,
 } from "lucide-react";
 import Header from "@/components/Header";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { signOut, useSession } from "next-auth/react";
 import {
   fetchRecentlyBorrowedBooks,
@@ -59,7 +59,7 @@ export default function DisplayProfile() {
           const books = await fetchRecentlyBorrowedBooks(session.user.id);
           const user = await fetchUserDetails(session?.user.id);
           setUserInfo(user);
-          setRecentBooks(books);
+          setRecentBooks(recentBooks);
           setStatistics(stats);
         } catch (error) {
           console.error("Error fetching request statistics:", error);
@@ -68,7 +68,7 @@ export default function DisplayProfile() {
     };
 
     loadStatistics();
-  }, [session]);
+  }, [session, recentBooks]);
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/" });
@@ -155,103 +155,104 @@ export default function DisplayProfile() {
                 </Button>
               </div>
             </div>
-
-            <div className="md:w-2/3 p-6 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    id="firstName"
-                    name="firstName"
-                    value={userInfo.firstName}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    name="lastName"
-                    value={userInfo.lastName}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={userInfo.email}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="address">Address</Label>
-                <Input
-                  id="address"
-                  name="address"
-                  value={userInfo.address}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phoneNumber">Phone Number</Label>
-                <Input
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  value={userInfo.phoneNumber}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                />
-              </div>
-
-              <div className="mt-6">
-                <CardContent className="p-4 grid gap-4">
-                  <h3 className="text-xl font-semibold">Transactions</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <Card className="flex-1">
-                      <CardContent className="flex flex-col items-center justify-center p-2">
-                        <NotebookTabs className="h-6 w-6 text-primary" />
-                        <div className="text-lg font-bold mt-1">
-                          {statistics.totalRequests}
-                        </div>
-                        <p className="text-muted-foreground text-sm">
-                          Total books requested
-                        </p>
-                      </CardContent>
-                    </Card>
-                    <Card className="flex-1">
-                      <CardContent className="flex flex-col items-center justify-center p-2">
-                        <ShieldCheck className="h-6 w-6 text-green-500" />
-                        <div className="text-lg font-bold mt-1">
-                          {statistics.approvedRequests}
-                        </div>
-                        <p className="text-muted-foreground text-sm">
-                          Approved requests
-                        </p>
-                      </CardContent>
-                    </Card>
-                    <Card className="flex-1">
-                      <CardContent className="flex flex-col items-center justify-center p-2">
-                        <Clock className="h-6 w-6 text-yellow-500" />
-                        <div className="text-lg font-bold mt-1">
-                          {statistics.pendingRequests}
-                        </div>
-                        <p className="text-muted-foreground text-sm">
-                          Pending requests
-                        </p>
-                      </CardContent>
-                    </Card>
+            <Suspense fallback={<p>Loading profile...</p>}>
+              <div className="md:w-2/3 p-6 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input
+                      id="firstName"
+                      name="firstName"
+                      value={userInfo.firstName}
+                      onChange={handleInputChange}
+                      disabled={!isEditing}
+                    />
                   </div>
-                </CardContent>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      name="lastName"
+                      value={userInfo.lastName}
+                      onChange={handleInputChange}
+                      disabled={!isEditing}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={userInfo.email}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="address">Address</Label>
+                  <Input
+                    id="address"
+                    name="address"
+                    value={userInfo.address}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phoneNumber">Phone Number</Label>
+                  <Input
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    value={userInfo.phoneNumber}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                  />
+                </div>
+
+                <div className="mt-6">
+                  <CardContent className="p-4 grid gap-4">
+                    <h3 className="text-xl font-semibold">Transactions</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <Card className="flex-1">
+                        <CardContent className="flex flex-col items-center justify-center p-2">
+                          <NotebookTabs className="h-6 w-6 text-primary" />
+                          <div className="text-lg font-bold mt-1">
+                            {statistics.totalRequests}
+                          </div>
+                          <p className="text-muted-foreground text-sm">
+                            Total books requested
+                          </p>
+                        </CardContent>
+                      </Card>
+                      <Card className="flex-1">
+                        <CardContent className="flex flex-col items-center justify-center p-2">
+                          <ShieldCheck className="h-6 w-6 text-green-500" />
+                          <div className="text-lg font-bold mt-1">
+                            {statistics.approvedRequests}
+                          </div>
+                          <p className="text-muted-foreground text-sm">
+                            Approved requests
+                          </p>
+                        </CardContent>
+                      </Card>
+                      <Card className="flex-1">
+                        <CardContent className="flex flex-col items-center justify-center p-2">
+                          <Clock className="h-6 w-6 text-yellow-500" />
+                          <div className="text-lg font-bold mt-1">
+                            {statistics.pendingRequests}
+                          </div>
+                          <p className="text-muted-foreground text-sm">
+                            Pending requests
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CardContent>
+                </div>
               </div>
-            </div>
+            </Suspense>
           </div>
         </CardContent>
       </Card>

@@ -4,7 +4,6 @@ import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
 import { db } from "@/db";
 import { membersTable } from "@/db/schema";
-
 import { iMember, Session, Token } from "@/lib/types";
 import { getUserByEmail } from "@/lib/repository";
 
@@ -52,36 +51,25 @@ const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: Token; user?: any }) {
+    async jwt(token, user) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.name = `${user.firstName || ""} ${user.lastName || ""}`.trim();
         token.role = user.role;
       }
-
       return token;
     },
-    async session({ session, token }: { session: Session; token: Token }) {
+    async session(session, token) {
       session.user = {
-        id: token.id as number,
-        email: token.email as string,
-        name: token.name as string,
-        role: token.role as string,
+        id: token.id,
+        email: token.email,
+        name: token.name,
+        role: token.role,
       };
-
       return session;
     },
-    // async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
-    //   if (url.startsWith(`${baseUrl}/admin`) && url.includes("admin")) {
-    //     return baseUrl;
-    //   }
-    //   if (url.startsWith(baseUrl)) {
-    //     return `${baseUrl}/books`;
-    //   }
-    //   return baseUrl;
-    // },
-    async signIn({ user, account }: { user: any; account: any }) {
+    async signIn( user, account ) {
       if (account.provider === "google") {
         const email = user.email;
         const fullName = user.name || "";
@@ -93,7 +81,7 @@ const authOptions = {
         const existingUsers = await getUserByEmail(email);
 
         if (!existingUsers) {
-          const newUser: iMember = {
+          const newUser = {
             email,
             firstName: firstName || "",
             lastName: lastName || "",

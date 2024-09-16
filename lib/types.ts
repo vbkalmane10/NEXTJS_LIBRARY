@@ -1,5 +1,5 @@
 import { JWT } from "next-auth/jwt";
-import NextAuth from "next-auth";
+import NextAuth, { DefaultSession } from "next-auth";
 export interface iMemberBase {
   firstName: string;
   lastName: string | null;
@@ -71,12 +71,13 @@ export interface RequestStatistics {
   pendingRequests: number;
 }
 declare module "next-auth" {
-  interface Session {
+  interface Session extends DefaultSession {
     user: {
       id: number;
       email: string;
       name: string;
       role: string;
+      expires?: string;
     };
   }
 
