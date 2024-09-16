@@ -46,7 +46,7 @@ const LoginPage = () => {
       });
 
       if (result?.ok) {
-        router.push("/books");
+        router.push("/404");
       } else if (result?.error) {
         switch (result.error) {
           case "CredentialsSignin":
