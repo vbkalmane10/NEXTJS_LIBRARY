@@ -4,18 +4,16 @@ import React, { useState } from "react";
 import * as LucideIcons from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut, Menu, User } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { Menu, User } from "lucide-react";
+
+// Explicit typing for the icon mapping
 type IconName = keyof typeof LucideIcons;
 interface NavItem {
   href: string;
   icon: IconName;
   text: string;
 }
-type IconComponentProps = {
-  size: number;
-  className?: string;
-};
+
 interface SideNavProps {
   navItems: NavItem[];
   userName: string | undefined;
@@ -61,9 +59,8 @@ const SideNav: React.FC<SideNavProps> = ({ navItems, userName }) => {
           <div className="flex flex-col flex-grow px-4 mt-4 py-4">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
-              const IconComponent = LucideIcons[
-                item.icon
-              ] as React.FC<IconComponentProps>;
+              const IconComponent = LucideIcons[item.icon];
+
               return (
                 <Link
                   key={item.href}
@@ -74,10 +71,10 @@ const SideNav: React.FC<SideNavProps> = ({ navItems, userName }) => {
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
-                  <IconComponent
+                  {/* <IconComponent
                     size={20}
                     className={isActive ? "text-blue-700" : "text-gray-700"}
-                  />
+                  /> */}
                   <span className={`ml-3 ${isActive ? "font-medium" : ""}`}>
                     {item.text}
                   </span>
@@ -85,16 +82,6 @@ const SideNav: React.FC<SideNavProps> = ({ navItems, userName }) => {
               );
             })}
           </div>
-
-          {/* <div className="px-4 mb-8">
-            <button
-              className="flex items-center w-full px-4 py-2 text-black  hover:bg-red-500 rounded-md transition-colors duration-200"
-              onClick={() => signOut({ callbackUrl: "/" })}
-            >
-              <LogOut size={20} className="mr-3" />
-              Logout
-            </button>
-          </div> */}
         </nav>
       </div>
     </>
