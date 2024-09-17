@@ -68,7 +68,7 @@ export default function DisplayProfile() {
               phoneNumber: user.phoneNumber || "",
               membershipStatus: user.membershipStatus || "",
               role: user.role || "",
-              password: "",
+              password: user.password || "",
             });
           } else {
             console.error("User not found");
@@ -91,8 +91,8 @@ export default function DisplayProfile() {
   const toggleEdit = async () => {
     if (isEditing) {
       try {
-        console.log("This is the userInfo", userInfo.membershipStatus);
         const response = await handleUserUpdate(session!.user.id, userInfo);
+        console.log(userInfo);
         if (!response.success) {
           toast({
             title: "Error updating user info",
