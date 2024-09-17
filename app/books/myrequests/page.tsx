@@ -1,27 +1,37 @@
-import { useEffect, useState } from "react";
+"use client ";
 import RequestCard from "@/components/RequestCard";
 import { useSession } from "next-auth/react";
 import { fetchUserRequest } from "@/lib/actions";
 import { getServerSession } from "next-auth";
 import { Request } from "@/lib/types";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+import { useEffect, useState } from "react";
 
 const MyRequestsPage = async () => {
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
+  const { data: session, status } = useSession();
+  const [requests, setRequests] = useState<Request[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  let requests: Request[] = [];
-  let loading = false;
+  useEffect(() => {
+    const fetchRequests = async () => {
+      if (status === "authenticated" && session?.user?.id) {
+        try {
+          const userRequests = await fetchUserRequest(session.user.id);
+          setRequests(userRequests);
+        } catch (error) {
+          console.error("Failed to fetch user requests:", error);
+          setError("Failed to fetch user requests. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
 
-  if (userId) {
-    try {
-      requests = await fetchUserRequest(userId);
-    } catch (error) {
-      console.error("Failed to fetch user requests:", error);
-    }
-  } else {
-    loading = false;
-  }
+    fetchRequests();
+  }, [session, status]);
 
   if (loading) {
     return <p>Loading requests...</p>;
