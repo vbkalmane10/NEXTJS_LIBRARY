@@ -61,14 +61,14 @@ export default function DisplayProfile() {
           if (user) {
             setUserInfo({
               id: user.id,
-              firstName: user.firstName || "",  
-              lastName: user.lastName || "",    
+              firstName: user.firstName || "",
+              lastName: user.lastName || "",
               email: user.email,
-              address: user.address || "",      
-              phoneNumber: user.phoneNumber || "", 
+              address: user.address || "",
+              phoneNumber: user.phoneNumber || "",
               membershipStatus: user.membershipStatus || "",
               role: user.role || "",
-              password: "",  
+              password: "",
             });
           } else {
             console.error("User not found");
@@ -129,13 +129,13 @@ export default function DisplayProfile() {
                 <Avatar className="w-32 h-32 mb-4 border-2 border-white">
                   <AvatarImage src="/placeholder.svg?height=128&width=128" />
                   <AvatarFallback className="text-black font-semibold border border-black text-3xl">
-                    {session?.user?.name
-                      ? session.user.name.substring(0, 2).toUpperCase()
+                    {userInfo.firstName
+                      ? userInfo.firstName.substring(0, 2).toUpperCase()
                       : "U"}
                   </AvatarFallback>
                 </Avatar>
                 <h2 className="text-2xl font-bold text-center mb-4">
-                  {session?.user.name}
+                  {userInfo.firstName}
                 </h2>
                 <Button
                   onClick={toggleEdit}
