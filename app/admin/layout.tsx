@@ -1,3 +1,4 @@
+"use client";
 import Header from "@/components/Header";
 import NavBar from "@/components/Navbar";
 import SideNav from "@/components/SideNav";
@@ -8,11 +9,7 @@ import { BookOpenText, Library, Users, User } from "lucide-react";
 import { getUserById } from "@/lib/repository";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
   const [userName, setUserName] = useState<string>("");
   useEffect(() => {
