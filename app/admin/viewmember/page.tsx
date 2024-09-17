@@ -32,21 +32,20 @@ export default function Page({
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const router = useRouter();
-  useEffect(() => {
-    async function loadUsers() {
-      try {
-        const { users, totalPages } = await getUsers(query, currentPage, 8);
-        setUsers(users);
-        setTotalPages(totalPages);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to fetch users.",
-          variant: "destructive",
-        });
-      }
+  async function loadUsers() {
+    try {
+      const { users, totalPages } = await getUsers(query, currentPage, 8);
+      setUsers(users);
+      setTotalPages(totalPages);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch users.",
+        variant: "destructive",
+      });
     }
-
+  }
+  useEffect(() => {
     loadUsers();
   }, [query, currentPage]);
   const handleDelete = async (id: number) => {
@@ -59,7 +58,7 @@ export default function Page({
           className: "bg-green-400 text-white",
           duration: 1000,
         });
-        router.refresh();
+        loadUsers();
       }
     } catch (error) {
       toast({
