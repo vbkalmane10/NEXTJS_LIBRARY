@@ -9,6 +9,15 @@ import { getUserByEmail } from "@/lib/repository";
 
 const authOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.CLIENT_ID || "",
+      clientSecret: process.env.CLIENT_SECRET || "",
+      authorization: {
+        params: {
+          scope: "profile email",
+        },
+      },
+    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -40,18 +49,9 @@ const authOptions = {
         };
       },
     }),
-    GoogleProvider({
-      clientId: process.env.CLIENT_ID || "",
-      clientSecret: process.env.CLIENT_SECRET || "",
-      authorization: {
-        params: {
-          scope: "profile email",
-        },
-      },
-    }),
   ],
   callbacks: {
-    async jwt(token, user) {
+    async jwt({ token, user }: { token: Token; user?: any }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -60,16 +60,16 @@ const authOptions = {
       }
       return token;
     },
-    async session(session, token) {
+    async session({ session, token }: { session: Session; token: Token }) {
       session.user = {
-        id: token.id,
-        email: token.email,
-        name: token.name,
-        role: token.role,
+        id: token.id as number,
+        email: token.email as string,
+        name: token.name as string,
+        role: token.role as string,
       };
       return session;
     },
-    async signIn( user, account ) {
+    async signIn({ user, account }: { user: any; account: any }) {
       if (account.provider === "google") {
         const email = user.email;
         const fullName = user.name || "";
