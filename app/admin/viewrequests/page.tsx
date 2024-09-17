@@ -1,7 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import RequestTable from "@/components/Requests";
-import { getRequests, handleApproveRequest, handleRejectRequest } from "@/lib/actions";
+import {
+  getRequests,
+  handleApproveRequest,
+  handleRejectRequest,
+} from "@/lib/actions";
 import { Request } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 import { useSearchParams } from "next/navigation";
@@ -53,7 +57,7 @@ const ViewRequestPage: React.FC = () => {
       if (result) {
         setRequests((prevRequests) =>
           prevRequests.map((req) =>
-            req.id === request.id ? { ...req, status: "Approved" } : req
+            req.id === request.id ? { ...req, status: "Rejected" } : req
           )
         );
         revalidatePath("/books/viewrequests");
