@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 interface RequestTableProps {
   requests: Request[];
   onApprove: (request: Request) => void;
-  onReject: (id: number) => void;
+  onReject: (request: Request) => void;
 }
 
 const RequestTable: React.FC<RequestTableProps> = ({
@@ -52,7 +52,7 @@ const RequestTable: React.FC<RequestTableProps> = ({
                         <Check />
                       </button>
                       <button
-                        onClick={() => onReject(request.id)}
+                        onClick={() => onReject(request)}
                         className="hover:bg-red-400 p-2 rounded"
                       >
                         <X />
@@ -111,7 +111,7 @@ const RequestTable: React.FC<RequestTableProps> = ({
                           <Check />
                         </button>
                         <button
-                          onClick={() => onReject(request.id)}
+                          onClick={() => onReject(request)}
                           className="hover:bg-red-400 p-2 rounded"
                         >
                           <X />

@@ -268,6 +268,66 @@ export async function approveRequest(
     };
   }
 }
+export async function rejectRequest(
+  req: Request
+): Promise<{ message: string; transaction: iTransaction | undefined }> {
+  const issueDate = new Date();
+  const formattedBorrowDate = issueDate.toISOString().split("T")[0];
+  const dueDate = new Date(issueDate);
+  dueDate.setDate(issueDate.getDate() + 14);
+  const formattedDueDate = dueDate.toISOString().split("T")[0];
+  try {
+    let newTransaction: iTransaction | undefined;
+    await db.transaction(async (trx) => {
+      const request = await trx
+        .select()
+        .from(transactionsTable)
+        .where(eq(transactionsTable.id, req.id))
+        .execute();
+      if (!request) {
+        throw new Error("Request not found");
+      }
+      if (req.status === "Approved") {
+        throw new Error("Request already approved");
+      }
+      const existingBook = await trx
+        .select()
+        .from(booksTable)
+        .where(eq(booksTable.id, req.bookId));
+      if (!existingBook) {
+        throw new Error("Book not found");
+      }
+
+      await trx
+        .update(transactionsTable)
+        .set({
+          status: "Rejected",
+          returnDate: null,
+          dueDate: formattedDueDate,
+          issueDate: formattedBorrowDate,
+        })
+        .where(eq(transactionsTable.id, req.id));
+
+      // newTransaction = {
+      //   bookId: req.bookId,
+      //   memberId: req.memberId,
+      //   returnDate: null,
+      //   dueDate: formattedDueDate,
+      //   issueDate: formattedBorrowDate,
+      // };
+      // await trx.insert(transactionsTable).values(newTransaction).execute();
+    });
+    return {
+      message: "Transaction Successful",
+      transaction: newTransaction,
+    };
+  } catch (error: any) {
+    return {
+      message: error.message,
+      transaction: undefined,
+    };
+  }
+}
 export async function deleteBook(
   isbnNo: string
 ): Promise<{ message: string; book?: iBook }> {

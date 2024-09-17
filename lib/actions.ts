@@ -27,6 +27,7 @@ import {
   getRecentApprovedRequestsWithBooks,
   getUserById,
   deleteMember,
+  rejectRequest,
 } from "./repository";
 import { revalidatePath } from "next/cache";
 
@@ -152,6 +153,18 @@ export async function handleApproveRequest(request: Request) {
     console.log("Error inside handle approve");
   }
 }
+export async function handleRejectRequest(request: Request) {
+  try {
+    const result = await rejectRequest(request);
+    if (result !== undefined) {
+      return result;
+    } else {
+      throw new Error("Error");
+    }
+  } catch (error) {
+    console.log("Error while rejecting request");
+  }
+}
 export const fetchBookDetails = async (
   isbnNo: string
 ): Promise<iBook | null> => {
@@ -225,7 +238,7 @@ export const handleUserUpdate = async (id: number, updatedUser: iMember) => {
 export const handleUserDelete = async (id: number) => {
   try {
     await deleteMember(id);
-    
+
     return { success: true, message: "User deleted successfully!" };
   } catch (error) {
     console.error("Error deleting user:", error);

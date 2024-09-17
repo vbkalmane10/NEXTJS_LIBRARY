@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import RequestTable from "@/components/Requests";
-import { getRequests, handleApproveRequest } from "@/lib/actions";
+import { getRequests, handleApproveRequest, handleRejectRequest } from "@/lib/actions";
 import { Request } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 import { useSearchParams } from "next/navigation";
@@ -19,7 +19,7 @@ const ViewRequestPage: React.FC = () => {
       try {
         const fetchedRequests = await getRequests(page);
         setRequests(fetchedRequests.data);
-        
+
         setTotalPages(fetchedRequests.totalPages);
         setLoading(false);
       } catch (error: any) {
@@ -47,8 +47,20 @@ const ViewRequestPage: React.FC = () => {
     }
   };
 
-  const handleReject = async (id: number) => {
-    console.log("Rejected request with ID:", id);
+  const handleReject = async (request: Request) => {
+    try {
+      const result = await handleRejectRequest(request);
+      if (result) {
+        setRequests((prevRequests) =>
+          prevRequests.map((req) =>
+            req.id === request.id ? { ...req, status: "Approved" } : req
+          )
+        );
+        revalidatePath("/books/viewrequests");
+      }
+    } catch (error) {
+      console.log("Error while rejecting");
+    }
   };
 
   if (loading) return <p>Loading requests...</p>;
