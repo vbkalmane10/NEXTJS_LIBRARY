@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import * as LucideIcons from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, User } from "lucide-react";
+import { Menu, User, LucideIcon } from "lucide-react";
 
 interface NavItem {
   href: string;

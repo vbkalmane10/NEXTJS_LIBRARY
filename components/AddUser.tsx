@@ -54,7 +54,7 @@ export default function AddBook() {
           title: "Success",
           description: result.message,
           variant: "destructive",
-          className: "bg-green-700",
+          className: "bg-green-400 text-white",
           duration: 1000,
         });
         setIsModalOpen(false);
