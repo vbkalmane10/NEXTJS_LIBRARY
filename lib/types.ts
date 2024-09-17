@@ -71,6 +71,23 @@ export interface RequestStatistics {
   approvedRequests: number;
   pendingRequests: number;
 }
+export interface ProfileContentProps {
+  userInfo: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    address: string;
+    phoneNumber: string;
+    membershipStatus: string;
+    role: string;
+    password: string;
+  };
+  statistics: RequestStatistics;
+  isEditing: boolean;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  toggleEdit: () => void;
+}
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
