@@ -1,3 +1,4 @@
+"use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -100,7 +101,6 @@ export default function DisplayProfile() {
             className: "bg-green-400 text-white",
             duration: 1000,
           });
-          
         }
       } catch (error) {
         console.error("Error updating user:", error);
