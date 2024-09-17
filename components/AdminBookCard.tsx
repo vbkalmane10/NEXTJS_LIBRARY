@@ -1,16 +1,16 @@
-"use client";
-import React from "react";
-import { Edit, Trash2, Trash } from "lucide-react";
-import { iBook } from "@/lib/types";
+'use client'
+
+import React, { useState } from "react"
+import { Edit, Trash2, ArrowUpDown } from "lucide-react"
+import { iBook } from "@/lib/types"
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,24 +21,33 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+
 interface AdminBookTableProps {
-  books: iBook[];
-  onEdit: (isbnNo: string) => void;
-  onDelete: (isbnNo: string) => void;
+  books: iBook[]
+  onEdit: (isbnNo: string) => void
+  onDelete: (isbnNo: string) => void
 }
 
-const AdminBookTable: React.FC<AdminBookTableProps> = ({
-  books,
-  onEdit,
-  onDelete,
-}) => {
+export default function AdminBookTable({ books, onEdit, onDelete }: AdminBookTableProps) {
+  const [sortedBooks, setSortedBooks] = useState(books)
+  const [isSorted, setIsSorted] = useState(false)
+
+  const handleSort = () => {
+    const sorted = [...sortedBooks].sort((a, b) => 
+      a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+    )
+    setSortedBooks(isSorted ? books : sorted)
+    setIsSorted(!isSorted)
+  }
+
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {books?.map((book, index) => (
+            {sortedBooks?.map((book, index) => (
               <div
                 key={book.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
@@ -51,26 +60,28 @@ const AdminBookTable: React.FC<AdminBookTableProps> = ({
                     <p className="text-sm text-gray-500">
                       Author: {book.author}
                     </p>
-
                     <p className="text-sm text-gray-500">ISBN: {book.isbnNo}</p>
                     <p className="text-sm text-gray-500">
                       Available Copies: {book.availableCopies}
                     </p>
                   </div>
-
                   <div className="flex gap-2">
-                    <button
+                    <Button
                       onClick={() => onEdit(book.isbnNo)}
-                      className="hover:bg-green-400 p-2 rounded"
+                      variant="ghost"
+                      size="icon"
+                      className="hover:bg-green-400"
                     >
-                      <Edit />
-                    </button>
-                    <button
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
                       onClick={() => onDelete(book.isbnNo)}
-                      className="hover:bg-red-400 p-2 rounded"
+                      variant="ghost"
+                      size="icon"
+                      className="hover:bg-red-400"
                     >
-                      <Trash2 />
-                    </button>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -81,9 +92,17 @@ const AdminBookTable: React.FC<AdminBookTableProps> = ({
             <TableHeader>
               <TableRow>
                 <TableHead className="px-4 py-5 font-medium">S.No</TableHead>
-                <TableHead className="px-4 py-5 font-medium">Title</TableHead>
+                <TableHead className="px-4 py-5 font-medium">
+                  <Button
+                    variant="ghost"
+                    onClick={handleSort}
+                    className="hover:bg-transparent"
+                  >
+                    Title
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </TableHead>
                 <TableHead className="px-4 py-5 font-medium">Author</TableHead>
-
                 <TableHead className="px-4 py-5 font-medium">
                   ISBN Number
                 </TableHead>
@@ -93,8 +112,8 @@ const AdminBookTable: React.FC<AdminBookTableProps> = ({
                 <TableHead className="px-4 py-5 font-medium">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            <tbody className="bg-white">
-              {books?.map((book, index) => (
+            <TableBody>
+              {sortedBooks?.map((book, index) => (
                 <TableRow key={book.id}>
                   <TableCell className="whitespace-nowrap py-3 pl-6 pr-3">
                     {index + 1}
@@ -105,27 +124,31 @@ const AdminBookTable: React.FC<AdminBookTableProps> = ({
                   <TableCell className="whitespace-nowrap px-3 py-3">
                     {book.author}
                   </TableCell>
-
                   <TableCell className="whitespace-nowrap px-3 py-3">
                     {book.isbnNo}
                   </TableCell>
-                  <TableCell className="whitespace-nowrap px-3 py-3 flex justify-center items-center">
+                  <TableCell className="whitespace-nowrap px-3 py-3 text-center">
                     {book.availableCopies}
                   </TableCell>
-                  <TableCell className="whitespace-nowrap py-3  pr-3">
+                  <TableCell className="whitespace-nowrap py-3 pr-3">
                     <div className="flex justify-start gap-2">
-                      <button
+                      <Button
                         onClick={() => onEdit(book.isbnNo)}
-                        className="hover:bg-green-400 p-2 rounded"
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-green-400"
                       >
-                        <Edit size={16} />
-                      </button>
-
+                        <Edit className="h-4 w-4" />
+                      </Button>
                       <AlertDialog>
-                        <AlertDialogTrigger>
-                          <button className="hover:bg-red-400 p-2 rounded">
-                            <Trash2 size={16} />
-                          </button>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="hover:bg-red-400"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
@@ -151,12 +174,10 @@ const AdminBookTable: React.FC<AdminBookTableProps> = ({
                   </TableCell>
                 </TableRow>
               ))}
-            </tbody>
+            </TableBody>
           </Table>
         </div>
       </div>
     </div>
-  );
-};
-
-export default AdminBookTable;
+  )
+}

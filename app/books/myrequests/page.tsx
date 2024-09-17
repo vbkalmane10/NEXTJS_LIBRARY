@@ -7,7 +7,7 @@ import { Request } from "@/lib/types";
 
 import { useEffect, useState } from "react";
 
-const MyRequestsPage =  () => {
+const MyRequestsPage = () => {
   const { data: session, status } = useSession();
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +34,11 @@ const MyRequestsPage =  () => {
   }, [session, status]);
 
   if (loading) {
-    return <p>Loading requests...</p>;
+    return (
+      <p>
+        Loading requests...
+      </p>
+    );
   }
 
   if (requests.length === 0) {
