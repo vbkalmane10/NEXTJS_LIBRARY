@@ -3,7 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Search from "@/components/search";
 import Pagination from "@/components/Pagination";
-import { fetchBooks, getUsers, handleDeleteBook, handleUserDelete } from "@/lib/actions";
+import {
+  fetchBooks,
+  getUsers,
+  handleDeleteBook,
+  handleUserDelete,
+} from "@/lib/actions";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AdminBookTable from "@/components/AdminBookCard";
@@ -54,8 +59,7 @@ export default function Page({
           className: "bg-green-400 text-white",
           duration: 1000,
         });
-
-        
+        router.refresh();
       }
     } catch (error) {
       toast({

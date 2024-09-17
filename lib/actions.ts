@@ -225,7 +225,7 @@ export const handleUserUpdate = async (id: number, updatedUser: iMember) => {
 export const handleUserDelete = async (id: number) => {
   try {
     await deleteMember(id);
-    revalidatePath("/admin/viewmember");
+    
     return { success: true, message: "User deleted successfully!" };
   } catch (error) {
     console.error("Error deleting user:", error);
