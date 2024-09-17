@@ -47,6 +47,7 @@ const LoginPage = () => {
 
       if (result?.ok) {
         router.replace("/books");
+        window.location.reload();
       } else if (result?.error) {
         switch (result.error) {
           case "CredentialsSignin":
