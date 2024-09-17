@@ -100,6 +100,9 @@ export default function BookCard({ book, userId, username }: BookCardProps) {
         <p className="text-sm text-gray-500 line-clamp-1">
           ISBN: {book.isbnNo}
         </p>
+        <p className="text-sm text-gray-500 line-clamp-1">
+          Price: {book.price}
+        </p>
       </div>
 
       <div className="flex gap-2 mt-4">

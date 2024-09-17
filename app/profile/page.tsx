@@ -34,7 +34,7 @@ export default function DisplayProfile() {
     pendingRequests: 0,
   });
   const [isEditing, setIsEditing] = useState(false);
-  const [recentBooks, setRecentBooks] = useState([]);
+
   const [userInfo, setUserInfo] = useState({
     id: 0,
     firstName: "",

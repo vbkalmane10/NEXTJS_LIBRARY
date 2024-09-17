@@ -1,30 +1,17 @@
-"use client";
 import Header from "@/components/Header";
 
 import SideNav from "@/components/SideNav";
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import * as LucideIcons from "lucide-react";
 import { getUserById } from "@/lib/repository";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-export default function Layout({ children }: { children: React.ReactNode }) {
-  const { data: session, status } = useSession();
-  const [userName, setUserName] = useState<string>("");
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (session?.user?.id) {
-        try {
-          const user = await getUserById(session.user.id);
-          setUserName(user?.firstName || "User");
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-    };
-
-    if (session?.user?.id) {
-      fetchUserData();
-    }
-  }, [session]);
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await getServerSession(authOptions);
+  const userName = await getUserById(session.user?.id);
   const navItems = [
     { href: "/books", text: "Books" },
     {
@@ -32,12 +19,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       text: "My Requests",
     },
-
+    // { href: "/books/mybooks", text: "My Books" },
+    // { href: "/books/favorites", text: "My Favorites" },
     { href: "/profile", text: "My Profile" },
   ];
   return (
     <div className="flex h-screen w-full">
-      <SideNav navItems={navItems} userName={userName} />
+      <SideNav navItems={navItems} userName={userName?.firstName} />
 
       <div className="flex flex-col flex-1">
         <Header />

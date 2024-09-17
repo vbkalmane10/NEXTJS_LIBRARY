@@ -38,6 +38,7 @@ export interface iBookBase {
   isbnNo: string;
   pages: number;
   totalCopies: number;
+  price: number;
 }
 export interface iBook extends iBookBase {
   id: number;
