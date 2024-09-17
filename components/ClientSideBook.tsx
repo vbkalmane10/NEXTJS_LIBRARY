@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BookCard from "./BookCard";
 import Pagination from "./Pagination";
 import Search from "./search";
@@ -12,21 +12,27 @@ interface BookProps {
   userName: string;
   currentPage: number;
   totalPages: number;
+  query: string;
 }
+
 export default function ClientSideBooks({
   books,
   userId,
   userName,
   currentPage,
   totalPages,
+  query,
 }: BookProps) {
-  const [sortBy, setSortBy] = useState("");
-  const [sortedBooks, setSortedBooks] = useState(books);
+  const [sortBy, setSortBy] = useState<string>("");
+  const [sortedBooks, setSortedBooks] = useState<iBook[]>(books);
 
-  const handleSortChange = (event: { target: { value: any } }) => {
+  useEffect(() => {
+    setSortedBooks(sortBooksBy(books, sortBy));
+  }, [books, sortBy]);
+
+  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSort = event.target.value;
     setSortBy(selectedSort);
-    setSortedBooks(sortBooksBy(books, selectedSort));
   };
 
   return (
@@ -37,7 +43,6 @@ export default function ClientSideBooks({
 
       <div className="mt-4 flex gap-4 items-center">
         <Search placeholder="Search books..." />
-
         <select
           className="p-2 border border-gray-300 rounded"
           value={sortBy}
@@ -68,7 +73,8 @@ export default function ClientSideBooks({
     </div>
   );
 }
-const sortBooksBy = (books: iBook[], sortBy: any) => {
+
+const sortBooksBy = (books: iBook[], sortBy: string) => {
   switch (sortBy) {
     case "title":
       return [...books].sort((a, b) => a.title.localeCompare(b.title));
