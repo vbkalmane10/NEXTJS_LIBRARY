@@ -39,7 +39,7 @@ const LoginPage = () => {
     setErrorMessage(null);
 
     try {
-      const result = await signIn(provider || "credentials", {
+      const result = await signIn("credentials", {
         redirect: false,
         email: formData.get("email"),
         password: formData.get("password"),

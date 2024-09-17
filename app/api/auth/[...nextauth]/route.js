@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { membersTable } from "@/db/schema";
 import { iMember, Session, Token } from "@/lib/types";
 import { getUserByEmail } from "@/lib/repository";
+import { AppEnvs } from "@/read_env";
 
 const authOptions = {
   providers: [
@@ -58,15 +59,17 @@ const authOptions = {
         token.name = `${user.firstName || ""} ${user.lastName || ""}`.trim();
         token.role = user.role;
       }
+      console.log(token);
       return token;
     },
     async session({ session, token }) {
       session.user = {
         id: token.id,
         email: token.email,
-        name: token.name ,
-        role: token.role ,
+        name: token.name,
+        role: token.role,
       };
+
       return session;
     },
     async signIn({ user, account }) {
@@ -101,7 +104,7 @@ const authOptions = {
       return true;
     },
   },
-  secret: process.env.NEXT_AUTH_SECRET,
+  secret: AppEnvs.NEXT_AUTH_SECRET,
   pages: {
     signIn: "/login",
   },

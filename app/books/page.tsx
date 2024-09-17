@@ -6,6 +6,8 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import GenreMenu from "@/components/Genre";
 import { authOptions } from "../api/auth/[...nextauth]/route";
+import { useState } from "react";
+import ClientSideBooks from "@/components/ClientSideBook";
 
 export default async function Page({
   searchParams,
@@ -33,32 +35,39 @@ export default async function Page({
     booksPerPage
   );
 
-
-
   return (
-    <div className="p-8">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="text-2xl font-bold">Books</h1>
-      </div>
-
-      <div className="mt-4 flex gap-4 items-center">
-        <Search placeholder="Search books..." />
-      </div>
-
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {books.map((book) => (
-          <BookCard
-            key={book.id}
-            book={book}
-            userId={userId}
-            username={userName}
-          />
-        ))}
-      </div>
-
-      <div className="mt-8 flex justify-center">
-        <Pagination currentPage={currentPage} totalPages={totalPages} />
-      </div>
-    </div>
+    <ClientSideBooks
+      books={books}
+      userId={userId}
+      userName={userName}
+      currentPage={currentPage}
+      totalPages={totalPages}
+    />
   );
+  // return (
+  //   <div className="p-8">
+  //     <div className="flex w-full items-center justify-between">
+  //       <h1 className="text-2xl font-bold">Books</h1>
+  //     </div>
+
+  //     <div className="mt-4 flex gap-4 items-center">
+  //       <Search placeholder="Search books..." />
+  //     </div>
+
+  //     <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+  //       {books.map((book) => (
+  //         <BookCard
+  //           key={book.id}
+  //           book={book}
+  //           userId={userId}
+  //           username={userName}
+  //         />
+  //       ))}
+  //     </div>
+
+  //     <div className="mt-8 flex justify-center">
+  //       <Pagination currentPage={currentPage} totalPages={totalPages} />
+  //     </div>
+  //   </div>
+  // );
 }
