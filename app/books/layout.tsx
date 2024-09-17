@@ -4,12 +4,14 @@ import SideNav from "@/components/SideNav";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import * as LucideIcons from "lucide-react";
+import { getUserById } from "@/lib/repository";
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
+  const userName = await getUserById(session.user?.name);
   const navItems = [
     { href: "/books", text: "Books" },
     {
@@ -23,7 +25,7 @@ export default async function Layout({
   ];
   return (
     <div className="flex h-screen w-full">
-      <SideNav navItems={navItems} userName={session?.user.name} />
+      <SideNav navItems={navItems} userName={userName?.firstName} />
 
       <div className="flex flex-col flex-1">
         <Header />
