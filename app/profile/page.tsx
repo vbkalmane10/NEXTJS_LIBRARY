@@ -21,7 +21,7 @@ import {
   fetchUserDetails,
   handleUserUpdate,
 } from "@/lib/actions";
-import { revalidatePath } from "next/cache";
+
 import { iMember, RequestStatistics } from "@/lib/types";
 
 export default function DisplayProfile() {
