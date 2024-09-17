@@ -74,6 +74,7 @@ export async function createBook(
       ...existingBook,
       totalCopies: updatedTotalCopies,
       availableCopies: updatedAvailableCopies,
+      price: 0,
     };
 
     return {
@@ -296,12 +297,23 @@ export async function deleteBook(
 export async function getBooksByIsbn(isbnNo: string): Promise<iBook | null> {
   try {
     const book = await db
-      .select()
+      .select({
+        id: booksTable.id,
+        title: booksTable.title,
+        author: booksTable.author,
+        publisher: booksTable.publisher,
+        genre: booksTable.genre,
+        isbnNo: booksTable.isbnNo,
+        pages: booksTable.pages,
+        totalCopies: booksTable.totalCopies,
+        availableCopies: booksTable.availableCopies,
+        price: booksTable.price,
+      })
       .from(booksTable)
       .where(eq(booksTable.isbnNo, isbnNo))
       .execute();
     if (book.length > 0) {
-      return book[0];
+      return book[0] as iBook;
     } else {
       return null;
     }
@@ -314,7 +326,6 @@ export async function updateBook(
   bookToUpdate: iBook
 ): Promise<iBook | null> {
   try {
-    // Perform the update operation
     await db
       .update(booksTable)
       .set(bookToUpdate)

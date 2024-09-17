@@ -20,6 +20,7 @@ export const booksTable = mysqlTable("books", {
   pages: int("pages").notNull(),
   totalCopies: int("totalCopies").notNull(),
   availableCopies: int("availableCopies").notNull(),
+  price: int("price"),
 });
 export const transactionsTable = mysqlTable("transactions", {
   id: int("id").primaryKey().autoincrement(),

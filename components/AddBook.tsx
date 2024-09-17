@@ -26,6 +26,7 @@ export default function AddBook() {
     pages: 1,
     totalCopies: 1,
     availableCopies: 1,
+    price: 1,
   });
 
   const [loading, setLoading] = useState(false);
@@ -38,7 +39,8 @@ export default function AddBook() {
     if (
       name === "pages" ||
       name === "totalCopies" ||
-      name === "availableCopies"
+      name === "availableCopies" ||
+      name === "price"
     ) {
       setFormData((prev) => ({
         ...prev,
@@ -81,6 +83,7 @@ export default function AddBook() {
           pages: 1,
           totalCopies: 1,
           availableCopies: 1,
+          price: 1,
         });
       }
     } catch (error) {
@@ -200,6 +203,17 @@ export default function AddBook() {
                       name="availableCopies"
                       placeholder="Available Copies"
                       value={formData.availableCopies}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="price">Price</Label>
+                    <Input
+                      type="number"
+                      name="price"
+                      placeholder="Price"
+                      value={formData.price}
                       onChange={handleChange}
                       required
                     />
