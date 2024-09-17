@@ -21,7 +21,7 @@ export default function Header() {
       {session && (
         <nav className="absolute right-6">
           <button onClick={toggleMenu} className="flex items-center gap-2">
-            <Link href="/profile">
+            <Link href="/books/profile">
               <Avatar className="h-10 w-10">
                 <AvatarFallback>
                   {session?.user?.name
