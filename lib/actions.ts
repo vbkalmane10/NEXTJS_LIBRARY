@@ -11,7 +11,6 @@ import {
   RequestStatistics,
 } from "./types";
 
-
 import {
   createBook,
   create,
@@ -27,7 +26,9 @@ import {
   getRequestStatistics,
   getRecentApprovedRequestsWithBooks,
   getUserById,
+  deleteMember,
 } from "./repository";
+import { revalidatePath } from "next/cache";
 
 export async function getUserId(email: string): Promise<number | null> {
   try {
@@ -217,7 +218,17 @@ export const handleUserUpdate = async (id: number, updatedUser: iMember) => {
     await updateMember(id, updatedUser);
     return { success: true, message: "User updated successfully!" };
   } catch (error) {
-    console.error("Error updating book:", error);
+    console.error("Error updating user:", error);
     return { success: false, message: "Failed to update the user." };
+  }
+};
+export const handleUserDelete = async (id: number) => {
+  try {
+    await deleteMember(id);
+    revalidatePath("/admin/viewmember");
+    return { success: true, message: "User deleted successfully!" };
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return { success: false, message: "Failed to delete the user." };
   }
 };

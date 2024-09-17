@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Search from "@/components/search";
 import Pagination from "@/components/Pagination";
-import { fetchBooks, getUsers, handleDeleteBook } from "@/lib/actions";
+import { fetchBooks, getUsers, handleDeleteBook, handleUserDelete } from "@/lib/actions";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AdminBookTable from "@/components/AdminBookCard";
@@ -44,6 +44,28 @@ export default function Page({
 
     loadUsers();
   }, [query, currentPage]);
+  const handleDelete = async (id: number) => {
+    try {
+      const result = await handleUserDelete(id);
+      if (result) {
+        toast({
+          title: "Success",
+          description: result.message,
+          className: "bg-green-400 text-white",
+          duration: 1000,
+        });
+
+        
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete book. Please try again.",
+        className: "bg-red-600 text-white",
+        duration: 1000,
+      });
+    }
+  };
   const handleEdit = (id: number) => {
     router.push(`/admin/editmember/${id}/edit`);
   };
@@ -61,9 +83,7 @@ export default function Page({
           <AdminUserTable
             users={users}
             onEdit={handleEdit}
-            onDelete={function (id: number): void {
-              throw new Error("Function not implemented.");
-            }}
+            onDelete={handleDelete}
           />
         </div>
         <div className="mt-8 flex justify-center">

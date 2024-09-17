@@ -1,10 +1,5 @@
 import { iBook, iBookBase, iMember, iMemberBase, iTransaction } from "./types";
-import {
-  booksTable,
-  membersTable,
-
-  transactionsTable,
-} from "@/db/schema";
+import { booksTable, membersTable, transactionsTable } from "@/db/schema";
 import { z } from "zod";
 import { db } from "@/db";
 import { eq, like, and, count } from "drizzle-orm";
@@ -433,8 +428,8 @@ export async function getRequestStatistics(
 export async function getRecentApprovedRequestsWithBooks(userId: number) {
   const requestsWithBooks = await db
     .select({
-      requestId:transactionsTable.id,
-      bookId:transactionsTable.bookId,
+      requestId: transactionsTable.id,
+      bookId: transactionsTable.bookId,
       bookTitle: booksTable.title,
     })
     .from(transactionsTable)
@@ -500,4 +495,23 @@ export async function updateMember(
     .execute();
 
   return updatedMember as iMember;
+}
+export async function deleteMember(id: number): Promise<iMember | undefined> {
+  try {
+    const existingMembers = await db
+      .select()
+      .from(membersTable)
+      .where(eq(membersTable.id, id))
+      .execute();
+
+    if (existingMembers.length > 0) {
+      const memberToDelete = existingMembers[0];
+
+      await db.delete(membersTable).where(eq(membersTable.id, id)).execute();
+
+      return memberToDelete as iMember;
+    }
+  } catch (error) {
+    throw new Error("Member not found");
+  }
 }
