@@ -51,7 +51,7 @@ const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: Token; user?: any }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -60,16 +60,16 @@ const authOptions = {
       }
       return token;
     },
-    async session({ session, token }: { session: Session; token: Token }) {
+    async session({ session, token }) {
       session.user = {
-        id: token.id as number,
-        email: token.email as string,
-        name: token.name as string,
-        role: token.role as string,
+        id: token.id,
+        email: token.email,
+        name: token.name ,
+        role: token.role ,
       };
       return session;
     },
-    async signIn({ user, account }: { user: any; account: any }) {
+    async signIn({ user, account }) {
       if (account.provider === "google") {
         const email = user.email;
         const fullName = user.name || "";
