@@ -1,4 +1,4 @@
-"use client ";
+"use client";
 import RequestCard from "@/components/RequestCard";
 import { useSession } from "next-auth/react";
 import { fetchUserRequest } from "@/lib/actions";
@@ -7,7 +7,7 @@ import { Request } from "@/lib/types";
 
 import { useEffect, useState } from "react";
 
-const MyRequestsPage = async () => {
+const MyRequestsPage =  () => {
   const { data: session, status } = useSession();
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
