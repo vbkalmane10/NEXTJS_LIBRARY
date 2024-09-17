@@ -11,7 +11,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  const userName = await getUserById(session.user?.name);
+  const userName = await getUserById(session.user?.id);
   const navItems = [
     { href: "/books", text: "Books" },
     {

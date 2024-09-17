@@ -33,12 +33,7 @@ export default async function Page({
     booksPerPage
   );
 
-  const navItems = [
-    { href: "/books", icon: "Home", text: "Books" },
-    { href: "/books/myrequests", icon: "Settings", text: "My Requests" },
-    { href: "/books/mybooks", icon: "HelpCircle", text: "My Books" },
-    { href: "/books/favorites", icon: "Bookmark", text: "My Favorites" },
-  ];
+
 
   return (
     <div className="p-8">

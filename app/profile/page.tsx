@@ -1,42 +1,37 @@
-"use client";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@radix-ui/react-label";
 import {
-  NotebookTabs,
-  ChevronRight,
-  ShieldCheck,
-  Clock,
-  BookOpen,
-  Star,
   CheckIcon,
   PencilIcon,
   LogOut,
+  NotebookTabs,
+  ShieldCheck,
+  Clock,
 } from "lucide-react";
-import Header from "@/components/Header";
 import { useEffect, useState, Suspense } from "react";
 import { signOut, useSession } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
 import {
   fetchRecentlyBorrowedBooks,
   fetchRequestStatistics,
   fetchUserDetails,
+  handleUserUpdate,
 } from "@/lib/actions";
-import { iMember, RequestStatistics } from "@/lib/types";
-import { Input } from "@/components/ui/input";
-import { Label } from "@radix-ui/react-label";
-import { Button } from "@/components/ui/button";
-import { handleUserUpdate } from "@/lib/actions";
-import { useToast } from "@/hooks/use-toast";
 import { revalidatePath } from "next/cache";
+import { iMember, RequestStatistics } from "@/lib/types";
 
 export default function DisplayProfile() {
   const { data: session, status } = useSession();
+  const { toast } = useToast();
+
   const [statistics, setStatistics] = useState<RequestStatistics>({
     totalRequests: 0,
     approvedRequests: 0,
     pendingRequests: 0,
   });
-  const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
   const [recentBooks, setRecentBooks] = useState([]);
   const [userInfo, setUserInfo] = useState({
@@ -56,7 +51,7 @@ export default function DisplayProfile() {
       if (session?.user?.id) {
         try {
           const stats = await fetchRequestStatistics(session.user.id);
-          const books = await fetchRecentlyBorrowedBooks(session.user.id);
+
           const user = await fetchUserDetails(session?.user.id);
           if (user) {
             setUserInfo({
@@ -73,7 +68,7 @@ export default function DisplayProfile() {
           } else {
             console.error("User not found");
           }
-          setRecentBooks(recentBooks);
+
           setStatistics(stats);
         } catch (error) {
           console.error("Error fetching request statistics:", error);
@@ -82,7 +77,7 @@ export default function DisplayProfile() {
     };
 
     loadStatistics();
-  }, [session, recentBooks]);
+  }, [session]);
 
   const handleLogout = () => {
     signOut({ callbackUrl: "/" });
@@ -92,7 +87,6 @@ export default function DisplayProfile() {
     if (isEditing) {
       try {
         const response = await handleUserUpdate(session!.user.id, userInfo);
-        console.log(userInfo);
         if (!response.success) {
           toast({
             title: "Error updating user info",
@@ -106,9 +100,10 @@ export default function DisplayProfile() {
             className: "bg-green-400 text-white",
             duration: 1000,
           });
+          
         }
       } catch (error) {
-        throw new Error("Error updating user");
+        console.error("Error updating user:", error);
       }
     }
     setIsEditing(!isEditing);
