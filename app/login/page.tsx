@@ -46,7 +46,7 @@ const LoginPage = () => {
       });
 
       if (result?.ok) {
-        router.push("/books");
+        router.replace("/books");
       } else if (result?.error) {
         switch (result.error) {
           case "CredentialsSignin":
@@ -68,7 +68,6 @@ const LoginPage = () => {
     setLoading(true);
     try {
       await signIn("google", { redirect: false });
-      router.refresh();
     } catch (error) {
       setErrorMessage("An error occurred during Google login.");
     } finally {
