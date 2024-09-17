@@ -30,23 +30,36 @@ interface AdminBookTableProps {
   onDelete: (isbnNo: string) => void
 }
 
+type SortField = 'title' | 'availableCopies'
+type SortOrder = 'asc' | 'desc'
+
 const AdminBookTable: React.FC<AdminBookTableProps> = ({
   books,
   onEdit,
   onDelete,
 }) => {
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
+  const [sortField, setSortField] = useState<SortField>('title')
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
 
   const sortedBooks = [...books].sort((a, b) => {
-    if (sortOrder === 'asc') {
-      return a.title.localeCompare(b.title)
+    if (sortField === 'title') {
+      return sortOrder === 'asc'
+        ? a.title.localeCompare(b.title)
+        : b.title.localeCompare(a.title)
     } else {
-      return b.title.localeCompare(a.title)
+      return sortOrder === 'asc'
+        ? a.availableCopies - b.availableCopies
+        : b.availableCopies - a.availableCopies
     }
   })
 
-  const toggleSort = () => {
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+  const toggleSort = (field: SortField) => {
+    if (field === sortField) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortField(field)
+      setSortOrder('asc')
+    }
   }
 
   return (
@@ -104,7 +117,7 @@ const AdminBookTable: React.FC<AdminBookTableProps> = ({
                 <TableHead className="px-4 py-5 font-medium">
                   <Button
                     variant="ghost"
-                    onClick={toggleSort}
+                    onClick={() => toggleSort('title')}
                     className="hover:bg-transparent"
                   >
                     Title
@@ -119,7 +132,17 @@ const AdminBookTable: React.FC<AdminBookTableProps> = ({
                   ISBN Number
                 </TableHead>
                 <TableHead className="px-4 py-5 font-medium">
-                  Available Copies
+                  <Button
+                    variant="ghost"
+                    onClick={() => toggleSort('availableCopies')}
+                    className="hover:bg-transparent"
+                  >
+                    Available Copies
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                    <span className="sr-only">
+                      Sort by available copies {sortOrder === 'asc' ? 'descending' : 'ascending'}
+                    </span>
+                  </Button>
                 </TableHead>
                 <TableHead className="px-4 py-5 font-medium">Actions</TableHead>
               </TableRow>
