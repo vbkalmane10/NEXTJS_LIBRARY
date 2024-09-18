@@ -1,10 +1,10 @@
-
 import SideNav from "@/components/SideNav";
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 import { getUserById } from "@/lib/MemberRepository/repository";
+import Header from "@/components/Header";
 export default async function Layout({
   children,
 }: {
@@ -24,6 +24,7 @@ export default async function Layout({
       <SideNav navItems={navItems} userName={userName?.firstName} />
 
       <div className="flex flex-col flex-1">
+        <Header membershipStatus={userName?.membershipStatus} />
         <div className="flex-grow overflow-y-auto md:overflow-y-auto">
           {children}
         </div>

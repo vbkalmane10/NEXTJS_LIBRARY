@@ -19,7 +19,7 @@ export default function Header({
   };
   const membershipColor =
     membershipStatus === "active" ? "bg-green-500" : "bg-red-500";
-  const membershipLabel = membershipStatus === "Active" ? "Active" : "Expired";
+  const membershipLabel = membershipStatus === "active" ? "Active" : "Expired";
   return (
     <header className="flex items-center px-6 py-4 bg-white shadow-md md:justify-between justify-center">
       <div className="text-2xl font-bold text-black">Booksphere</div>
