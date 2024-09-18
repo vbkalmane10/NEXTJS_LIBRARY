@@ -2,14 +2,14 @@
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { iBook } from "@/lib/types";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 
 interface EditBookFormProps {
   book: iBook;
   onClose: () => void;
-  onSubmit: (updatedBook: iBook) => void; 
+  onSubmit: (updatedBook: iBook) => void;
   isPending: boolean;
 }
 
@@ -20,7 +20,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
   isPending,
 }) => {
   const [formData, setFormData] = useState<iBook>({ ...book });
-  const router = useRouter(); 
+  const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,7 +37,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
   };
 
   return (
-    <div className="w-full max-w-3xl p-6 bg-white rounded-lg shadow-md mx-auto mt-6">
+    <div className="w-full max-w-3xl p-6 bg-white rounded-lg shadow-md mx-auto flex justify-center items-center">
       <h2 className="text-2xl font-semibold text-center">Edit Book</h2>
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

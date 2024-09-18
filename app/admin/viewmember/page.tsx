@@ -70,7 +70,7 @@ export default function Page({
   };
   return (
     <div className="flex flex-col w-full min-h-screen">
-      <Header />
+      
       <div className="w-full p-8">
         <h1 className="text-2xl font-bold">Users</h1>
 

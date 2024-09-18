@@ -72,7 +72,6 @@ const ViewRequestPage: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full min-h-screen">
-      <Header />
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">View Requests</h1>
         {requests.length === 0 ? (

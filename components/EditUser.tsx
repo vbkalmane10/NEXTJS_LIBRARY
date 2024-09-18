@@ -48,7 +48,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
   };
 
   return (
-    <div className="w-full max-w-3xl p-6 bg-white rounded-lg shadow-md mx-auto mt-6">
+    <div className="w-full max-w-3xl p-6 bg-white rounded-lg shadow-md mx-auto flex justify-center items-center">
       <h2 className="text-2xl font-semibold text-center">Edit User</h2>
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
