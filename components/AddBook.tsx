@@ -27,7 +27,7 @@ export default function AddBook() {
     totalCopies: 1,
     availableCopies: 1,
     price: 1,
-    imageUrl: "",
+
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -54,11 +54,11 @@ export default function AddBook() {
       }));
     }
   };
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setImageFile(e.target.files[0]);
-    }
-  };
+  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     setImageFile(e.target.files[0]);
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -69,19 +69,19 @@ export default function AddBook() {
         setErrorMessage("ISBN should be 13 digits");
         return;
       }
-      let imageUrl = formData.imageUrl;
-      if (imageFile) {
-        const uploadedImageUrl = await uploadImageToCloudinary(imageFile); 
-        imageUrl = uploadedImageUrl;
-        setFormData((prev) => ({ ...prev, imageUrl }));
-      }
+      // let imageUrl = formData.imageUrl;
+      // if (imageFile) {
+      //   const uploadedImageUrl = await uploadImageToCloudinary(imageFile);
+      //   imageUrl = uploadedImageUrl;
+      //   setFormData((prev) => ({ ...prev, imageUrl }));
+      // }
       const result = await addBook(formData);
       if (result) {
         toast({
           title: "Success",
           description: result.message,
           variant: "destructive",
-          className: "bg-green-500",
+          className: "bg-green-400 text-white",
           duration: 1000,
         });
         setIsModalOpen(false);
@@ -95,7 +95,7 @@ export default function AddBook() {
           totalCopies: 1,
           availableCopies: 1,
           price: 1,
-          imageUrl: "",
+          
         });
       }
     } catch (error) {
@@ -230,16 +230,7 @@ export default function AddBook() {
                       required
                     />
                   </div>
-                  <div className="space-y-1">
-                  <Label htmlFor="image">Book Image</Label>
-                  <Input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    required
-                  />
-                </div>
+                 
                   <p className="text-red-600 font-semibold">{errorMessage}</p>
                 </div>
                 <div className="flex justify-between">

@@ -3,7 +3,12 @@ import { db } from "@/db";
 import { membersTable, booksTable } from "@/db/schema";
 import { eq, like, and, gt } from "drizzle-orm";
 import { iBook, iBookBase } from "../types";
-import { createBook, deleteBook, getBooksByIsbn, updateBook } from "./repository";
+import {
+  createBook,
+  deleteBook,
+  getBooksByIsbn,
+  updateBook,
+} from "./repository";
 export async function fetchBooks(
   searchTerm: string,
   currentPage: number,
@@ -41,7 +46,25 @@ export async function fetchBooks(
     totalPages: Math.ceil(totalBooks.length / limit),
   };
 }
-
+export async function fetchBooksAction(
+  searchTerm: string,
+  currentPage: number,
+  booksPerPage: number
+) {
+  try {
+    const { books, totalPages } = await fetchBooks(
+      searchTerm,
+      currentPage,
+      booksPerPage
+    );
+    return {
+      books: books,
+      totalPages: totalPages,
+    };
+  } catch (error) {
+    throw new Error("Error displaying books");
+  }
+}
 export async function addBook(book: iBookBase) {
   try {
     const newBook = await createBook(book);

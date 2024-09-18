@@ -1,4 +1,4 @@
-import { fetchBooks } from "@/lib/BookRepository/actions";
+import { fetchBooksAction } from "@/lib/BookRepository/actions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
@@ -32,7 +32,7 @@ export default async function Page({
   const currentPage = Number(searchParams?.page) || 1;
   const booksPerPage = 8;
 
-  const { books, totalPages } = await fetchBooks(
+  const { books, totalPages } = await fetchBooksAction(
     query,
     currentPage,
     booksPerPage

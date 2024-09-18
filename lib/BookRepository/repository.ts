@@ -2,7 +2,7 @@ import { iBook, iBookBase, iMember, iMemberBase, iTransaction } from "../types";
 import { booksTable, membersTable, transactionsTable } from "@/db/schema";
 import { z } from "zod";
 import { db } from "@/db";
-import { eq, like, and, count } from "drizzle-orm";
+import { eq, like, and, count,gt } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import { Request, RequestStatistics } from "../types";
 
@@ -130,4 +130,41 @@ export async function deleteBook(
       console.error("Error updating book:", error);
       return null;
     }
+  }
+  export async function fetchBooks(
+    searchTerm: string,
+    currentPage: number,
+    booksPerPage: number
+  ) {
+    const limit = booksPerPage;
+    const offset = (currentPage - 1) * limit;
+  
+    const booksQuery = db
+      .select()
+      .from(booksTable)
+      .where(
+        searchTerm
+          ? and(like(booksTable.title, `%${searchTerm}%`))
+          : undefined && gt(booksTable.availableCopies, 1)
+      )
+      .limit(limit)
+      .offset(offset)
+      .execute();
+  
+    const totalBooksQuery = db
+      .select()
+      .from(booksTable)
+      .where(
+        searchTerm
+          ? and(like(booksTable.title, `%${searchTerm}%`))
+          : undefined && gt(booksTable.availableCopies, 1)
+      )
+      .execute();
+  
+    const totalBooks = await totalBooksQuery;
+  
+    return {
+      books: await booksQuery,
+      totalPages: Math.ceil(totalBooks.length / limit),
+    };
   }
