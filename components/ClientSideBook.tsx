@@ -44,7 +44,7 @@ export default function ClientSideBooks({
       <div className="mt-4 flex gap-4 items-center">
         <Search placeholder="Search books..." />
         <select
-          className="p- border border-gray-300 rounded"
+          className="p-4 border border-gray-300 rounded"
           value={sortBy}
           onChange={handleSortChange}
         >
