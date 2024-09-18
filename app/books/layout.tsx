@@ -21,7 +21,7 @@ export default async function Layout({
     },
     // { href: "/books/mybooks", text: "My Books" },
     // { href: "/books/favorites", text: "My Favorites" },
-    { href: "books/profile", text: "My Profile" },
+    { href: "/books/profile", text: "My Profile" },
   ];
   return (
     <div className="flex h-screen w-full">
