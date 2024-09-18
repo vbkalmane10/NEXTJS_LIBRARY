@@ -1,6 +1,6 @@
-import { Pool } from "pg";
+
 import { drizzle } from "drizzle-orm/vercel-postgres";
-import { AppEnvs } from "@/read_env";
+
 import { sql } from "@vercel/postgres";
 import * as schema from "@/drizzle/schema";
 // const pool = mysql.createPool({
