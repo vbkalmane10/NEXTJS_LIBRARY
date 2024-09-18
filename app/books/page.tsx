@@ -1,7 +1,7 @@
 import { fetchBooks } from "@/lib/BookRepository/actions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import ClientSideBooks from "@/components/ClientSideBook";
 
 const sortBooks = (books: any[], sortBy: string) => {
