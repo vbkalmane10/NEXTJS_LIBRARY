@@ -20,12 +20,12 @@ import {
   fetchRecentlyBorrowedBooks,
   fetchRequestStatistics,
 } from "@/lib/actions";
+import { iMember, ProfileContentProps, RequestStatistics } from "@/lib/types";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   fetchUserDetails,
   handleUserUpdate,
 } from "@/lib/MemberRepository/actions";
-import { iMember, ProfileContentProps, RequestStatistics } from "@/lib/types";
-import { Skeleton } from "@/components/ui/skeleton";
 
 function ProfileSkeleton() {
   return (

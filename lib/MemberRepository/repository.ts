@@ -29,18 +29,23 @@ export async function create(
     };
   } else {
     const hashedPassword = await bcrypt.hash(validatedMember.password, 10);
-    const newMemberData: iMember = {
+    const newMemberData: Omit<iMember, "id"> = {
       ...validatedMember,
       password: hashedPassword,
       membershipStatus: "active",
-      id: 0,
+
       role: "user",
     };
 
-    await db.insert(membersTable).values(newMemberData);
+    const insertedMembers = await db
+      .insert(membersTable)
+      .values(newMemberData)
+      .returning();
+
+    const newMember = insertedMembers[0];
     return {
       message: "Member added successfully",
-      user: newMemberData,
+      user: newMember,
     };
   }
 }
