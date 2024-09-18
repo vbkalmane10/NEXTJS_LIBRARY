@@ -18,7 +18,7 @@ export default async function Layout({
     { href: "/admin/viewrequests", text: "Book Requests" },
 
     { href: "/admin/viewmember", text: "View Members" },
-    { href: "/profile", text: "View Profile" },
+    { href: "/admin/profile", text: "View Profile" },
   ];
   return (
     <div className="flex h-screen w-full">
