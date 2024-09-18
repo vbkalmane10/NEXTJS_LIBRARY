@@ -1,4 +1,4 @@
-// /app/signup/page.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -15,7 +15,7 @@ import { Label } from "@radix-ui/react-label";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { PulseLoader } from "react-spinners";
-import { createMember } from "@/lib/actions";
+import { createMember } from "@/lib/MemberRepository/actions";
 const SignupPage = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");

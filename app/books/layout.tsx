@@ -1,10 +1,8 @@
 import Header from "@/components/Header";
-
 import SideNav from "@/components/SideNav";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import * as LucideIcons from "lucide-react";
-import { getUserById } from "@/lib/repository";
+import { getUserById } from "@/lib/MemberRepository/repository";
 export default async function Layout({
   children,
 }: {

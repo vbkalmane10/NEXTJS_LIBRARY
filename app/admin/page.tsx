@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Search from "@/components/search";
 import Pagination from "@/components/Pagination";
-import { fetchBooks, handleDeleteBook } from "@/lib/actions";
+import { fetchBooks, handleDeleteBook } from "@/lib/BookRepository/actions";
 import { signOut } from "next-auth/react";
 import AdminBookTable from "@/components/AdminBookCard";
 import AddBook from "@/components/AddBook";

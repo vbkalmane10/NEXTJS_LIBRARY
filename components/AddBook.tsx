@@ -13,7 +13,7 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "@/components/ui/input";
 import { PulseLoader } from "react-spinners";
-import { addBook } from "@/lib/actions";
+import { addBook } from "@/lib/BookRepository/actions";
 import { useToast } from "@/hooks/use-toast";
 export default function AddBook() {
   const [isModalOpen, setIsModalOpen] = useState(false);

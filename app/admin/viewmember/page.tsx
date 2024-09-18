@@ -3,12 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Search from "@/components/search";
 import Pagination from "@/components/Pagination";
-import {
-  fetchBooks,
-  getUsers,
-  handleDeleteBook,
-  handleUserDelete,
-} from "@/lib/actions";
+import { fetchBooks, handleDeleteBook } from "@/lib/BookRepository/actions";
+import { handleUserDelete, getUsers } from "@/lib/MemberRepository/actions";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AdminBookTable from "@/components/AdminBookCard";

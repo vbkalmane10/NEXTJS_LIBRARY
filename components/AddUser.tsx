@@ -13,7 +13,7 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "@/components/ui/input";
 import { PulseLoader } from "react-spinners";
-import { addBook, createMember } from "@/lib/actions";
+import { createMember } from "@/lib/MemberRepository/actions";
 import { useToast } from "@/hooks/use-toast";
 
 export default function AddBook() {

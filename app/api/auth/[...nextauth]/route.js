@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { db } from "@/db";
 import { membersTable } from "@/db/schema";
 import { iMember, Session, Token } from "@/lib/types";
-import { getUserByEmail } from "@/lib/repository";
+import { getUserByEmail } from "@/lib/MemberRepository/repository";
 import { AppEnvs } from "@/read_env";
 
 const authOptions = {

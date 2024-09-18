@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { iBook } from "@/lib/types";
 import EditBookForm from "@/components/EditBook";
-import { fetchBookDetails, handleBookUpdate } from "@/lib/actions";
+import { fetchBookDetails, handleBookUpdate } from "@/lib/BookRepository/actions";
 import { toast } from "@/hooks/use-toast";
 
 const EditBookPage = ({ params }: { params: { isbnNo: string } }) => {

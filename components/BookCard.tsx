@@ -1,6 +1,5 @@
 "use client";
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { handleCreateRequest } from "@/lib/actions";
 import { createRequest } from "@/lib/repository";
 

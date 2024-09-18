@@ -12,24 +12,15 @@ import {
 } from "./types";
 
 import {
-  createBook,
-  create,
   fetchAllRequests,
   createRequest,
   approveRequest,
-  deleteBook,
   getBooksByIsbn,
-  updateBook,
-  updateMember,
-  fetchUsers,
   getUserRequests,
   getRequestStatistics,
   getRecentApprovedRequestsWithBooks,
-  getUserById,
-  deleteMember,
   rejectRequest,
 } from "./repository";
-import { revalidatePath } from "next/cache";
 
 export async function getUserId(email: string): Promise<number | null> {
   try {
@@ -50,71 +41,6 @@ export async function getUserId(email: string): Promise<number | null> {
   }
 }
 
-export async function fetchBooks(
-  searchTerm: string,
-  currentPage: number,
-  booksPerPage: number
-) {
-  const limit = booksPerPage;
-  const offset = (currentPage - 1) * limit;
-
-  const booksQuery = db
-    .select()
-    .from(booksTable)
-    .where(
-      searchTerm
-        ? and(like(booksTable.title, `%${searchTerm}%`))
-        : undefined && gt(booksTable.availableCopies, 1)
-    )
-    .limit(limit)
-    .offset(offset)
-    .execute();
-
-  const totalBooksQuery = db
-    .select()
-    .from(booksTable)
-    .where(
-      searchTerm
-        ? and(like(booksTable.title, `%${searchTerm}%`))
-        : undefined && gt(booksTable.availableCopies, 1)
-    )
-    .execute();
-
-  const totalBooks = await totalBooksQuery;
-
-  return {
-    books: await booksQuery,
-    totalPages: Math.ceil(totalBooks.length / limit),
-  };
-}
-export async function createMember(member: iMemberBase) {
-  try {
-    const newMember = await create(member);
-    return newMember;
-  } catch (error) {
-    throw new Error("Failed to create member");
-  }
-}
-
-export async function addBook(book: iBookBase) {
-  try {
-    const newBook = await createBook(book);
-    return newBook;
-  } catch (error) {
-    console.error("Error creating book:", error);
-    throw new Error("Failed to create book");
-  }
-}
-
-export async function handleDeleteBook(isbnNo: string) {
-  try {
-    const deletedBook = await deleteBook(isbnNo);
-    return deletedBook;
-  } catch (error) {
-    console.error("Error in handleDeleteBook:", error);
-    throw new Error("Failed to delete book");
-  }
-}
 export async function getRequests(page = 1) {
   try {
     const requests = await fetchAllRequests(page);
@@ -165,37 +91,7 @@ export async function handleRejectRequest(request: Request) {
     console.log("Error while rejecting request");
   }
 }
-export const fetchBookDetails = async (
-  isbnNo: string
-): Promise<iBook | null> => {
-  return await getBooksByIsbn(isbnNo);
-};
-export const handleBookUpdate = async (isbnNo: string, updatedBook: iBook) => {
-  try {
-    await updateBook(isbnNo, updatedBook);
-    return { success: true, message: "Book updated successfully!" };
-  } catch (error) {
-    console.error("Error updating book:", error);
-    return { success: false, message: "Failed to update the book." };
-  }
-};
 
-export async function getUsers(
-  searchTerm: string,
-  currentPage: number,
-  usersPerPage: number
-) {
-  const { users, totalPages } = await fetchUsers(
-    searchTerm,
-    currentPage,
-    usersPerPage
-  );
-  if (users) {
-    return { users, totalPages };
-  } else {
-    throw new Error("Error while fetching users");
-  }
-}
 export async function fetchUserRequest(userId: number) {
   try {
     const requests = await getUserRequests(userId);
@@ -223,25 +119,3 @@ export async function fetchRecentlyBorrowedBooks(userId: number) {
     throw new Error("Error while fetching recent requests");
   }
 }
-export const fetchUserDetails = async (id: number): Promise<iMember | null> => {
-  return await getUserById(id);
-};
-export const handleUserUpdate = async (id: number, updatedUser: iMember) => {
-  try {
-    await updateMember(id, updatedUser);
-    return { success: true, message: "User updated successfully!" };
-  } catch (error) {
-    console.error("Error updating user:", error);
-    return { success: false, message: "Failed to update the user." };
-  }
-};
-export const handleUserDelete = async (id: number) => {
-  try {
-    await deleteMember(id);
-
-    return { success: true, message: "User deleted successfully!" };
-  } catch (error) {
-    console.error("Error deleting user:", error);
-    return { success: false, message: "Failed to delete the user." };
-  }
-};

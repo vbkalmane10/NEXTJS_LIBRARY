@@ -19,11 +19,13 @@ import { useToast } from "@/hooks/use-toast";
 import {
   fetchRecentlyBorrowedBooks,
   fetchRequestStatistics,
-  fetchUserDetails,
-  handleUserUpdate,
 } from "@/lib/actions";
 import { iMember, ProfileContentProps, RequestStatistics } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  fetchUserDetails,
+  handleUserUpdate,
+} from "@/lib/MemberRepository/actions";
 
 function ProfileSkeleton() {
   return (

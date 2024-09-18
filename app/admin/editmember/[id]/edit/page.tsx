@@ -4,7 +4,7 @@ import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { iBook, iMember } from "@/lib/types";
 import EditUserForm from "@/components/EditUser";
-import { fetchUserDetails, handleUserUpdate } from "@/lib/actions";
+import { fetchUserDetails, handleUserUpdate } from "@/lib/MemberRepository/actions";
 import { toast } from "@/hooks/use-toast";
 
 const EditBookPage = ({ params }: { params: { id: number } }) => {

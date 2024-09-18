@@ -1,14 +1,9 @@
-import Search from "@/components/search";
-import Pagination from "@/components/Pagination";
-import BookCard from "@/components/BookCard";
-import { fetchBooks } from "@/lib/actions";
+import { fetchBooks } from "@/lib/BookRepository/actions";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import GenreMenu from "@/components/Genre";
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import { useState } from "react";
 import ClientSideBooks from "@/components/ClientSideBook";
-import SortByDropdown from "@/components/SortBy";
+
 const sortBooks = (books: any[], sortBy: string) => {
   return [...books].sort((a, b) => {
     if (sortBy === "price") {

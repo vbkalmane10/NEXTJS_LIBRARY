@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { PulseLoader } from "react-spinners";
 import { FaGoogle } from "react-icons/fa";
-import Header from "@/components/Header";
+
 
 const LoginPage = () => {
   const { data: session, status } = useSession();
