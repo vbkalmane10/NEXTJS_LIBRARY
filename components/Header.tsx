@@ -23,7 +23,7 @@ export default function Header({
   return (
     <header className="flex items-center px-6 py-4 bg-white shadow-md md:justify-between justify-center">
       <div className="text-2xl font-bold text-black">Booksphere</div>
-      <div className="flex mr-1">
+      <div className="flex items-center gap-1">
         {membershipStatus && (
           <div
             className={`ml-4 px-3 py-1 text-sm font-semibold text-white rounded-full ${membershipColor}`}
@@ -32,7 +32,7 @@ export default function Header({
           </div>
         )}
         {session && (
-          <nav className="absolute right-6">
+          <nav>
             <button onClick={toggleMenu} className="flex items-center gap-2">
               <Link href="/books/profile">
                 <Avatar className="h-10 w-10">
