@@ -14,9 +14,14 @@ interface NavItem {
 interface SideNavProps {
   navItems: NavItem[];
   userName: string | undefined;
+  membershipStatus?: string | undefined;
 }
 
-const SideNav: React.FC<SideNavProps> = ({ navItems, userName }) => {
+const SideNav: React.FC<SideNavProps> = ({
+  navItems,
+  userName,
+  membershipStatus,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 

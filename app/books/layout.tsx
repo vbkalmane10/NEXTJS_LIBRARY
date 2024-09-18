@@ -26,7 +26,7 @@ export default async function Layout({
       <SideNav navItems={navItems} userName={userName?.firstName} />
 
       <div className="flex flex-col flex-1">
-        <Header />
+        <Header membershipStatus={userName?.membershipStatus} />
 
         <div className="flex-grow overflow-y-auto md:overflow-y-auto p-4">
           {children}
