@@ -20,8 +20,7 @@ export async function create(
   const existingMembers = await db
     .select()
     .from(membersTable)
-    .where(eq(membersTable.email, member.email))
-    .execute();
+    .where(eq(membersTable.email, member.email));
 
   if (existingMembers.length > 0) {
     return {
@@ -38,7 +37,7 @@ export async function create(
       role: "user",
     };
 
-    await db.insert(membersTable).values(newMemberData).execute();
+    await db.insert(membersTable).values(newMemberData);
     return {
       message: "Member added successfully",
       user: newMemberData,
@@ -46,128 +45,125 @@ export async function create(
   }
 }
 export async function fetchUsers(
-    searchTerm: string,
-    currentPage: number,
-    usersPerPage: number
-  ) {
-    const limit = usersPerPage;
-    const offset = (currentPage - 1) * limit;
-  
-    const usersQuery = db
+  searchTerm: string,
+  currentPage: number,
+  usersPerPage: number
+) {
+  const limit = usersPerPage;
+  const offset = (currentPage - 1) * limit;
+
+  const usersQuery = db
+    .select()
+    .from(membersTable)
+    .where(
+      searchTerm
+        ? and(like(membersTable.firstName, `%${searchTerm}%`))
+        : undefined
+    )
+    .limit(limit)
+    .offset(offset)
+    .execute();
+
+  const totalUsersQuery = db
+    .select()
+    .from(membersTable)
+    .where(
+      searchTerm
+        ? and(like(membersTable.firstName, `%${searchTerm}%`))
+        : undefined
+    )
+    .execute();
+
+  const totalUsers = await totalUsersQuery;
+
+  return {
+    users: await usersQuery,
+    totalPages: Math.ceil(totalUsers.length / limit),
+  };
+}
+export async function getUserByEmail(email: string): Promise<iMember | null> {
+  try {
+    const [member] = await db
       .select()
       .from(membersTable)
-      .where(
-        searchTerm
-          ? and(like(membersTable.firstName, `%${searchTerm}%`))
-          : undefined
-      )
-      .limit(limit)
-      .offset(offset)
-      .execute();
-  
-    const totalUsersQuery = db
+      .where(eq(membersTable.email, email));
+    return member || null;
+  } catch (error) {
+    throw new Error("Error while getting user by email");
+  }
+}
+export async function getUserById(id: number): Promise<iMember | null> {
+  try {
+    const [member] = await db
       .select()
       .from(membersTable)
-      .where(
-        searchTerm
-          ? and(like(membersTable.firstName, `%${searchTerm}%`))
-          : undefined
-      )
-      .execute();
-  
-    const totalUsers = await totalUsersQuery;
-  
-    return {
-      users: await usersQuery,
-      totalPages: Math.ceil(totalUsers.length / limit),
-    };
+      .where(eq(membersTable.id, id));
+    return member || null;
+  } catch (error) {
+    throw new Error("Error while getting user by id");
   }
-  export async function getUserByEmail(email: string): Promise<iMember | null> {
-    try {
-      const [member] = await db
-        .select()
-        .from(membersTable)
-        .where(eq(membersTable.email, email));
-      return member || null;
-    } catch (error) {
-      throw new Error("Error while getting user by email");
-    }
+}
+export async function updateMember(
+  id: number,
+  data: iMemberBase
+): Promise<iMember | null> {
+  const existingMembers = await db
+    .select()
+    .from(membersTable)
+    .where(eq(membersTable.id, id))
+    .execute();
+
+  if (existingMembers.length === 0) {
+    console.log("NO MEMBERS FOUND");
+    return null;
   }
-  export async function getUserById(id: number): Promise<iMember | null> {
-    try {
-      const [member] = await db
-        .select()
-        .from(membersTable)
-        .where(eq(membersTable.id, id));
-      return member || null;
-    } catch (error) {
-      throw new Error("Error while getting user by id");
-    }
-  }
-  export async function updateMember(
-    id: number,
-    data: iMemberBase
-  ): Promise<iMember | null> {
+
+  const existingMember = existingMembers[0];
+  const updatedMember = {
+    ...existingMember,
+    ...data,
+  };
+
+  await db
+    .update(membersTable)
+    .set(updatedMember)
+    .where(eq(membersTable.id, id))
+    .execute();
+
+  return updatedMember as iMember;
+}
+export async function deleteMember(id: number): Promise<iMember | undefined> {
+  try {
     const existingMembers = await db
       .select()
       .from(membersTable)
       .where(eq(membersTable.id, id))
       .execute();
-  
-    if (existingMembers.length === 0) {
-      console.log("NO MEMBERS FOUND");
-      return null;
+
+    if (existingMembers.length > 0) {
+      const memberToDelete = existingMembers[0];
+
+      await db.delete(membersTable).where(eq(membersTable.id, id)).execute();
+
+      return memberToDelete as iMember;
     }
-  
-    const existingMember = existingMembers[0];
-    const updatedMember = {
-      ...existingMember,
-      ...data,
-    };
-  
-    await db
-      .update(membersTable)
-      .set(updatedMember)
-      .where(eq(membersTable.id, id))
+  } catch (error) {
+    throw new Error("Member not found");
+  }
+}
+export async function getUserId(email: string): Promise<number | null> {
+  try {
+    const [user] = await db
+      .select({
+        id: membersTable.id,
+      })
+      .from(membersTable)
+      .where(eq(membersTable.email, email))
       .execute();
-  
-    return updatedMember as iMember;
+
+    return user?.id ?? null;
+  } catch (error) {
+    console.error("Error fetching user ID:", error);
+    return null;
   }
-  export async function deleteMember(id: number): Promise<iMember | undefined> {
-    try {
-      const existingMembers = await db
-        .select()
-        .from(membersTable)
-        .where(eq(membersTable.id, id))
-        .execute();
-  
-      if (existingMembers.length > 0) {
-        const memberToDelete = existingMembers[0];
-  
-        await db.delete(membersTable).where(eq(membersTable.id, id)).execute();
-  
-        return memberToDelete as iMember;
-      }
-    } catch (error) {
-      throw new Error("Member not found");
-    }
-  }
-  export async function getUserId(email: string): Promise<number | null> {
-    try {
-      
-      const [user] = await db
-        .select({
-          id: membersTable.id, 
-        })
-        .from(membersTable)
-        .where(eq(membersTable.email, email))
-        .execute();
-  
-      
-      return user?.id ?? null;
-    } catch (error) {
-      console.error("Error fetching user ID:", error);
-      return null; 
-    }
-  }
-  
+}

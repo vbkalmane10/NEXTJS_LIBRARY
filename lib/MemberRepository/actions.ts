@@ -36,9 +36,11 @@ export async function getUsers(
 }
 export async function createMember(member: iMemberBase) {
   try {
+    console.log("Creating member with data:", member);
     const newMember = await create(member);
     return newMember;
   } catch (error) {
+    console.error("Error creating member:", error);
     throw new Error("Failed to create member");
   }
 }
