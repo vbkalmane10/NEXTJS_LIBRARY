@@ -71,7 +71,7 @@ export default function AddBook() {
       }
       let imageUrl = formData.imageUrl;
       if (imageFile) {
-        const uploadedImageUrl = await uploadImageToCloudinary(imageFile); // Function to upload to Cloudinary
+        const uploadedImageUrl = await uploadImageToCloudinary(imageFile); 
         imageUrl = uploadedImageUrl;
         setFormData((prev) => ({ ...prev, imageUrl }));
       }

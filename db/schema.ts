@@ -21,6 +21,7 @@ export const booksTable = mysqlTable("books", {
   totalCopies: int("totalCopies").notNull(),
   availableCopies: int("availableCopies").notNull(),
   price: int("price"),
+  imageUrl: varchar("imageurl", { length: 255 }),
 });
 export const transactionsTable = mysqlTable("transactions", {
   id: int("id").primaryKey().autoincrement(),
