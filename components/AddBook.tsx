@@ -72,7 +72,7 @@ export default function AddBook() {
       }
       let imageUrl = formData.imageUrl;
       if (imageFile) {
-        const uploadedImageUrl = await uploadImageToCloudinary(imageFile); 
+        const uploadedImageUrl = await uploadImageToCloudinary(imageFile);
         imageUrl = uploadedImageUrl;
         setFormData((prev) => ({ ...prev, imageUrl }));
       }
@@ -123,7 +123,7 @@ export default function AddBook() {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-xl">
+          <Card className="w-full max-w-xl max-h-screen overflow-y-auto">
             <CardHeader className="pb-6">
               <CardTitle className="text-2xl font-bold text-center">
                 Add Book
@@ -232,15 +232,15 @@ export default function AddBook() {
                     />
                   </div>
                   <div className="space-y-1">
-                  <Label htmlFor="image">Book Image</Label>
-                  <Input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    required
-                  />
-                </div>
+                    <Label htmlFor="image">Book Image</Label>
+                    <Input
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      required
+                    />
+                  </div>
                   <p className="text-red-600 font-semibold">{errorMessage}</p>
                 </div>
                 <div className="flex justify-between">
