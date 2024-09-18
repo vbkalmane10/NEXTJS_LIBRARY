@@ -15,8 +15,6 @@ import { Input } from "@/components/ui/input";
 import { PulseLoader } from "react-spinners";
 import { addBook } from "@/lib/BookRepository/actions";
 import { useToast } from "@/hooks/use-toast";
-import { cloudinary } from "@/lib/Cloudinary";
-import { CloudinaryUploadResponse } from "@/lib/types";
 export default function AddBook() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -29,9 +27,8 @@ export default function AddBook() {
     totalCopies: 1,
     availableCopies: 1,
     price: 1,
-    imageUrl: "",
   });
-  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [responseMessage, setResponseMessage] = useState<string | null>(null);
@@ -56,11 +53,7 @@ export default function AddBook() {
       }));
     }
   };
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setImageFile(e.target.files[0]);
-    }
-  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -71,43 +64,7 @@ export default function AddBook() {
         setErrorMessage("ISBN should be 13 digits");
         return;
       }
-      let publicId = null;
-      let imageUrl = formData.imageUrl;
-  
-      if (imageFile) {
-        const arrayBuffer = await imageFile.arrayBuffer();
-        const buffer = new Uint8Array(arrayBuffer);
-  
-        const uploadResponse = await new Promise<CloudinaryUploadResponse>(
-          (resolve, reject) => {
-            cloudinary.uploader.upload_stream(
-              {
-                folder: "library_books",
-                public_id: `${formData.isbnNo}-${Date.now()}`,
-              },
-              function (error: any, result: any) {
-                if (error) {
-                  reject(error);
-                  return;
-                }
-                if (result) {
-                  resolve(result);
-                  return;
-                }
-              }
-            ).end(buffer);
-          }
-        );
-  
-        if (uploadResponse) {
-          imageUrl = uploadResponse.secure_url as string;
-          publicId = uploadResponse.public_id;
-        } else {
-          throw new Error("Failed to upload image to Cloudinary");
-        }
-      }
-      const newBookData = { ...formData, imageUrl };
-      const result = await addBook(newBookData);
+      const result = await addBook(formData);
       if (result) {
         toast({
           title: "Success",
@@ -127,7 +84,6 @@ export default function AddBook() {
           totalCopies: 1,
           availableCopies: 1,
           price: 1,
-          imageUrl: "",
         });
       }
     } catch (error) {
@@ -154,7 +110,7 @@ export default function AddBook() {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-xl max-h-screen overflow-y-auto">
+          <Card className="w-full max-w-xl">
             <CardHeader className="pb-6">
               <CardTitle className="text-2xl font-bold text-center">
                 Add Book
@@ -259,16 +215,6 @@ export default function AddBook() {
                       placeholder="Price"
                       value={formData.price}
                       onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="image">Book Image</Label>
-                    <Input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      onChange={handleImageChange}
                       required
                     />
                   </div>

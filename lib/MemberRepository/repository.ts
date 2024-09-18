@@ -1,5 +1,5 @@
 import { iBook, iBookBase, iMember, iMemberBase, iTransaction } from "../types";
-import { booksTable, membersTable, transactionsTable } from "@/db/schema";
+import { booksTable, membersTable, transactionsTable } from "@/drizzle/schema";
 import { z } from "zod";
 import { db } from "@/db";
 import { eq, like, and, count } from "drizzle-orm";

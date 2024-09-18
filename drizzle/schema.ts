@@ -1,6 +1,6 @@
-import { date, mysqlTable, serial, varchar, int } from "drizzle-orm/mysql-core";
-export const membersTable = mysqlTable("members", {
-  id: int("id").primaryKey().autoincrement(),
+import { pgTable, serial, varchar, integer } from "drizzle-orm/pg-core";
+export const membersTable = pgTable("members", {
+  id: serial("id").primaryKey(),
   firstName: varchar("firstName", { length: 100 }).notNull(),
   lastName: varchar("lastName", { length: 100 }),
   email: varchar("email", { length: 100 }).unique().notNull(),
@@ -10,27 +10,27 @@ export const membersTable = mysqlTable("members", {
   membershipStatus: varchar("membershipStatus", { length: 255 }).notNull(),
   role: varchar("role", { length: 255 }).notNull(),
 });
-export const booksTable = mysqlTable("books", {
-  id: int("id").primaryKey().autoincrement(),
+export const booksTable = pgTable("books", {
+  id: serial("id").primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
   author: varchar("author", { length: 255 }).notNull(),
   publisher: varchar("publisher", { length: 255 }).notNull(),
   genre: varchar("genre", { length: 255 }).notNull(),
   isbnNo: varchar("isbnNo", { length: 255 }).notNull(),
-  pages: int("pages").notNull(),
-  totalCopies: int("totalCopies").notNull(),
-  availableCopies: int("availableCopies").notNull(),
-  price: int("price"),
+  pages: integer("pages").notNull(),
+  totalCopies: integer("totalCopies").notNull(),
+  availableCopies: integer("availableCopies").notNull(),
+  price: integer("price"),
   imageUrl: varchar("imageUrl", { length: 255 }),
 });
-export const transactionsTable = mysqlTable("transactions", {
-  id: int("id").primaryKey().autoincrement(),
-  bookId: int("bookId")
+export const transactionsTable = pgTable("transactions", {
+  id: serial("id").primaryKey(),
+  bookId: integer("bookId")
     .notNull()
     .references(() => booksTable.id),
   bookTitle: varchar("bookTitle", { length: 255 }).notNull(),
   isbnNo: varchar("isbnNo", { length: 13 }).notNull(),
-  memberId: int("memberId")
+  memberId: integer("memberId")
     .notNull()
     .references(() => membersTable.id),
 

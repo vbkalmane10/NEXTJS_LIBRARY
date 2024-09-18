@@ -1,10 +1,9 @@
-import Header from "@/components/Header";
-import NavBar from "@/components/Navbar";
+
 import SideNav from "@/components/SideNav";
-import * as LucideIcons from "lucide-react";
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { BookOpenText, Library, Users, User } from "lucide-react";
+
 import { getUserById } from "@/lib/MemberRepository/repository";
 export default async function Layout({
   children,

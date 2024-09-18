@@ -1,7 +1,8 @@
-import mysql from "mysql2/promise";
-import { drizzle } from "drizzle-orm/mysql2";
+import { Pool } from "pg";
+import { drizzle } from "drizzle-orm/vercel-postgres";
 import { AppEnvs } from "@/read_env";
-
+import { sql } from "@vercel/postgres";
+import * as schema from "@/drizzle/schema";
 // const pool = mysql.createPool({
 //   host: process.env.DB_HOST,
 //   user: process.env.DB_USER,
@@ -10,7 +11,4 @@ import { AppEnvs } from "@/read_env";
 //   port: Number(process.env.DB_PORT),
 // });
 // console.log(process.env.DB_HOST);
-const pool = mysql.createPool({
-  uri: AppEnvs.DATABASE_URL || "",
-});
-export const db = drizzle(pool);
+export const db = drizzle(sql, { schema });

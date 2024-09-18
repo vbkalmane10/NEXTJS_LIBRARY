@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/db";
-import { membersTable, booksTable } from "@/db/schema";
+import { membersTable, booksTable } from "@/drizzle/schema";
 import { eq, like, and, gt } from "drizzle-orm";
 import { iBook, iBookBase } from "../types";
 import {
