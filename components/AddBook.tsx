@@ -15,7 +15,8 @@ import { Input } from "@/components/ui/input";
 import { PulseLoader } from "react-spinners";
 import { addBook } from "@/lib/BookRepository/actions";
 import { useToast } from "@/hooks/use-toast";
-import { uploadImageToCloudinary } from "@/lib/Cloudinary";
+import { cloudinary } from "@/lib/Cloudinary";
+import { CloudinaryUploadResponse } from "@/lib/types";
 export default function AddBook() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -70,13 +71,43 @@ export default function AddBook() {
         setErrorMessage("ISBN should be 13 digits");
         return;
       }
+      let publicId = null;
       let imageUrl = formData.imageUrl;
+  
       if (imageFile) {
-        const uploadedImageUrl = await uploadImageToCloudinary(imageFile);
-        imageUrl = uploadedImageUrl;
-        setFormData((prev) => ({ ...prev, imageUrl }));
+        const arrayBuffer = await imageFile.arrayBuffer();
+        const buffer = new Uint8Array(arrayBuffer);
+  
+        const uploadResponse = await new Promise<CloudinaryUploadResponse>(
+          (resolve, reject) => {
+            cloudinary.uploader.upload_stream(
+              {
+                folder: "library_books",
+                public_id: `${formData.isbnNo}-${Date.now()}`,
+              },
+              function (error: any, result: any) {
+                if (error) {
+                  reject(error);
+                  return;
+                }
+                if (result) {
+                  resolve(result);
+                  return;
+                }
+              }
+            ).end(buffer);
+          }
+        );
+  
+        if (uploadResponse) {
+          imageUrl = uploadResponse.secure_url as string;
+          publicId = uploadResponse.public_id;
+        } else {
+          throw new Error("Failed to upload image to Cloudinary");
+        }
       }
-      const result = await addBook(formData);
+      const newBookData = { ...formData, imageUrl };
+      const result = await addBook(newBookData);
       if (result) {
         toast({
           title: "Success",
