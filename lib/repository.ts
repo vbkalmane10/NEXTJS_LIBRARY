@@ -1,4 +1,11 @@
-import { iBook, iBookBase, iMember, iMemberBase, iTransaction } from "./types";
+import {
+  CreateRequest,
+  iBook,
+  iBookBase,
+  iMember,
+  iMemberBase,
+  iTransaction,
+} from "./types";
 import { booksTable, membersTable, transactionsTable } from "@/drizzle/schema";
 import { z } from "zod";
 import { db } from "@/db";
@@ -81,11 +88,11 @@ export async function createRequest(
       request: undefined,
     };
   }
+  type CreateRequest = Omit<Request, "id"> | undefined;
+  let newRequest: CreateRequest;
 
-  let newRequest: Request | undefined;
   try {
     newRequest = {
-      id: 0,
       memberId: request.memberId,
       bookId: request.bookId,
       bookTitle: request.bookTitle,
@@ -101,7 +108,7 @@ export async function createRequest(
 
     return {
       message: "Request created successfully",
-      request: newRequest,
+      request: newRequest as Request,
     };
   } catch (error) {
     console.error("Error creating request:", error);
@@ -340,4 +347,3 @@ export async function getRecentApprovedRequestsWithBooks(userId: number) {
 
   return requestsWithBooks;
 }
-

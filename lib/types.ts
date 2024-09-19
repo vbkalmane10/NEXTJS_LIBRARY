@@ -39,7 +39,7 @@ export interface iBookBase {
   pages: number;
   totalCopies: number;
   price: number | null;
-  imageUrl?: string | undefined | null;
+  imageUrl?: string | null;
 }
 export interface iBook extends iBookBase {
   id: number;
@@ -67,6 +67,7 @@ export interface Request {
   returnDate: string | null;
   dueDate: string | null;
 }
+export type CreateRequest = Omit<Request, "id">;
 export interface RequestStatistics {
   totalRequests: number;
   approvedRequests: number;

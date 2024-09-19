@@ -56,7 +56,7 @@ export default function ClientSideBooks({
         </select>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {sortedBooks.map((book) => (
           <BookCard
             key={book.id}

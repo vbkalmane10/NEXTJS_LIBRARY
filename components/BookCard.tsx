@@ -2,7 +2,7 @@
 
 import { handleCreateRequest } from "@/lib/actions";
 import { createRequest } from "@/lib/repository";
-
+import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -19,13 +19,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { iBook } from "@/lib/types";
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  isbnNo: string;
-}
-
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Heart } from "lucide-react"
+import { Button } from "@/components/ui/button"
 interface BookCardProps {
   book: iBook;
   userId: number | undefined;
@@ -87,82 +83,57 @@ export default function BookCard({ book, userId, username }: BookCardProps) {
     console.log(`Adding to favorites: ${book.title}`);
   };
   return (
-    <div className="p-4 border rounded-lg shadow-md flex flex-col justify-between h-56">
-      <div className="flex-grow">
-        <h2 className="text-lg font-semibold line-clamp-2">{book.title}</h2>
-        <p className="text-sm text-gray-600 line-clamp-1">
-          Author: {book.author}
-        </p>
-        <p className="text-sm text-gray-600 line-clamp-1">
-          Publisher: {book.publisher}
-        </p>
-        <p className="text-sm text-gray-500 line-clamp-1">
-          ISBN: {book.isbnNo}
-        </p>
-        <p className="text-sm text-gray-500 line-clamp-1">
-          Price: {book.price}
-        </p>
-      </div>
-
-      <div className="flex gap-2 mt-4">
-        <AlertDialog>
-          <AlertDialogTrigger className="bg-black text-white px-3 py-1 rounded hover:bg-blue-100 hover:text-black transition flex-grow">
-            Borrow
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Confirm Borrow ?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to borrow {book.title}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleConfirm} className="bg-black">
-                Continue
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        <button
-          onClick={handleFavorite}
-          className="bg-white text-red-500 p-2 rounded-full  transition flex items-center justify-center"
-        ></button>
-      </div>
-      {showConfirm && (
-        <div className="fixed inset-0  bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold flex justify-center ">
-              Confirm Borrow
-            </h3>
-            <h3>Are you sure you want to borrow {book.title} ?</h3>
-
-            <div className="flex gap-4 mt-4 justify-center">
-              {isSubmitting ? (
-                <div className="flex justify-center mt-4">
-                  <PulseLoader color="#3498db" />
-                </div>
-              ) : (
-                <button
-                  onClick={handleConfirm}
-                  className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-black"
-                >
-                  Confirm
-                </button>
-              )}
-              <button
-                onClick={handleCancel}
-                className="bg-transparent text-black px-4 py-2 rounded  transition"
-              >
-                Cancel
-              </button>
-            </div>
-
-            {error && <p className="mt-4 text-red-600">{error}</p>}
+    <Card className="w-[280px] h-[480px] overflow-hidden transition-all duration-300 hover:shadow-lg mt-6">
+    <CardHeader className="p-0">
+      <div className="relative h-[200px] w-full">
+        {book.imageUrl ? (
+          <Image
+            src={book.imageUrl}
+            alt={book.title}
+            layout="fill"
+            objectFit="cover"
+            className="transition-all duration-300 hover:scale-105"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gray-200">
+            <span className="text-gray-500">No Image</span>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </CardHeader>
+    <CardContent className="p-4 flex flex-col h-[220px]">
+      <CardTitle className="text-lg font-bold line-clamp-2 mb-2">{book.title}</CardTitle>
+      <p className="text-sm text-gray-600 mb-1 line-clamp-1">by {book.author}</p>
+      <p className="text-sm text-gray-500 mb-1 line-clamp-1">{book.publisher}</p>
+      <p className="text-sm text-gray-500 mb-1">ISBN: {book.isbnNo}</p>
+      <p className="text-lg font-semibold text-green-600 mt-auto">${book.price}</p>
+    </CardContent>
+    <CardFooter className="p-4 pt-0 flex justify-between items-center">
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button className="w-3/4" variant="default">
+            Borrow
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Borrow</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to borrow {book.title}?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirm} disabled={isSubmitting}>
+              {isSubmitting ? "Processing..." : "Confirm"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <Button variant="ghost" size="icon" onClick={() => console.log(`Adding to favorites: ${book.title}`)}>
+        <Heart className="h-5 w-5 text-red-500" />
+      </Button>
+    </CardFooter>
+  </Card>
   );
 }

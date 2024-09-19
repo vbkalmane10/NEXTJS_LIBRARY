@@ -9,12 +9,13 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Button } from "./ui/button";
-
+import Image from "next/image";
 import { Label } from "./ui/label";
 import { Input } from "@/components/ui/input";
 import { PulseLoader } from "react-spinners";
 import { addBook } from "@/lib/BookRepository/actions";
 import { useToast } from "@/hooks/use-toast";
+import { uploadImageToCloudinary } from "@/lib/Cloudinary";
 export default function AddBook() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,11 +28,12 @@ export default function AddBook() {
     totalCopies: 1,
     availableCopies: 1,
     price: 1,
+    imageUrl: "",
   });
-
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [responseMessage, setResponseMessage] = useState<string | null>(null);
+
   const { toast } = useToast();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,7 +55,11 @@ export default function AddBook() {
       }));
     }
   };
-
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setImageFile(e.target.files[0]);
+    }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -64,7 +70,15 @@ export default function AddBook() {
         setErrorMessage("ISBN should be 13 digits");
         return;
       }
-      const result = await addBook(formData);
+      if (!imageFile) {
+        setErrorMessage("Please upload a book image.");
+        setLoading(false);
+        return;
+      }
+      const imageUrl = await uploadImageToCloudinary(imageFile);
+
+      console.log("This is the image url",imageUrl);
+      const result = await addBook({ ...formData, imageUrl });
       if (result) {
         toast({
           title: "Success",
@@ -84,7 +98,9 @@ export default function AddBook() {
           totalCopies: 1,
           availableCopies: 1,
           price: 1,
+          imageUrl: "",
         });
+        setImageFile(null);
       }
     } catch (error) {
       console.error("Error adding book:", error);
@@ -110,7 +126,7 @@ export default function AddBook() {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-xl">
+          <Card className="w-full max-w-xl max-h-screen overflow-auto">
             <CardHeader className="pb-6">
               <CardTitle className="text-2xl font-bold text-center">
                 Add Book
@@ -215,6 +231,16 @@ export default function AddBook() {
                       placeholder="Price"
                       value={formData.price}
                       onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="image">Book Image</Label>
+                    <Input
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      onChange={handleImageChange}
                       required
                     />
                   </div>

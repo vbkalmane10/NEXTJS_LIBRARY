@@ -41,17 +41,16 @@ export async function createBook(
       book: updatedBook,
     };
   } else {
-    const newBookData: iBook = {
+    const newBookData: Omit<iBook, "id"> = {
       ...book,
       availableCopies: book.totalCopies,
-      id: 0,
     };
 
     await db.insert(booksTable).values(newBookData);
 
     return {
       message: "Book added successfully",
-      book: newBookData,
+      book: newBookData as iBook,
     };
   }
 }

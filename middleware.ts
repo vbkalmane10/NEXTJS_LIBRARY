@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
   });
 
   const { pathname } = req.nextUrl;
-  console.log(token);
+  
   if (!token) {
     if (pathname.startsWith("/admin") || pathname.startsWith("/books")) {
       return NextResponse.redirect(new URL("/login", req.url));
