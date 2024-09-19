@@ -51,9 +51,9 @@ export interface iTransactionBase {
 }
 
 export interface iTransaction extends iTransactionBase {
-  issueDate: string;
+  issueDate: string|null;
   returnDate: string | null;
-  dueDate: string;
+  dueDate: string|null;
 }
 export interface Request {
   id: number;

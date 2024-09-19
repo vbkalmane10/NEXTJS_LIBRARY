@@ -1,8 +1,9 @@
 "use client";
 
-import { SessionProvider, signOut, useSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
 import { Toaster } from "@/components/ui/toaster";
+import { NextIntlClientProvider } from "next-intl";
 
 import "./globals.css";
 
@@ -18,4 +19,3 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     </html>
   );
 }
-

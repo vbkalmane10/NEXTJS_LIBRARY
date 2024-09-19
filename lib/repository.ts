@@ -164,15 +164,6 @@ export async function approveRequest(
         .update(booksTable)
         .set({ availableCopies: availableCopies - 1 })
         .where(eq(booksTable.id, req.bookId));
-
-      // newTransaction = {
-      //   bookId: req.bookId,
-      //   memberId: req.memberId,
-      //   returnDate: null,
-      //   dueDate: formattedDueDate,
-      //   issueDate: formattedBorrowDate,
-      // };
-      // await trx.insert(transactionsTable).values(newTransaction).execute();
     });
     return {
       message: "Transaction Successful",
@@ -313,7 +304,7 @@ export async function getRequestStatistics(
       .where(
         and(
           eq(transactionsTable.memberId, memberId),
-          eq(transactionsTable.status, "pending")
+          eq(transactionsTable.status, "Pending")
         )
       )
       .execute();
@@ -346,4 +337,73 @@ export async function getRecentApprovedRequestsWithBooks(userId: number) {
     .limit(3);
 
   return requestsWithBooks;
+}
+export async function returnBook(
+  req: Request
+): Promise<{ message: string; transaction: iTransaction | undefined }> {
+  const returnDate = new Date().toISOString().split("T")[0];
+
+  try {
+    let updatedTransaction: iTransaction | undefined;
+
+    await db.transaction(async (trx) => {
+      const transaction = await trx
+        .select()
+        .from(transactionsTable)
+        .where(eq(transactionsTable.id, req.id))
+        .execute();
+
+      if (!transaction) {
+        throw new Error("Transaction not found");
+      }
+
+      if (transaction[0].status === "Returned") {
+        throw new Error("Request already returned");
+      }
+
+      if (transaction[0].status !== "Approved") {
+        throw new Error("Only approved transactions can be returned");
+      }
+
+      const existingBook = await trx
+        .select()
+        .from(booksTable)
+        .where(eq(booksTable.id, req.bookId))
+        .execute();
+
+      if (!existingBook) {
+        throw new Error("Book not found");
+      }
+
+      await trx
+        .update(transactionsTable)
+        .set({
+          status: "Returned",
+          returnDate: returnDate,
+        })
+        .where(eq(transactionsTable.id, req.id));
+
+      const availableCopies = existingBook[0].availableCopies;
+      await trx
+        .update(booksTable)
+        .set({ availableCopies: availableCopies + 1 })
+        .where(eq(booksTable.id, req.bookId));
+
+      updatedTransaction = {
+        ...transaction[0],
+
+        returnDate: returnDate,
+      };
+    });
+
+    return {
+      message: "Book returned successfully",
+      transaction: updatedTransaction,
+    };
+  } catch (error: any) {
+    return {
+      message: error.message,
+      transaction: undefined,
+    };
+  }
 }

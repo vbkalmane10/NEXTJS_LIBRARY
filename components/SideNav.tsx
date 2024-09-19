@@ -4,6 +4,7 @@ import * as LucideIcons from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, User, LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface NavItem {
   href: string;

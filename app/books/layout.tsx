@@ -3,13 +3,17 @@ import SideNav from "@/components/SideNav";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getUserById } from "@/lib/MemberRepository/repository";
+import { useLocale } from "next-intl";
 export default async function Layout({
   children,
+
 }: {
   children: React.ReactNode;
+
 }) {
   const session = await getServerSession(authOptions);
   const userName = await getUserById(session.user?.id);
+
   const navItems = [
     { href: "/books", text: "Books" },
     {
@@ -23,7 +27,11 @@ export default async function Layout({
   ];
   return (
     <div className="flex h-screen w-full">
-      <SideNav navItems={navItems} userName={userName?.firstName} />
+      <SideNav
+        navItems={navItems}
+        userName={userName?.firstName}
+       
+      />
 
       <div className="flex flex-col flex-1">
         <Header membershipStatus={userName?.membershipStatus} />
