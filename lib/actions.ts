@@ -20,6 +20,7 @@ import {
   getRequestStatistics,
   getRecentApprovedRequestsWithBooks,
   rejectRequest,
+  cancelRequest,
 } from "./repository";
 
 export async function getUserId(email: string): Promise<number | null> {
@@ -117,5 +118,13 @@ export async function fetchRecentlyBorrowedBooks(userId: number) {
     return recentBooks;
   } catch (error) {
     throw new Error("Error while fetching recent requests");
+  }
+}
+export async function handleCancelRequest(requestId: number) {
+  try {
+    const result = await cancelRequest(requestId);
+    return result;
+  } catch (error) {
+    throw new Error("Error while cancelling the request");
   }
 }

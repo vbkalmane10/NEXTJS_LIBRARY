@@ -29,7 +29,9 @@ const SideNav: React.FC<SideNavProps> = ({
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
-
+  const membershipColor =
+    membershipStatus === "active" ? "bg-green-500" : "bg-red-500";
+  const membershipLabel = membershipStatus === "active" ? "Active" : "Expired";
   return (
     <>
       <button
@@ -52,11 +54,18 @@ const SideNav: React.FC<SideNavProps> = ({
         } md:translate-x-0 transition duration-200 ease-in-out z-30 md:z-0 md:static`}
       >
         <nav className="flex flex-col w-64 bg-white shadow-lg h-full">
-          <div className="flex flex-col items-center mt-8 mb-4">
+          <div className="flex flex-col items-center mt-8 justify-center">
             <div className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center">
               <User className="w-12 h-12 text-gray-600" />
             </div>
             <h2 className="mt-4 text-xl font-semibold">{userName}</h2>
+            {membershipStatus && (
+              <div
+                className={` mt-2 px-3 py-1 text-sm font-semibold text-white rounded-full ${membershipColor}`}
+              >
+                {membershipLabel}
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col flex-grow px-4 mt-4 py-4">

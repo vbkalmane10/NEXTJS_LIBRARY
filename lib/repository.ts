@@ -407,3 +407,25 @@ export async function returnBook(
     };
   }
 }
+export async function cancelRequest(requestId: number) {
+  try {
+    const existingTransaction = await db
+      .select()
+      .from(transactionsTable)
+      .where(eq(transactionsTable.id, requestId))
+      .execute();
+    if (!existingTransaction) {
+      throw new Error("Transaction not found");
+    }
+    await db
+      .delete(transactionsTable)
+      .where(eq(transactionsTable.id, requestId))
+      .execute();
+    return {
+      message: "Request cancelled successfully",
+      transaction: existingTransaction,
+    };
+  } catch (error) {
+    throw new Error("Error while cancelling the request");
+  }
+}

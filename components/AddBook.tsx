@@ -77,7 +77,7 @@ export default function AddBook() {
       }
       const imageUrl = await uploadImageToCloudinary(imageFile);
 
-      console.log("This is the image url",imageUrl);
+      console.log("This is the image url", imageUrl);
       const result = await addBook({ ...formData, imageUrl });
       if (result) {
         toast({
@@ -191,16 +191,18 @@ export default function AddBook() {
                     required
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="pages">Pages</Label>
-                  <Input
-                    type="number"
-                    name="pages"
-                    placeholder="Pages"
-                    value={formData.pages}
-                    onChange={handleChange}
-                    required
-                  />
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="space-y-1">
+                    <Label htmlFor="pages">Pages</Label>
+                    <Input
+                      type="number"
+                      name="pages"
+                      placeholder="Pages"
+                      value={formData.pages}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
                   <div className="space-y-1">
                     <Label htmlFor="totalCopies">Total Copies</Label>
                     <Input
@@ -223,30 +225,33 @@ export default function AddBook() {
                       required
                     />
                   </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="price">Price</Label>
-                    <Input
-                      type="number"
-                      name="price"
-                      placeholder="Price"
-                      value={formData.price}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="image">Book Image</Label>
-                    <Input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      required
-                    />
-                  </div>
-                  <p className="text-red-600 font-semibold">{errorMessage}</p>
                 </div>
-                <div className="flex justify-between">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="space-y-1">
+                  <Label htmlFor="price">Price</Label>
+                  <Input
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="image">Book Image</Label>
+                  <Input
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    required
+                  />
+                </div>
+                </div>
+                <p className="text-red-600 font-semibold">{errorMessage}</p>
+
+                <div className="flex gap-4">
                   {loading ? (
                     <div className="flex justify-center mt-4">
                       <PulseLoader color="#3498db" />

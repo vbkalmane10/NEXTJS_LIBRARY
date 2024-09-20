@@ -7,32 +7,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export default function Header({
-  membershipStatus,
-}: {
-  membershipStatus: string | undefined;
-}) {
+export default function Header() {
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const membershipColor =
-    membershipStatus === "active" ? "bg-green-500" : "bg-red-500";
-  const membershipLabel = membershipStatus === "active" ? "Active" : "Expired";
 
   return (
     <header className="flex items-center px-6 py-4 bg-white shadow-md md:justify-between justify-center">
       <div className="text-2xl font-bold text-black">Booksphere</div>
       <div className="flex items-center gap-1">
-        {membershipStatus && (
-          <div
-            className={`ml-4 px-3 py-1 text-sm font-semibold text-white rounded-full ${membershipColor}`}
-          >
-            {membershipLabel}
-          </div>
-        )}
         {session && (
           <nav>
             <button onClick={toggleMenu} className="flex items-center gap-2">
