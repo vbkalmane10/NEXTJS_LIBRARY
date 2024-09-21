@@ -9,14 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import nodemailer from "nodemailer";
 import { Button } from "@/components/ui/button";
-import { getTransactionsDueToday } from "@/lib/actions";
-import { format } from "date-fns";
-import { iTransaction } from "@/lib/types";
-
+import { getTransactionsDueToday, sendEmailNotification } from "@/lib/actions";
+import { fetchUserDetails } from "@/lib/MemberRepository/actions";
+import { toast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 export default function DueTodayPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
-
+  const [loadingId, setLoadingId] = useState<number | null>(null);
   useEffect(() => {
     const fetchTransactions = async () => {
       const today = new Date();
@@ -27,8 +28,35 @@ export default function DueTodayPage() {
     fetchTransactions();
   }, []);
 
-  const handleNotify = (transactionId: string) => {
-    alert(`Notify member for transaction: ${transactionId}`);
+  const handleNotify = async (memberId: number, transaction: any) => {
+    setLoadingId(transaction.id);
+    try {
+      const user = await fetchUserDetails(memberId);
+      console.log(user);
+      const result = await sendEmailNotification(
+        user?.email,
+        transaction.bookTitle
+      );
+      if (result.success) {
+        toast({
+          title: "Success",
+          description: result.message,
+          variant: "destructive",
+          className: "bg-green-500 text-black",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: result.message,
+          variant: "destructive",
+          className: "bg-red-500",
+        });
+      }
+    } catch (error) {
+      throw new Error("Error while sending notiifcation");
+    } finally {
+      setLoadingId(null);
+    }
   };
 
   return (
@@ -43,7 +71,7 @@ export default function DueTodayPage() {
             <TableHead>Member Name</TableHead>
             <TableHead>Book Name</TableHead>
             <TableHead>Issued Date</TableHead>
-            <TableHead>Action</TableHead>
+            <TableHead className="text-center">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="bg-white">
@@ -54,12 +82,22 @@ export default function DueTodayPage() {
               <TableCell>{transaction.firstName}</TableCell>
               <TableCell>{transaction.bookTitle}</TableCell>
               <TableCell>{transaction.issueDate}</TableCell>
-              <TableCell>
+              <TableCell className="flex justify-center space-x-2">
                 <Button
-                  onClick={() => handleNotify(transaction.id)}
+                  onClick={() =>
+                    handleNotify(transaction.memberId, transaction)
+                  }
                   variant="outline"
+                  disabled={loadingId === transaction.id}
                 >
-                  Notify
+                  {loadingId === transaction.id ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    "Notify"
+                  )}
+                </Button>
+                <Button variant="secondary" className="min-w-[120px] bg-green-400">
+                  Mark as Returned
                 </Button>
               </TableCell>
             </TableRow>

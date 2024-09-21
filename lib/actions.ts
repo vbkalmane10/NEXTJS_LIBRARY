@@ -10,7 +10,7 @@ import {
   Request,
   RequestStatistics,
 } from "./types";
-
+import nodemailer from "nodemailer";
 import {
   fetchAllRequests,
   createRequest,
@@ -136,4 +136,60 @@ export async function getTransactionsDueToday(date: Date) {
   } catch (error) {
     throw new Error("Error while fetching due today");
   }
+}
+export async function sendEmailNotification(
+  memberEmail: string | undefined,
+  bookTitle: string
+): Promise<{ success: boolean; message: string }> {
+  return new Promise((resolve, reject) => {
+    if (!memberEmail) {
+      return reject({ success: false, message: "No member email provided" });
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.APP_EMAIL_ID,
+        pass: process.env.APP_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.APP_EMAIL_ID,
+      to: memberEmail,
+      subject: "Due Book Notification",
+      text: `Dear member, the following book is due today: ${bookTitle}`,
+      html: `
+      <div style="max-width: 600px; margin: auto; font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; padding-bottom: 20px;">
+         <h1>BookSphere</h1>
+          <h2 style="color: #333;">Your Book is Due Today!</h2>
+        </div>
+        <div style="background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);">
+          <p style="color: #333;">Dear Member,</p>
+          <p style="color: #333;">We noticed that your borrowed book <strong style="color: #007bff;">${bookTitle}</strong> is due today.</p>
+          <p style="color: #333;">Please return it to avoid any late fees or renew it if you still need it.</p>
+          
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <p style="color: #888;">Thank you for using our library services.</p>
+          <p style="color: #888;">Contact us at <a href="mailto:support@library.com" style="color: #007bff;">support@library.com</a> for any questions.</p>
+        </div>
+        <div style="background-color: #007bff; padding: 10px; border-radius: 0 0 8px 8px; text-align: center;">
+          <p style="color: #fff; margin: 0;">&copy; 2024 Your Library. All rights reserved.</p>
+        </div>
+      </div>
+    `,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error sending email:", error);
+        return reject({ success: false, message: "Error sending email" });
+      } else {
+        console.log("Email sent: " + info.response);
+        return resolve({ success: true, message: "Email sent successfully" });
+      }
+    });
+  });
 }

@@ -67,7 +67,7 @@ const ViewRequestPage: React.FC = () => {
     }
   };
 
-  if (loading) return <p>Loading requests...</p>;
+  if (loading) return <p className="flex justify-center items-center">Loading requests...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (

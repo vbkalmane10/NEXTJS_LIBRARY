@@ -81,7 +81,7 @@ export async function handleDeleteBook(isbnNo: string) {
     return deletedBook;
   } catch (error) {
     console.error("Error in handleDeleteBook:", error);
-    throw new Error("Failed to delete book");
+    throw new Error("Failed to delete book.The book might have issued");
   }
 }
 

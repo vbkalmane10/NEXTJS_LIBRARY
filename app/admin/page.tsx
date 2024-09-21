@@ -64,7 +64,7 @@ export default function Page({
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to delete book. Please try again.",
+        description: "Failed to delete book.Books might have issued",
         className: "bg-red-600 text-white",
         duration: 1000,
       });
