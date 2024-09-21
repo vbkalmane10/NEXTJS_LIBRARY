@@ -429,3 +429,17 @@ export async function cancelRequest(requestId: number) {
     throw new Error("Error while cancelling the request");
   }
 }
+
+export async function dueToday(date: Date) {
+  try {
+    const formattedDate = date.toISOString().split("T")[0];
+    const transactions = await db
+      .select()
+      .from(transactionsTable)
+      .where(eq(transactionsTable.dueDate, formattedDate));
+
+    return transactions;
+  } catch (error) {
+    throw new Error("Error while fetching due today transactions");
+  }
+}

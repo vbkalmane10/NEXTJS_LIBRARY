@@ -21,6 +21,7 @@ import {
   getRecentApprovedRequestsWithBooks,
   rejectRequest,
   cancelRequest,
+  dueToday,
 } from "./repository";
 
 export async function getUserId(email: string): Promise<number | null> {
@@ -126,5 +127,13 @@ export async function handleCancelRequest(requestId: number) {
     return result;
   } catch (error) {
     throw new Error("Error while cancelling the request");
+  }
+}
+export async function getTransactionsDueToday(date: Date) {
+  try {
+    const result = await dueToday(date);
+    return result;
+  } catch (error) {
+    throw new Error("Error while fetching due today");
   }
 }

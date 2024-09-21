@@ -15,7 +15,7 @@ export default async function Layout({
   const navItems = [
     { href: "/admin", text: "Books" },
     { href: "/admin/viewrequests", text: "Book Requests" },
-
+    { href: "/admin/dueToday", text: "Due Today" },
     { href: "/admin/viewmember", text: "View Members" },
     { href: "/admin/profile", text: "View Profile" },
   ];
