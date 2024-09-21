@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "./i18n/routing";
 
 export async function middleware(req: NextRequest) {
   console.log("Middleware invoked");
@@ -10,7 +12,7 @@ export async function middleware(req: NextRequest) {
     secureCookie: process.env.NODE_ENV === "production",
   });
 
-  const { pathname } = req.nextUrl;
+  const pathname = req.nextUrl.pathname;
   
   if (!token) {
     if (pathname.startsWith("/admin") || pathname.startsWith("/books")) {

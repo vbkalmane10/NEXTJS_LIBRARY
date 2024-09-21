@@ -9,9 +9,11 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const MyRequestsPage = () => {
   const { data: session, status } = useSession();
+
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +53,6 @@ const MyRequestsPage = () => {
           prevRequests.filter((request) => request.id !== requestId)
         );
       }
-  
     } catch (error) {
       toast({
         title: "Error",
@@ -80,7 +81,7 @@ const MyRequestsPage = () => {
       {/* Switch/Toggle for Approved or Pending Requests */}
       <div className="mb-6 flex items-center space-x-4">
         <span className="text-sm font-medium text-gray-700">
-          Showing {filter === "Pending" ? "Pending" : "Approved"} Requests
+          Show {filter === "Pending" ? "Approved" : "Pending"} Requests
         </span>
 
         <label className="relative inline-flex items-center cursor-pointer">

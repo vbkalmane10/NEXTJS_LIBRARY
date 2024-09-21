@@ -1,12 +1,12 @@
+
+import createNextIntlPlugin from 'next-intl/plugin';
+const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     domains: ["res.cloudinary.com"],
   },
-  i18n: {
-    locales: ["en", "kn"],
-    defaultLocale: "en",
-  },
+ 
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig)

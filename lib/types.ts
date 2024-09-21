@@ -51,9 +51,9 @@ export interface iTransactionBase {
 }
 
 export interface iTransaction extends iTransactionBase {
-  issueDate: string|null;
+  issueDate: string | null;
   returnDate: string | null;
-  dueDate: string|null;
+  dueDate: string | null;
 }
 export interface Request {
   id: number;
@@ -89,6 +89,7 @@ export interface ProfileContentProps {
   isEditing: boolean;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   toggleEdit: () => void;
+  
 }
 declare module "next-auth" {
   interface Session extends DefaultSession {

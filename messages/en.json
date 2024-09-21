@@ -1,0 +1,13 @@
+{
+  "LandingPage": {
+    "welcome": "Welcome to Digital Library",
+    "description": "Discover, request, and manage your favorite books all in one place.",
+    "explore_books": "Explore Books",
+    "why_choose": "Why Choose Our Library?",
+    "browse_books": "Browse through a vast collection of books across all genres.",
+    "request_books": "Request Books",
+    "request_new_books": "Request new books or borrow available copies easily.",
+    "manage_transactions": "Manage Transactions",
+    "track_transactions": "Keep track of all your transactions and book requests in one place."
+  }
+}
