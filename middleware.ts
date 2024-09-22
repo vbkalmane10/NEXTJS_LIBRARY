@@ -1,11 +1,9 @@
+import createMiddleware from "next-intl/middleware";
+ import { routing } from "./i18n/routing";
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import createMiddleware from "next-intl/middleware";
-import { routing } from "./i18n/routing";
-
+const intlMiddleware = createMiddleware(routing);
 export async function middleware(req: NextRequest) {
-  console.log("Middleware invoked");
-
   const token = await getToken({
     req,
     secret: process.env.NEXT_AUTH_SECRET,
@@ -13,12 +11,15 @@ export async function middleware(req: NextRequest) {
   });
 
   const pathname = req.nextUrl.pathname;
-  
+  const pathnameWithoutLocale = pathname.replace(/^\/[a-z]{2}(?:-[A-Z]{2})?/, '');
+
+  // If the user is not authenticated, redirect them to login for certain paths
   if (!token) {
     if (pathname.startsWith("/admin") || pathname.startsWith("/books")) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
   } else {
+    // If user is authenticated, restrict access to routes based on their role
     if (pathname.startsWith("/admin") && token.role !== "admin") {
       return NextResponse.redirect(new URL("/404", req.url));
     }
@@ -28,9 +29,11 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  // NextIntl middleware ensures that the locale is applied correctly
+  return intlMiddleware(req);
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/books/:path*"],
+  matcher: ['/((?!api|_next|.*\\..*).*)'],
 };
+

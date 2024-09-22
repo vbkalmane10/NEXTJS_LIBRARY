@@ -6,8 +6,10 @@ import { getUserById } from "@/lib/MemberRepository/repository";
 import { useLocale } from "next-intl";
 export default async function Layout({
   children,
+  params: { locale }
 }: {
   children: React.ReactNode;
+  params: { locale: string };
 }) {
   const session = await getServerSession(authOptions);
   const userName = await getUserById(session.user?.id);
@@ -29,6 +31,7 @@ export default async function Layout({
         navItems={navItems}
         userName={userName?.firstName}
         membershipStatus={userName?.membershipStatus}
+        locale={locale}
       />
 
       <div className="flex flex-col flex-1">

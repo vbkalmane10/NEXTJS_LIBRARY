@@ -12,6 +12,7 @@ import { iBook } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import SideNav from "@/components/SideNav";
 import Header from "@/components/Header";
+import { useTranslations } from "next-intl";
 
 export default function Page({
   searchParams,
@@ -26,7 +27,7 @@ export default function Page({
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const router = useRouter();
-
+  const t = useTranslations("AdminPage");
   async function loadBooks() {
     try {
       const { books, totalPages } = await fetchBooks(query, currentPage, 7);
@@ -34,8 +35,8 @@ export default function Page({
       setTotalPages(totalPages);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to fetch books.",
+        title: t("error.title"),
+        description: t("error.fetchBooks"),
         variant: "destructive",
       });
     }
@@ -51,7 +52,7 @@ export default function Page({
       const result = await handleDeleteBook(isbnNo);
       if (result) {
         toast({
-          title: "Success",
+          title: t("success.title"),
           description: result.message,
           className: "bg-green-600 text-white",
           duration: 1000,
@@ -63,8 +64,8 @@ export default function Page({
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to delete book.Books might have issued",
+        title: t("error.title"),
+        description: t("error.deleteBook"),
         className: "bg-red-600 text-white",
         duration: 1000,
       });
@@ -82,14 +83,14 @@ export default function Page({
   return (
     <div className="flex flex-col w-full min-h-screen">
       <div className="p-8 flex-grow">
-        <h1 className="text-3xl font-bold">Welcome, Admin</h1>
+        <h1 className="text-3xl font-bold">{t("welcomeAdmin")}</h1>
 
         <div className="flex w-full items-center justify-between mt-4">
-          <h1 className="text-2xl font-bold">Books</h1>
+          <h1 className="text-2xl font-bold">{t("booksHeading")}</h1>
         </div>
 
         <div className="mt-4 flex gap-4 items-center">
-          <Search placeholder="Search books..." />
+          <Search placeholder={t("searchPlaceholder")} />
           <AddBook />
         </div>
 

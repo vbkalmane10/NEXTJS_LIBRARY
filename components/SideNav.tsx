@@ -16,12 +16,14 @@ interface SideNavProps {
   navItems: NavItem[];
   userName: string | undefined;
   membershipStatus?: string | undefined;
+  locale:string;
 }
 
 const SideNav: React.FC<SideNavProps> = ({
   navItems,
   userName,
   membershipStatus,
+  locale
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -70,7 +72,7 @@ const SideNav: React.FC<SideNavProps> = ({
 
           <div className="flex flex-col flex-grow px-4 mt-4 py-4">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = pathname === `/${locale}${item.href}`;
 
               return (
                 <Link

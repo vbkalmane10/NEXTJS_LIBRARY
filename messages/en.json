@@ -1,13 +1,49 @@
 {
   "LandingPage": {
-    "welcome": "Welcome to Digital Library",
-    "description": "Discover, request, and manage your favorite books all in one place.",
-    "explore_books": "Explore Books",
-    "why_choose": "Why Choose Our Library?",
-    "browse_books": "Browse through a vast collection of books across all genres.",
-    "request_books": "Request Books",
-    "request_new_books": "Request new books or borrow available copies easily.",
-    "manage_transactions": "Manage Transactions",
-    "track_transactions": "Keep track of all your transactions and book requests in one place."
+    "title": "Welcome to Digital Library",
+    "subtitle": "Discover, request, and manage your favorite books all in one place.",
+    "exploreBooks": "Explore Books",
+    "whyChooseUs": "Why Choose Our Library?",
+    "feature1": {
+      "title": "Explore Books",
+      "description": "Browse through a vast collection of books across all genres."
+    },
+    "feature2": {
+      "title": "Request Books",
+      "description": "Request new books or borrow available copies easily."
+    },
+    "feature3": {
+      "title": "Manage Transactions",
+      "description": "Keep track of all your transactions and book requests in one place."
+    }
+  },
+  "Login": {
+    "title": "Login",
+    "subtitle": "Enter your email and password to access your account.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "signInButton": "Sign in",
+    "orContinueWith": "OR CONTINUE WITH",
+    "noAccount": "Don't have an account?",
+    "signUpLink": "Sign up",
+    "invalidCredentials": "Invalid email or password.",
+    "loginFailed": "Login failed. Please try again.",
+    "errorOccurred": "An error occurred. Please try again.",
+    "googleLoginError": "An error occurred during Google login."
+  },
+  "AdminPage": {
+    "welcomeAdmin": "Welcome, Admin",
+    "booksHeading": "Books",
+    "searchPlaceholder": "Search books...",
+    "error": {
+      "title": "Error",
+      "fetchBooks": "Failed to fetch books.",
+      "deleteBook": "Failed to delete book. Books might have been issued."
+    },
+    "success": {
+      "title": "Success"
+    }
   }
 }
