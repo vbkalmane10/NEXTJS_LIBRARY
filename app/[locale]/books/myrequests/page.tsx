@@ -1,7 +1,11 @@
 "use client";
 import RequestCard from "@/components/RequestCard";
 import { useSession } from "next-auth/react";
-import { fetchUserRequest, handleCancelRequest } from "@/lib/actions";
+import {
+  fetchUserRequest,
+  handleCancelRequest,
+  handleReturnBook,
+} from "@/lib/actions";
 import { getServerSession } from "next-auth";
 import { Request } from "@/lib/types";
 
@@ -17,7 +21,9 @@ const MyRequestsPage = () => {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<"Approved" | "Pending">("Pending");
+  const [filter, setFilter] = useState<"Approved" | "Pending" | "Returned">(
+    "Pending"
+  );
   const { toast } = useToast();
   const router = useRouter();
   useEffect(() => {
@@ -62,44 +68,50 @@ const MyRequestsPage = () => {
       });
     }
   };
-  const filteredRequests = requests.filter((request) =>
-    filter === "Approved"
-      ? request.status === "Approved"
-      : request.status === "Pending"
-  );
+
+  const filteredRequests = requests.filter((request) => {
+    if (filter === "Approved") {
+      return request.status === "Approved";
+    } else if (filter === "Pending") {
+      return request.status === "Pending";
+    } else if (filter === "Returned") {
+      return request.status === "Returned";
+    }
+    return true;
+  });
   if (loading) {
-    return <p>Loading requests...</p>;
+    return <p>Loading transactions...</p>;
   }
 
   if (requests.length === 0) {
-    return <p>No requests found for your account.</p>;
+    return <p>No transactions found for your account.</p>;
   }
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">My Book Requests</h1>
+      <h1 className="text-2xl font-bold mb-4">My Book Transactions</h1>
 
       {/* Switch/Toggle for Approved or Pending Requests */}
-      <div className="mb-6 flex items-center space-x-4">
-        <span className="text-sm font-medium text-gray-700">
-          Show {filter === "Pending" ? "Approved" : "Pending"} Requests
-        </span>
-
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            className="sr-only peer"
-            checked={filter === "Approved"}
-            onChange={() =>
-              setFilter((prevFilter) =>
-                prevFilter === "Pending" ? "Approved" : "Pending"
-              )
-            }
-          />
-          <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+      <div className="mb-6">
+        <label
+          htmlFor="request-filter"
+          className="text-sm font-medium text-gray-700"
+        >
+          Filter transactions by status:
         </label>
+        <select
+          id="request-filter"
+          value={filter}
+          onChange={(e) =>
+            setFilter(e.target.value as "Approved" | "Pending" | "Returned")
+          }
+          className="ml-2 px-3 py-2 border border-gray-300 rounded-md"
+        >
+          <option value="Pending">Pending</option>
+          <option value="Approved">Approved</option>
+          <option value="Returned">Returned</option>
+        </select>
       </div>
 
-      {/* Display filtered requests */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredRequests.length > 0 ? (
           filteredRequests.map((request) => (
@@ -107,10 +119,11 @@ const MyRequestsPage = () => {
               key={request.id}
               request={request}
               onCancel={() => handleCancel(request.id)}
+              // onReturn={() => handleReturn(request)}
             />
           ))
         ) : (
-          <p>No {filter} requests found.</p>
+          <p>No {filter} transactions found.</p>
         )}
       </div>
     </div>

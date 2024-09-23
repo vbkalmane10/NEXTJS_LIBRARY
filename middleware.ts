@@ -15,10 +15,10 @@ export async function middleware(req: NextRequest) {
     });
 
     const pathname = req.nextUrl.pathname;
-    // Remove locale from the path (e.g., "/en/books" => "/books")
+    // Remove locale from the path 
     const pathnameWithoutLocale = pathname.replace(/^\/[a-z]{2}(?:-[A-Z]{2})?/, "");
 
-    // If the user is not authenticated, redirect them to login for certain paths
+    // If the user is not authenticated, redirect them to login
     if (!token) {
       if (pathnameWithoutLocale.startsWith("/admin") || pathnameWithoutLocale.startsWith("/books")) {
         return NextResponse.redirect(new URL("/login", req.url));

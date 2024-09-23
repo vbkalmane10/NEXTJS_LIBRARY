@@ -3,6 +3,7 @@ import { Check, X } from "lucide-react";
 import { Request } from "@/lib/types";
 import { handleApproveRequest } from "@/lib/actions";
 import { revalidatePath } from "next/cache";
+import clsx from "clsx";
 
 interface RequestTableProps {
   requests: Request[];
@@ -39,6 +40,7 @@ const RequestTable: React.FC<RequestTableProps> = ({
                     <p className="text-sm text-gray-500">
                       ISBN: {request.isbnNo}
                     </p>
+
                     <p className="text-sm text-gray-500">
                       Status: {request.status}
                     </p>
@@ -98,8 +100,19 @@ const RequestTable: React.FC<RequestTableProps> = ({
                   <td className="whitespace-nowrap px-3 py-3">
                     {request.isbnNo}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {request.status}
+                  <td className="whitespace-nowrap py-3">
+                    <p
+                      className={clsx(
+                        "text-white py-1 px-2 w-fit rounded-full text-center",
+                        {
+                          "bg-gray-500": request.status === "Pending",
+                          "bg-green-500": request.status === "Approved",
+                          "bg-red-500": request.status === "Rejected",
+                        }
+                      )}
+                    >
+                      {request.status}
+                    </p>
                   </td>
                   <td className="whitespace-nowrap py-3  pr-3">
                     {request.status === "Pending" && (

@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ClipboardCheck } from "lucide-react";
 import nodemailer from "nodemailer";
 import { Button } from "@/components/ui/button";
 import { getTransactionsDueToday, sendEmailNotification } from "@/lib/actions";
@@ -59,6 +60,14 @@ export default function DueTodayPage() {
     }
   };
 
+  if (transactions.length === 0) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+       
+        No Books are due-today !!!
+      </div>
+    );
+  }
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">Transactions Due Today</h1>
@@ -96,7 +105,10 @@ export default function DueTodayPage() {
                     "Notify"
                   )}
                 </Button>
-                <Button variant="secondary" className="min-w-[120px] bg-green-400">
+                <Button
+                  variant="secondary"
+                  className="min-w-[120px] bg-green-400"
+                >
                   Mark as Returned
                 </Button>
               </TableCell>

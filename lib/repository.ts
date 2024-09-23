@@ -265,13 +265,18 @@ export async function getBooksByIsbn(isbnNo: string): Promise<iBook | null> {
   }
 }
 
-export async function getUserRequests(userId: number) {
+export async function getUserRequests(userId: number,status?:string) {
   try {
-    const requests = await db
-      .select()
-      .from(transactionsTable)
-      .where(eq(transactionsTable.memberId, userId));
-    return requests;
+    const conditions = status 
+    ? and(eq(transactionsTable.memberId, userId), eq(transactionsTable.status, status))
+    : eq(transactionsTable.memberId, userId);
+
+  const requests = await db
+    .select()
+    .from(transactionsTable)
+    .where(conditions);
+
+  return requests;
   } catch (error) {
     throw new Error("Error while fetching the requests");
   }

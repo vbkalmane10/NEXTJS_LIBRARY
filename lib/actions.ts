@@ -22,6 +22,7 @@ import {
   rejectRequest,
   cancelRequest,
   dueToday,
+  returnBook,
 } from "./repository";
 
 export async function getUserId(email: string): Promise<number | null> {
@@ -94,9 +95,9 @@ export async function handleRejectRequest(request: Request) {
   }
 }
 
-export async function fetchUserRequest(userId: number) {
+export async function fetchUserRequest(userId: number, status?: string) {
   try {
-    const requests = await getUserRequests(userId);
+    const requests = await getUserRequests(userId, status);
     return requests;
   } catch (error) {
     throw new Error("Error while fetching requests");
@@ -192,4 +193,12 @@ export async function sendEmailNotification(
       }
     });
   });
+}
+export async function handleReturnBook(req: Request) {
+  try {
+    const result = await returnBook(req);
+    return result;
+  } catch (error) {
+    throw new Error("Error while returning book");
+  }
 }

@@ -19,9 +19,9 @@ export default async function Layout({
     {
       href: "/books/myrequests",
 
-      text: "My Requests",
+      text: "My Transactions",
     },
-    // { href: "/books/mybooks", text: "My Books" },
+    { href: "/books/mybooks", text: "My Books" },
     // { href: "/books/favorites", text: "My Favorites" },
     { href: "/books/profile", text: "My Profile" },
   ];

@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Button } from "./ui/button";
 import { returnBook } from "@/lib/repository";
 import { useToast } from "@/hooks/use-toast";
-import { revalidatePath } from "next/cache";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,35 +19,15 @@ import {
 interface RequestCardProps {
   request: Request;
   onCancel: () => void;
+  //onReturn: () => void;
 }
 
 const RequestCard: React.FC<RequestCardProps> = ({
   request,
   onCancel,
+ // onReturn,
 }: RequestCardProps) => {
-  const { toast } = useToast();
-  // const handleReturn = async () => {
-  //   try {
-  //     const result = await returnBook(request);
-  //     if (result) {
-  //       toast({
-  //         title: "Success",
-  //         description: result.message,
-  //         variant: "destructive",
-  //         className: "bg-green-500",
-  //         duration: 1000,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     toast({
-  //       title: "Error",
-  //       description: "Failed to return book",
-  //       variant: "destructive",
-  //       className: "bg-red-500",
-  //       duration: 1000,
-  //     });
-  //   }
-  // };
+
 
   return (
     <div className="relative border border-gray-300 rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow duration-300 h-48">
@@ -92,7 +72,9 @@ const RequestCard: React.FC<RequestCardProps> = ({
             </AlertDialog>
           </div>
         )}
-        {request.status === "Approved" && <Button>Return Book</Button>}
+        {/* {request.status === "Approved" && (
+          <Button>Return Book</Button>
+        )} */}
       </div>
     </div>
   );
