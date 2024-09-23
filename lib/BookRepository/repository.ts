@@ -31,7 +31,6 @@ export async function createBook(
       ...existingBook,
       totalCopies: updatedTotalCopies,
       availableCopies: updatedAvailableCopies,
-      price: 0,
     };
 
     return {

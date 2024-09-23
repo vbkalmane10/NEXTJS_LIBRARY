@@ -118,8 +118,8 @@ const sortBooksBy = (books: iBook[], sortBy: string) => {
       return [...books].sort((a, b) => a.author.localeCompare(b.author));
     case "genre":
       return [...books].sort((a, b) => a.genre.localeCompare(b.genre));
-    // case "price":
-    //   return [...books].sort((a, b) => a.price! - b.price!);
+    case "price":
+      return [...books].sort((a, b) => a.price! - b.price!);
     default:
       return books;
   }
