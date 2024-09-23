@@ -38,7 +38,7 @@ export interface iBookBase {
   isbnNo: string;
   pages: number;
   totalCopies: number;
-  price: number | null;
+  price: number | null | string;
   imageUrl?: string | null;
 }
 export interface iBook extends iBookBase {
@@ -89,7 +89,6 @@ export interface ProfileContentProps {
   isEditing: boolean;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   toggleEdit: () => void;
-  
 }
 declare module "next-auth" {
   interface Session extends DefaultSession {

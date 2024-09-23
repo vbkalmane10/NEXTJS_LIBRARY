@@ -127,7 +127,7 @@ export default function BookCard({ book, userId, username }: BookCardProps) {
         </p>
         <p className="text-sm text-gray-500 mb-1">ISBN: {book.isbnNo}</p>
         <p className="text-lg font-semibold text-green-600 mt-auto">
-          ${book.price}
+          {book.price}
         </p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">

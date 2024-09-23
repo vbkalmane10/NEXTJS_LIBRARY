@@ -14,7 +14,16 @@ interface BookProps {
   totalPages: number;
   query: string;
 }
-
+const timeZoneCurrencyMap: Record<string, string> = {
+  "Asia/Calcutta": "INR",
+  "America/New_York": "USD",
+  "Europe/London": "GBP",
+};
+const exchangeRates: Record<string, number> = {
+  USD: 0.012,    
+  INR: 1,   
+  GBP: 0.75, 
+};
 export default function ClientSideBooks({
   books,
   userId,
@@ -25,7 +34,14 @@ export default function ClientSideBooks({
 }: BookProps) {
   const [sortBy, setSortBy] = useState<string>("");
   const [sortedBooks, setSortedBooks] = useState<iBook[]>(books);
-
+  const [currency, setCurrency] = useState<string>("USD");
+  useEffect(() => {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+   // const timeZone = "Europe/London";
+    console.log(timeZone);
+    const detectedCurrency = timeZoneCurrencyMap[timeZone] || "INR";
+    setCurrency(detectedCurrency);
+  }, []);
   useEffect(() => {
     setSortedBooks(sortBooksBy(books, sortBy));
   }, [books, sortBy]);
@@ -34,7 +50,26 @@ export default function ClientSideBooks({
     const selectedSort = event.target.value;
     setSortBy(selectedSort);
   };
-
+  const formatPrice = (price: number | null | string) => {
+    const numericPrice = typeof price === "string" ? parseFloat(price) : price;
+  
+    if (numericPrice == null) return "";
+  
+    const baseCurrency = "INR"; 
+    const convertedPrice = numericPrice * (exchangeRates[currency] / exchangeRates[baseCurrency]);
+  
+    switch (currency) {
+      case "INR":
+        return `₹${convertedPrice.toFixed(2)}`; 
+      case "USD":
+        return `$${convertedPrice.toFixed(2)}`;
+      case "GBP":
+        return `£${convertedPrice.toFixed(2)}`;
+      default:
+        return `$${convertedPrice.toFixed(2)}`;
+    }
+  };
+  console.log(currency);
   return (
     <div className="p-8">
       <div className="flex w-full items-center justify-between">
@@ -60,7 +95,7 @@ export default function ClientSideBooks({
         {sortedBooks.map((book) => (
           <BookCard
             key={book.id}
-            book={book}
+            book={{ ...book, price: formatPrice(book.price) }}
             userId={userId}
             username={userName}
           />
@@ -82,8 +117,8 @@ const sortBooksBy = (books: iBook[], sortBy: string) => {
       return [...books].sort((a, b) => a.author.localeCompare(b.author));
     case "genre":
       return [...books].sort((a, b) => a.genre.localeCompare(b.genre));
-    case "price":
-      return [...books].sort((a, b) => a.price! - b.price!);
+    // case "price":
+    //   return [...books].sort((a, b) => a.price! - b.price!);
     default:
       return books;
   }
