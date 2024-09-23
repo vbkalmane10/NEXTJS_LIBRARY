@@ -20,9 +20,9 @@ const timeZoneCurrencyMap: Record<string, string> = {
   "Europe/London": "GBP",
 };
 const exchangeRates: Record<string, number> = {
-  USD: 0.012,    
-  INR: 1,   
-  GBP: 0.75, 
+  USD: 0.012,
+  INR: 1,
+  GBP: 0.75,
 };
 export default function ClientSideBooks({
   books,
@@ -37,7 +37,7 @@ export default function ClientSideBooks({
   const [currency, setCurrency] = useState<string>("USD");
   useEffect(() => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-   // const timeZone = "Europe/London";
+    // const timeZone = "Europe/London";
     console.log(timeZone);
     const detectedCurrency = timeZoneCurrencyMap[timeZone] || "INR";
     setCurrency(detectedCurrency);
@@ -52,15 +52,16 @@ export default function ClientSideBooks({
   };
   const formatPrice = (price: number | null | string) => {
     const numericPrice = typeof price === "string" ? parseFloat(price) : price;
-  
+
     if (numericPrice == null) return "";
-  
-    const baseCurrency = "INR"; 
-    const convertedPrice = numericPrice * (exchangeRates[currency] / exchangeRates[baseCurrency]);
-  
+
+    const baseCurrency = "INR";
+    const convertedPrice =
+      numericPrice * (exchangeRates[currency] / exchangeRates[baseCurrency]);
+
     switch (currency) {
       case "INR":
-        return `₹${convertedPrice.toFixed(2)}`; 
+        return `₹${convertedPrice.toFixed(2)}`;
       case "USD":
         return `$${convertedPrice.toFixed(2)}`;
       case "GBP":
@@ -95,7 +96,7 @@ export default function ClientSideBooks({
         {sortedBooks.map((book) => (
           <BookCard
             key={book.id}
-            book={{ ...book, price: formatPrice(book.price) }}
+            book={{ ...book, price: parseFloat(formatPrice(book.price)) }}
             userId={userId}
             username={userName}
           />
