@@ -241,7 +241,7 @@ export default function AddBookPage() {
                   Add Book
                 </Button>
               )}
-              <Button onClick={() => router.replace("/admin")} className="bg-transparent text-black">Cancel</Button>
+              <Button onClick={() => router.replace("/admin")} className="bg-transparent text-white">Cancel</Button>
             </div>
       </form>
     </div>

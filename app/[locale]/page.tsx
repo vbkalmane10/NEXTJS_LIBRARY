@@ -22,8 +22,8 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
        <div className="mt-8">
-          <div className="flex items-center">
-            <span className="mr-2 text-gray-700">English</span>
+          <div className="flex justify-center items-center">
+            <span className="text-gray-700 p-2">English</span>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
