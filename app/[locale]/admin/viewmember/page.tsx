@@ -14,7 +14,7 @@ import { iBook, iMember } from "@/lib/types";
 import AdminUserTable from "@/components/ViewMember";
 import AddUser from "@/components/AddUser";
 import Header from "@/components/Header";
-
+import { Loader2 } from "lucide-react";
 export default function Page({
   searchParams,
 }: {
@@ -25,6 +25,7 @@ export default function Page({
 }) {
   const [users, setUsers] = useState<iMember[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState<boolean>(true);
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const router = useRouter();
@@ -43,6 +44,7 @@ export default function Page({
   }
   useEffect(() => {
     loadUsers();
+    setLoading(false);
   }, [query, currentPage]);
   const handleDelete = async (id: number) => {
     try {
@@ -68,9 +70,16 @@ export default function Page({
   const handleEdit = (id: number) => {
     router.push(`/admin/editmember/${id}/edit`);
   };
+  if (loading) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        <Loader2 className="animate-spin" /> {/* Loading spinner */}
+        <p className="ml-2">Loading...</p>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col w-full min-h-screen">
-      
       <div className="w-full p-8">
         <h1 className="text-2xl font-bold">Users</h1>
 

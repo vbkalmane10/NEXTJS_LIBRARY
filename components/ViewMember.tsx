@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useTranslations } from "next-intl";
 
 interface AdminUserTableProps {
   users: iMember[];
@@ -33,6 +34,7 @@ const AdminUserTable: React.FC<AdminUserTableProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const t = useTranslations("UserTable");
   return (
     <div className="mt-6 overflow-hidden rounded-lg shadow-md bg-white h-screen">
       <div className="inline-block min-w-full align-middle">
@@ -48,12 +50,12 @@ const AdminUserTable: React.FC<AdminUserTableProps> = ({
                     <p className="font-medium text-gray-800">
                       {index + 1}. {user.firstName} {user.lastName}
                     </p>
-                    <p className="text-sm text-gray-500">Email: {user.email}</p>
+                    <p className="text-sm text-gray-500">{t('email')}: {user.email}</p>
                     <p className="text-sm text-gray-500">
-                      Phone Number: {user.phoneNumber}
+                    {t('phoneNumber')}: {user.phoneNumber}
                     </p>
                     <p className="text-sm text-gray-500">
-                      Membership Status: {user.membershipStatus}
+                    {t('membershipStatus')}: {user.membershipStatus}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -78,17 +80,27 @@ const AdminUserTable: React.FC<AdminUserTableProps> = ({
           <Table className="w-full border-separate border-spacing-y-2">
             <TableHeader className="bg-gray-200 text-gray-700">
               <TableRow>
-                <TableHead className="px-4 py-5 font-medium">S.No</TableHead>
-                <TableHead className="px-4 py-5 font-medium">Name</TableHead>
-                <TableHead className="px-4 py-5 font-medium">Email</TableHead>
                 <TableHead className="px-4 py-5 font-medium">
-                  Phone Number
+                  {t("serialNo")}
                 </TableHead>
-                <TableHead className="px-4 py-5 font-medium">Address</TableHead>
                 <TableHead className="px-4 py-5 font-medium">
-                  Membership Status
+                  {t("name")}
                 </TableHead>
-                <TableHead className="px-4 py-5 font-medium">Actions</TableHead>
+                <TableHead className="px-4 py-5 font-medium">
+                  {t("email")}
+                </TableHead>
+                <TableHead className="px-4 py-5 font-medium">
+                  {t("phoneNumber")}
+                </TableHead>
+                <TableHead className="px-4 py-5 font-medium">
+                  {t("address")}
+                </TableHead>
+                <TableHead className="px-4 py-5 font-medium">
+                  {t("membershipStatus")}
+                </TableHead>
+                <TableHead className="px-4 py-5 font-medium">
+                  {t("actions")}
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="bg-white">
@@ -143,9 +155,9 @@ const AdminUserTable: React.FC<AdminUserTableProps> = ({
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => onDelete(user.id)}
-                              className="bg-black text-white hover:bg-red-600 transition-colors duration-200"
+                              className="bg-red-500 text-white hover:bg-red-600 transition-colors duration-200"
                             >
-                              Continue
+                            Delete
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>

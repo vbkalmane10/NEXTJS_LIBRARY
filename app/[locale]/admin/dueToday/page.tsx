@@ -9,21 +9,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ClipboardCheck } from "lucide-react";
-import nodemailer from "nodemailer";
+
 import { Button } from "@/components/ui/button";
 import { getTransactionsDueToday, sendEmailNotification } from "@/lib/actions";
 import { fetchUserDetails } from "@/lib/MemberRepository/actions";
 import { toast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 export default function DueTodayPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const t = useTranslations("dueToday");
   useEffect(() => {
     const fetchTransactions = async () => {
-      const today = new Date();
-      const response = await getTransactionsDueToday(today);
-      setTransactions(response);
+      try {
+        const today = new Date();
+        const response = await getTransactionsDueToday(today);
+        setTransactions(response);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load transactions.",
+          variant: "destructive",
+          className: "bg-red-500",
+        });
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
+      }
     };
 
     fetchTransactions();
@@ -60,27 +73,34 @@ export default function DueTodayPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        <Loader2 className="animate-spin" />
+        <p className="ml-2">Loading...</p>
+      </div>
+    );
+  }
   if (transactions.length === 0) {
     return (
       <div className="h-full w-full flex justify-center items-center">
-       
-        No Books are due-today !!!
+        {t("noBooksDueToday")}
       </div>
     );
   }
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Transactions Due Today</h1>
+      <h1 className="text-2xl font-bold mb-4">{t("transactionsDueToday")}</h1>
 
       <Table className="w-full border-separate border-spacing-y-2">
         <TableHeader className="bg-gray-200 text-gray-700">
           <TableRow>
-            <TableHead>S.No</TableHead>
+            <TableHead>{t("serialNo")}</TableHead>
 
-            <TableHead>Member Name</TableHead>
-            <TableHead>Book Name</TableHead>
-            <TableHead>Issued Date</TableHead>
-            <TableHead className="text-center">Action</TableHead>
+            <TableHead>{t("memberName")}</TableHead>
+            <TableHead>{t("bookName")}</TableHead>
+            <TableHead>{t("issuedDate")}</TableHead>
+            <TableHead className="text-center">{t("action")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody className="bg-white">
@@ -102,14 +122,14 @@ export default function DueTodayPage() {
                   {loadingId === transaction.id ? (
                     <Loader2 className="animate-spin" />
                   ) : (
-                    "Notify"
+                    t("notify")
                   )}
                 </Button>
                 <Button
                   variant="secondary"
                   className="min-w-[120px] bg-green-400"
                 >
-                  Mark as Returned
+                  {t("markAsReturned")}
                 </Button>
               </TableCell>
             </TableRow>

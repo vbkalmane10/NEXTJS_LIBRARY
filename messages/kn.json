@@ -37,6 +37,12 @@
     "welcomeAdmin": "ಸ್ವಾಗತ, ಅಡ್ಮಿನ್",
     "booksHeading": "ಪುಸ್ತಕಗಳು",
     "searchPlaceholder": "ಪುಸ್ತಕಗಳನ್ನು ಹುಡುಕಿ...",
+    "serialNo": "ಸಂಖ್ಯೆ",
+    "title": "ಶೀರ್ಷಿಕೆ",
+    "author": "ಲೇಖಕ",
+    "isbnNo": "ಐಎಸ್‌ಬಿಎನ್ ನಂಬರ್",
+    "availableCopies": "ಉಪಲಭ್ಯವಾದ ಪ್ರತಿಗಳು",
+    "actions": "ಕ್ರಮಗಳು",
     "error": {
       "title": "ದೋಷ",
       "fetchBooks": "ಪುಸ್ತಕಗಳನ್ನು ತರಲು ವಿಫಲವಾಗಿದೆ.",
@@ -45,5 +51,39 @@
     "success": {
       "title": "ಯಶಸ್ಸು"
     }
+  },
+  "viewrequests": {
+    "loadingRequests": "ಕೋರಿಕೆಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
+    "error": "ದೋಷ:",
+    "viewRequests": "ಕೋರಿಕೆಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
+    "noRequestsFound": "ಯಾವುದೇ ಕೋರಿಕೆಗಳು ಕಂಡುಬಂದಿಲ್ಲ."
+  },
+  "dueToday": {
+    "noBooksDueToday": "ಇಂದು ಯಾವುದೇ ಪುಸ್ತಕಗಳು ಬಾಕಿ ಇಲ್ಲ !!!",
+    "transactionsDueToday": "ಇಂದು ಬಾಕಿ ಇರುವ ಪುಸ್ತಕಗಳು",
+    "serialNo": "ಕ್ರಮ ಸಂಖ್ಯೆ",
+    "memberName": "ಸದಸ್ಯರ ಹೆಸರು",
+    "bookName": "ಪುಸ್ತಕದ ಹೆಸರು",
+    "issuedDate": "ನೀಡಿದ ದಿನಾಂಕ",
+    "action": "ಕ್ರಿಯೆ",
+    "notify": "ಸೂಚನೆ ಕಳುಹಿಸಿ",
+    "markAsReturned": "ಹಿಂತಿರುಗಿಸಿದ ಎಂದು ಗುರುತಿಸಿ",
+    "success": "ಯಶಸ್ವಿ",
+    "error": "ದೋಷ"
+  },
+  "UserTable": {
+    "serialNo": "ಸಂಖ್ಯೆ",
+    "name": "ಹೆಸರು",
+    "email": "ಇಮೇಲ್",
+    "phoneNumber": "ದೂರವಾಣಿ ಸಂಖ್ಯೆ",
+    "address": "ವಿಳಾಸ",
+    "membershipStatus": "ಸದಸ್ಯ ಸ್ಥಿತಿ",
+    "actions": "ಕ್ರಮಗಳು",
+    "edit": "ತಿದ್ದು",
+    "delete": "ಅಳಿಸಿ",
+    "confirmDeleteTitle": "ನೀವು ಖಚಿತವಾಗಿ ಶಾಕ್ ಮಾಡಬೇಕೆ?",
+    "confirmDeleteDescription": "{{name}} ನಮ್ಮ ಡೇಟಾಬೇಸ್‌ನಿಂದ ಅಳಿಸಲಾಗುವುದು",
+    "cancel": "ರದ್ದು",
+    "continue": "ಮುಂದುವರಿಸಿ"
   }
 }

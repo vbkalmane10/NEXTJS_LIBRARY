@@ -37,6 +37,12 @@
     "welcomeAdmin": "Welcome, Admin",
     "booksHeading": "Books",
     "searchPlaceholder": "Search books...",
+    "serialNo": "S.No",
+    "title": "Title",
+    "author": "Author",
+    "isbnNo": "ISBN No.",
+    "availableCopies": "Available Copies",
+    "actions": "Actions",
     "error": {
       "title": "Error",
       "fetchBooks": "Failed to fetch books.",
@@ -45,5 +51,39 @@
     "success": {
       "title": "Success"
     }
+  },
+  "viewrequests": {
+    "loadingRequests": "Loading requests...",
+    "error": "Error:",
+    "viewRequests": "View Requests",
+    "noRequestsFound": "No requests found."
+  },
+  "dueToday": {
+    "noBooksDueToday": "No Books are due-today !!!",
+    "transactionsDueToday": "Transactions Due Today",
+    "serialNo": "S.No",
+    "memberName": "Member Name",
+    "bookName": "Book Name",
+    "issuedDate": "Issued Date",
+    "action": "Action",
+    "notify": "Notify",
+    "markAsReturned": "Mark as Returned",
+    "success": "Success",
+    "error": "Error"
+  },
+  "UserTable": {
+    "serialNo": "S.No",
+    "name": "Name",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "address": "Address",
+    "membershipStatus": "Membership Status",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDeleteTitle": "Are you absolutely sure?",
+    "confirmDeleteDescription": "{{name}} will be deleted from our database",
+    "cancel": "Cancel",
+    "continue": "Continue"
   }
 }

@@ -42,6 +42,13 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
     });
   };
 
+  const handleRoleChange = (value: string) => {
+    setFormData({
+      ...formData,
+      role: value,
+    });
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
@@ -117,6 +124,23 @@ const EditUserForm: React.FC<EditUserFormProps> = ({
               <SelectContent>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="expired">Expired</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Role Dropdown */}
+          <div>
+            <Label htmlFor="role">Role</Label>
+            <Select
+              value={formData.role}
+              onValueChange={handleRoleChange}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="user">User</SelectItem>
+                <SelectItem value="admin">Admin</SelectItem>
               </SelectContent>
             </Select>
           </div>

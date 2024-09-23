@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import SideNav from "@/components/SideNav";
 import Header from "@/components/Header";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 export default function Page({
   searchParams,
@@ -24,6 +25,7 @@ export default function Page({
 }) {
   const [books, setBooks] = useState<iBook[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState<boolean>(true);
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const router = useRouter();
@@ -43,7 +45,13 @@ export default function Page({
   }
 
   useEffect(() => {
-    loadBooks();
+    try {
+      loadBooks();
+    } catch (error) {
+      throw new Error("Error while fetching books");
+    } finally {
+      setLoading(false);
+    }
   }, [query, currentPage]);
 
   // Handle the deletion of a book
@@ -80,6 +88,14 @@ export default function Page({
     signOut({ callbackUrl: "/" });
   };
 
+  if (loading) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        <Loader2 className="animate-spin" />
+        <p className="ml-2">Loading...</p>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col w-full min-h-screen">
       <div className="p-8 flex-grow">

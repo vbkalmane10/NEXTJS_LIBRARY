@@ -11,12 +11,15 @@ import { revalidatePath } from "next/cache";
 import { useSearchParams } from "next/navigation";
 import Pagination from "@/components/Pagination";
 import Header from "@/components/Header";
+import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 const ViewRequestPage: React.FC = () => {
   const searchParams = useSearchParams();
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const t = useTranslations("viewrequests");
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   useEffect(() => {
     const fetchRequests = async (page: number) => {
@@ -67,15 +70,27 @@ const ViewRequestPage: React.FC = () => {
     }
   };
 
-  if (loading) return <p className="flex justify-center items-center">Loading requests...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        <Loader2 className="animate-spin" /> {/* Loading spinner */}
+        <p className="ml-2">Loading...</p>
+      </div>
+    );
+  }
+  if (error)
+    return (
+      <p>
+        {t("error")} {error}
+      </p>
+    );
 
   return (
     <div className="flex flex-col w-full min-h-screen">
       <div className="p-8">
-        <h1 className="text-2xl font-bold mb-4">View Requests</h1>
+        <h1 className="text-2xl font-bold mb-4">{t("viewRequests")}</h1>
         {requests.length === 0 ? (
-          <p>No requests found.</p>
+          <p>{t("noRequestsFound")}</p>
         ) : (
           <RequestTable
             requests={requests}

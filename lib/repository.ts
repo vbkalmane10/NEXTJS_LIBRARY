@@ -180,10 +180,10 @@ export async function rejectRequest(
   req: Request
 ): Promise<{ message: string; transaction: iTransaction | undefined }> {
   const issueDate = new Date();
-  const formattedBorrowDate = issueDate.toISOString().split("T")[0];
+ 
   const dueDate = new Date(issueDate);
   dueDate.setDate(issueDate.getDate() + 14);
-  const formattedDueDate = dueDate.toISOString().split("T")[0];
+ 
   try {
     let newTransaction: iTransaction | undefined;
     await db.transaction(async (trx) => {
@@ -211,8 +211,8 @@ export async function rejectRequest(
         .set({
           status: "Rejected",
           returnDate: null,
-          dueDate: formattedDueDate,
-          issueDate: formattedBorrowDate,
+          dueDate: null,
+          issueDate: null,
         })
         .where(eq(transactionsTable.id, req.id));
 

@@ -12,7 +12,7 @@ export default function AddBook() {
 
   return (
     <Button
-      className="bg-black text-white px-4 py-2 rounded hover:bg-blue-600"
+      className="bg-black text-white px-4 py-4 rounded"
       onClick={handleAddBookClick}
     >
       + Add Book
