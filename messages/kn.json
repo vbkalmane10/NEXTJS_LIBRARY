@@ -81,9 +81,19 @@
     "actions": "ಕ್ರಮಗಳು",
     "edit": "ತಿದ್ದು",
     "delete": "ಅಳಿಸಿ",
-    "confirmDeleteTitle": "ನೀವು ಖಚಿತವಾಗಿ ಶಾಕ್ ಮಾಡಬೇಕೆ?",
+    "confirmDeleteTitle": "ನೀವು ಖಚಿತವಾಗಿ ಮಾಡಬೇಕೆ?",
     "confirmDeleteDescription": "{{name}} ನಮ್ಮ ಡೇಟಾಬೇಸ್‌ನಿಂದ ಅಳಿಸಲಾಗುವುದು",
     "cancel": "ರದ್ದು",
     "continue": "ಮುಂದುವರಿಸಿ"
+  },
+  "BooksPage": {
+    "Books": "ಪುಸ್ತಕಗಳು",
+    "label": "ವರ್ಗೀಕರಿಸಿ",
+    "title": "ಶೀರ್ಷಿಕೆ",
+    "author": "ಲೇಖಕ",
+    "genre": "ಪ್ರಕಾರ",
+    "price": "ಬೆಲೆ",
+    "borrow": "ಪಡೆಯಿರಿ",
+    "processing": "ಪ್ರಕ್ರಿಯೆ..."
   }
 }

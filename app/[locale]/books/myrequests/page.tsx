@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 const MyRequestsPage = () => {
   const { data: session, status } = useSession();
@@ -80,11 +81,18 @@ const MyRequestsPage = () => {
     return true;
   });
   if (loading) {
-    return <p>Loading transactions...</p>;
+    if (loading) {
+      return (
+        <div className="h-full w-full flex justify-center items-center">
+          <Loader2 className="animate-spin" />
+          <p className="ml-2">Loading...</p>
+        </div>
+      );
+    }
   }
 
   if (requests.length === 0) {
-    return <p>No transactions found for your account.</p>;
+    return <p className="h-full w-full flex justify-center items-center">No transactions found for your account.</p>;
   }
   return (
     <div className="p-8">

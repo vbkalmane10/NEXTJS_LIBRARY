@@ -84,7 +84,7 @@ const MyBooksPage = () => {
   if (requests.length === 0) {
     return (
       <div className="w-full h-full bg-white flex justify-center items-center">
-        <Ban className="h-9 w-9 p-1" />
+      
 
         <p>You havent borrowed any books !!!</p>
       </div>

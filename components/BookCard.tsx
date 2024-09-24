@@ -35,26 +35,42 @@ import {
   Heart,
   Building2,
   BookCopy,
-  ShieldCheck
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ScrollArea } from "./ui/scroll-area";
+import { useTranslations } from "next-intl";
 interface BookCardProps {
   book: iBook;
   userId: number | undefined;
   username: string | undefined;
+  currency:string
 }
-export default function BookCard({ book, userId, username }: BookCardProps) {
+export default function BookCard({ book, userId, username,currency }: BookCardProps) {
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const t = useTranslations("BooksPage");
+
   const { toast } = useToast();
   const handleBorrow = () => {
     setShowConfirm(true);
+  };
+  const getCurrencySymbol = (currency: string) => {
+    switch (currency) {
+      case "INR":
+        return "₹";
+      case "USD":
+        return "$";
+      case "GBP":
+        return "£";
+      default:
+        return "$";
+    }
   };
   const handleConfirm = async () => {
     setIsSubmitting(true);
@@ -127,14 +143,15 @@ export default function BookCard({ book, userId, username }: BookCardProps) {
         </p>
         <p className="text-sm text-gray-500 mb-1">ISBN: {book.isbnNo}</p>
         <p className="text-lg font-semibold text-green-600 mt-auto">
-          {book.price}
+        {getCurrencySymbol(currency)}
+          {book.price!.toFixed(2)}
         </p>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button className="w-3/4" variant="default">
-              Borrow
+              {t("borrow")}
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -207,7 +224,7 @@ export default function BookCard({ book, userId, username }: BookCardProps) {
                     onClick={handleConfirm}
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Processing..." : "Borrow Now"}
+                    {isSubmitting ? t( "processing") : t("borrow")}
                   </Button>
                 </div>
               </div>

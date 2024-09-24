@@ -6,7 +6,7 @@ import { getUserById } from "@/lib/MemberRepository/repository";
 import { useLocale } from "next-intl";
 export default async function Layout({
   children,
-  params: { locale }
+  params: { locale },
 }: {
   children: React.ReactNode;
   params: { locale: string };
@@ -24,6 +24,7 @@ export default async function Layout({
     { href: "/books/mybooks", text: "My Books" },
     // { href: "/books/favorites", text: "My Favorites" },
     { href: "/books/profile", text: "My Profile" },
+    // { href: "/books/professors", text: "Professors" },
   ];
   return (
     <div className="flex h-screen w-full  ">

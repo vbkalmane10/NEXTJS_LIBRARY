@@ -5,6 +5,7 @@ import BookCard from "./BookCard";
 import Pagination from "./Pagination";
 import Search from "./search";
 import { iBook } from "@/lib/types";
+import { useTranslations } from "next-intl";
 
 interface BookProps {
   books: iBook[];
@@ -22,7 +23,7 @@ const timeZoneCurrencyMap: Record<string, string> = {
 const exchangeRates: Record<string, number> = {
   USD: 0.012,
   INR: 1,
-  GBP: 0.75,
+  GBP: 0.009,
 };
 export default function ClientSideBooks({
   books,
@@ -34,11 +35,12 @@ export default function ClientSideBooks({
 }: BookProps) {
   const [sortBy, setSortBy] = useState<string>("");
   const [sortedBooks, setSortedBooks] = useState<iBook[]>(books);
-  const [currency, setCurrency] = useState<string>("USD");
+  const [currency, setCurrency] = useState<string>("INR");
+  const t = useTranslations("BooksPage");
   useEffect(() => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     // const timeZone = "Europe/London";
-    console.log(timeZone);
+
     const detectedCurrency = timeZoneCurrencyMap[timeZone] || "INR";
     setCurrency(detectedCurrency);
   }, []);
@@ -53,28 +55,19 @@ export default function ClientSideBooks({
   const formatPrice = (price: number | null | string) => {
     const numericPrice = typeof price === "string" ? parseFloat(price) : price;
 
-    if (numericPrice == null) return "";
+    if (numericPrice == null) return 0;
 
     const baseCurrency = "INR";
     const convertedPrice =
       numericPrice * (exchangeRates[currency] / exchangeRates[baseCurrency]);
 
-    switch (currency) {
-      case "INR":
-        return `₹${convertedPrice.toFixed(2)}`;
-      case "USD":
-        return `$${convertedPrice.toFixed(2)}`;
-      case "GBP":
-        return `£${convertedPrice.toFixed(2)}`;
-      default:
-        return `$${convertedPrice.toFixed(2)}`;
-    }
+    return convertedPrice;
   };
-  console.log(currency);
+
   return (
     <div className="p-8">
       <div className="flex w-full items-center justify-between">
-        <h1 className="text-2xl font-bold">Books</h1>
+        <h1 className="text-2xl font-bold">{t("Books")}</h1>
       </div>
 
       <div className="mt-4 flex gap-4 items-center">
@@ -84,11 +77,11 @@ export default function ClientSideBooks({
           value={sortBy}
           onChange={handleSortChange}
         >
-          <option value="">Sort by</option>
-          <option value="title">Title</option>
-          <option value="author">Author</option>
-          <option value="genre">Genre</option>
-          <option value="price">Price</option>
+          <option value="">{t("label")}</option>
+          <option value="title">{t("title")}</option>
+          <option value="author">{t("author")}</option>
+          <option value="genre">{t("genre")}</option>
+          <option value="price">{t("price")}</option>
         </select>
       </div>
 
@@ -96,9 +89,10 @@ export default function ClientSideBooks({
         {sortedBooks.map((book) => (
           <BookCard
             key={book.id}
-            book={{ ...book, price: parseFloat(formatPrice(book.price)) }}
+            book={{ ...book, price: formatPrice(book.price) }}
             userId={userId}
             username={userName}
+            currency={currency}
           />
         ))}
       </div>

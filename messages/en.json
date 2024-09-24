@@ -85,5 +85,15 @@
     "confirmDeleteDescription": "{{name}} will be deleted from our database",
     "cancel": "Cancel",
     "continue": "Continue"
+  },
+  "BooksPage": {
+    "Books": "Books",
+    "label": "Sort by",
+    "title": "Title",
+    "author": "Author",
+    "genre": "Genre",
+    "price": "Price",
+    "borrow": "Borrow",
+    "processing": "Processing..."
   }
 }
