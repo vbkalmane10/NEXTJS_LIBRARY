@@ -80,7 +80,7 @@ const MyRequestsPage = () => {
     }
     return true;
   });
-  if (loading) {
+ 
     if (loading) {
       return (
         <div className="h-full w-full flex justify-center items-center">
@@ -89,7 +89,7 @@ const MyRequestsPage = () => {
         </div>
       );
     }
-  }
+
 
   if (requests.length === 0) {
     return <p className="h-full w-full flex justify-center items-center">No transactions found for your account.</p>;

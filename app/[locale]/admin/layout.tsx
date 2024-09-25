@@ -10,7 +10,7 @@ export default async function Layout({
   params: { locale },
 }: {
   children: React.ReactNode;
-  params: { locale: string }; 
+  params: { locale: string };
 }) {
   const session = await getServerSession(authOptions);
   const userName = await getUserById(session.user?.id);
@@ -19,19 +19,17 @@ export default async function Layout({
     { href: "/admin/viewrequests", text: "Book Requests" },
     { href: "/admin/dueToday", text: "Due Today" },
     { href: "/admin/viewmember", text: "View Members" },
+
+    { href: "/admin/myevents", text: "Events" },
     { href: "/admin/profile", text: "View Profile" },
   ];
   return (
     <div className="flex h-screen w-full">
-      <SideNav
-        navItems={navItems}
-        userName={userName?.firstName}
-        membershipStatus={userName?.membershipStatus}
-        locale={locale}
-      />
+     
 
       <div className="flex flex-col flex-1">
-        <Header />
+        <Header  navItems={navItems}
+        userName={userName?.firstName}/>
         <div className="flex-grow overflow-y-auto md:overflow-y-auto">
           {children}
         </div>

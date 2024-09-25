@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, integer } from "drizzle-orm/pg-core";
+import { pgTable, serial, varchar, integer, text } from "drizzle-orm/pg-core";
 export const membersTable = pgTable("members", {
   id: serial("id").primaryKey(),
   firstName: varchar("firstName", { length: 100 }).notNull(),
@@ -39,6 +39,13 @@ export const transactionsTable = pgTable("transactions", {
   dueDate: varchar("dueDate", { length: 255 }),
   firstName: varchar("firstName", { length: 255 }),
   status: varchar("status", { length: 255 }),
+});
+export const professorsTable = pgTable("professors", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  department: varchar("department", { length: 100 }),
+  shortBio: text("shortBio"),
+  calendlyLink: varchar("calendly_link", { length: 255 }).notNull(),
 });
 // export const requestsTable = mysqlTable("requests", {
 //   id: int("id").primaryKey().autoincrement(),

@@ -54,7 +54,7 @@ export default function Page({
     }
   }, [query, currentPage]);
 
-  // Handle the deletion of a book
+ 
   const handleDelete = async (isbnNo: string) => {
     try {
       const result = await handleDeleteBook(isbnNo);

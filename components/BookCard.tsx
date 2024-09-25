@@ -113,7 +113,7 @@ export default function BookCard({ book, userId, username,currency }: BookCardPr
   };
 
   return (
-    <Card className="w-[280px] h-[480px] overflow-hidden transition-all duration-300 hover:shadow-lg mt-6">
+    <Card className="w-[310px] h-[480px] overflow-hidden transition-all duration-300 hover:shadow-lg mt-6">
       <CardHeader className="p-0">
         <div className=" relative h-[200px] w-full">
           {book.imageUrl ? (

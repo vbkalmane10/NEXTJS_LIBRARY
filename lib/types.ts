@@ -136,3 +136,10 @@ export type CloudinaryUploadResponse = {
   access_mode: string;
   original_filename: string;
 };
+export interface Professor {
+  id: number | null;
+  name: string ;
+  department: string | null;
+  shortBio: string | null;
+  calendlyLink: string;
+}

@@ -23,6 +23,7 @@ import {
   cancelRequest,
   dueToday,
   returnBook,
+  fetchProfessors,
 } from "./repository";
 
 export async function getUserId(email: string): Promise<number | null> {
@@ -200,5 +201,13 @@ export async function handleReturnBook(req: Request) {
     return result;
   } catch (error) {
     throw new Error("Error while returning book");
+  }
+}
+export async function handleFetchProfessors() {
+  try {
+    const result = await fetchProfessors();
+    return result;
+  } catch (error) {
+    throw new Error("Error while fething professors");
   }
 }

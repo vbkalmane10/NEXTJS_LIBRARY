@@ -6,7 +6,7 @@ import {
   iMemberBase,
   iTransaction,
 } from "./types";
-import { booksTable, membersTable, transactionsTable } from "@/drizzle/schema";
+import { booksTable, membersTable, transactionsTable,professorsTable } from "@/drizzle/schema";
 import { z } from "zod";
 import { db } from "@/db";
 import { eq, like, and, count } from "drizzle-orm";
@@ -446,5 +446,16 @@ export async function dueToday(date: Date) {
     return transactions;
   } catch (error) {
     throw new Error("Error while fetching due today transactions");
+  }
+}
+export async function fetchProfessors(){
+  try {
+    const professors = await db
+      .select()
+      .from(professorsTable);
+    return professors;
+  } catch (error) {
+    console.error("Error fetching professors:", error);
+    throw new Error("Unable to fetch professors");
   }
 }

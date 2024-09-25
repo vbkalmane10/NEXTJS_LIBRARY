@@ -33,6 +33,8 @@ export default async function Page({
 
   const userId = session.user?.id;
   const userName = session.user?.name;
+  console.log(userName);
+  console.log(userId);
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
   const booksPerPage = 8;

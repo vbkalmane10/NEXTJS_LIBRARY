@@ -37,7 +37,7 @@ const SideNav: React.FC<SideNavProps> = ({
   return (
     <>
       <button
-        className="fixed top-4 left-4 z-20 md:hidden bg-white p-2 rounded-md shadow-md"
+        className=" fixed top-4 left-4 md:hidden bg-white p-2 rounded-md shadow-md"
         onClick={toggleSidebar}
       >
         <Menu size={24} />

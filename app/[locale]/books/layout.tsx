@@ -22,21 +22,16 @@ export default async function Layout({
       text: "My Transactions",
     },
     { href: "/books/mybooks", text: "My Books" },
-    // { href: "/books/favorites", text: "My Favorites" },
+
+    ,
+    { href: "/books/professors", text: "Professors" },
+    { href: "/books/myevents", text: "My Events" },
     { href: "/books/profile", text: "My Profile" },
-    // { href: "/books/professors", text: "Professors" },
   ];
   return (
     <div className="flex h-screen w-full  ">
-      <SideNav
-        navItems={navItems}
-        userName={userName?.firstName}
-        membershipStatus={userName?.membershipStatus}
-        locale={locale}
-      />
-
       <div className="flex flex-col flex-1">
-        <Header />
+        <Header navItems={navItems} userName={userName?.firstName} />
 
         <div className="flex-grow overflow-y-auto md:overflow-y-auto p-4">
           {children}
