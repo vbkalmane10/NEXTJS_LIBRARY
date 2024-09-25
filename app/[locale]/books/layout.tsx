@@ -3,7 +3,8 @@ import SideNav from "@/components/SideNav";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getUserById } from "@/lib/MemberRepository/repository";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 export default async function Layout({
   children,
   params: { locale },
@@ -13,20 +14,14 @@ export default async function Layout({
 }) {
   const session = await getServerSession(authOptions);
   const userName = await getUserById(session.user?.id);
-
+  const t = await getTranslations("Header");
   const navItems = [
-    { href: "/books", text: "Books" },
-    {
-      href: "/books/myrequests",
-
-      text: "My Transactions",
-    },
-    { href: "/books/mybooks", text: "My Books" },
-
-    ,
-    { href: "/books/professors", text: "Professors" },
-    { href: "/books/myevents", text: "My Events" },
-    { href: "/books/profile", text: "My Profile" },
+    { href: "/books", text: t("Books") },
+    { href: "/books/myrequests", text: t("My Transactions") },
+    { href: "/books/mybooks", text: t("My Books") },
+    { href: "/books/professors", text: t("Professors") },
+    { href: "/books/myevents", text: t("My Events") },
+    { href: "/books/profile", text: t("My Profile") },
   ];
   return (
     <div className="flex h-screen w-full  ">

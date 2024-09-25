@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import MyBooksCard from "@/components/MyBooksCard";
 import { Ban } from "lucide-react";
+import { useTranslations } from "next-intl";
 const MyBooksPage = () => {
   const { data: session, status } = useSession();
   const [requests, setRequests] = useState<Request[]>([]);
@@ -19,7 +20,7 @@ const MyBooksPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   const { toast } = useToast();
-  const router = useRouter();
+  const t = useTranslations("myBooks");
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -84,16 +85,14 @@ const MyBooksPage = () => {
   if (requests.length === 0) {
     return (
       <div className="w-full h-full bg-white flex justify-center items-center">
-      
-
-        <p>You havent borrowed any books !!!</p>
+        <p>{t("You havent borrowed any books")} !!!</p>
       </div>
     );
   }
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">My Books</h1>
+      <h1 className="text-2xl font-bold mb-4">{t("My Books")}</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {requests.map((request) => (
           <MyBooksCard

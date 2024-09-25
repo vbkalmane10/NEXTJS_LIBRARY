@@ -125,55 +125,81 @@ function ProfileContent({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="firstName">First Name</Label>
-            <Input
-              id="firstName"
-              name="firstName"
-              value={userInfo.firstName}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-            />
+            {isEditing ? (
+              <Input
+                id="firstName"
+                name="firstName"
+                value={userInfo.firstName}
+                onChange={handleInputChange}
+                     className="border border-black"
+              />
+            ) : (
+              <div className="p-2 bg-gray-100 rounded">{userInfo.firstName}</div>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              id="lastName"
-              name="lastName"
-              value={userInfo.lastName}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-            />
+            {isEditing ? (
+              <Input
+                id="lastName"
+                name="lastName"
+                value={userInfo.lastName}
+                onChange={handleInputChange}
+                     className="border border-black"
+              />
+            ) : (
+              <div className="p-2 bg-gray-100 rounded">{userInfo.lastName}</div>
+            )}
           </div>
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={userInfo.email}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-          />
+          {isEditing ? (
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              value={userInfo.email}
+              onChange={handleInputChange}
+                   className="border border-black"
+            />
+          ) : (
+            <div className="p-2 bg-gray-100 rounded">{userInfo.email}</div>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="address">Address</Label>
-          <Input
-            id="address"
-            name="address"
-            value={userInfo.address}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-          />
+          {isEditing ? (
+            <Input
+              id="address"
+              name="address"
+              value={userInfo.address}
+              onChange={handleInputChange}
+              className="border border-black"
+            />
+          ) : (
+            <div className="p-2 bg-gray-100 rounded">{userInfo.address}</div>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="phoneNumber">Phone Number</Label>
-          <Input
-            id="phoneNumber"
-            name="phoneNumber"
-            value={userInfo.phoneNumber}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-          />
+          {isEditing ? (
+            <Input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={userInfo.phoneNumber}
+                   className="border border-black"
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value)) {
+                  handleInputChange(e);
+                }
+              }}
+            />
+          ) : (
+            <div className="p-2 bg-gray-100 rounded">{userInfo.phoneNumber}</div>
+          )}
         </div>
 
         <div className="mt-6">

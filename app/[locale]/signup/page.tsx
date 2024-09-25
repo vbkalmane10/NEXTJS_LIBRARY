@@ -1,37 +1,69 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Label } from "@radix-ui/react-label";
-import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { PulseLoader } from "react-spinners";
-import { createMember } from "@/lib/MemberRepository/actions";
+} from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import Link from "next/link"
+import { Input } from "@/components/ui/input"
+import { PulseLoader } from "react-spinners"
+import { createMember } from "@/lib/MemberRepository/actions"
+import { Eye, EyeOff } from "lucide-react"
+
+interface FieldError {
+  [key: string]: string
+}
+
 const SignupPage = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [address, setAddress] = useState("");
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("")
+  const [address, setAddress] = useState("")
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<FieldError>({})
+  const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const router = useRouter()
+
+  const validateForm = () => {
+    const errors: FieldError = {}
+
+    if (!firstName.trim()) errors.firstName = "First name is required"
+    if (!lastName.trim()) errors.lastName = "Last name is required"
+    if (!email.trim()) errors.email = "Email is required"
+    if (!password.trim()) errors.password = "Password is required"
+    if (!phoneNumber.trim()) errors.phoneNumber = "Phone number is required"
+    if (!address.trim()) errors.address = "Address is required"
+
+    // Password validation
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/
+    if (!passwordRegex.test(password)) {
+      errors.password = "Password must contain at least one capital letter, one number, and one special character"
+    }
+
+    setFieldErrors(errors)
+    return Object.keys(errors).length === 0
+  }
 
   const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage(null);
-    setSuccessMessage(null);
-    setLoading(true);
+    e.preventDefault()
+    setErrorMessage(null)
+    setSuccessMessage(null)
+    setFieldErrors({})
+
+    if (!validateForm()) return
+
+    setLoading(true)
     try {
       const newMember = await createMember({
         firstName,
@@ -40,20 +72,24 @@ const SignupPage = () => {
         password,
         phoneNumber,
         address,
-      });
+      })
 
       if (newMember !== undefined) {
-        setSuccessMessage(newMember.message);
-        router.push("/login");
+        setSuccessMessage(newMember.message)
+        router.push("/login")
       } else {
-        setErrorMessage("Member already exists.");
+        setErrorMessage("Member already exists.")
       }
     } catch (error) {
-      setErrorMessage("Failed to register.");
+      setErrorMessage("Failed to register.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
@@ -72,8 +108,13 @@ const SignupPage = () => {
                   id="firstName"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  required
+                
                 />
+                {fieldErrors.firstName && (
+                  <div className="text-red-500 text-sm mt-1 p-2 bg-red-50 border border-red-200 rounded">
+                    {fieldErrors.firstName}
+                  </div>
+                )}
               </div>
               <div className="space-y-1">
                 <Label htmlFor="lastName">Last Name</Label>
@@ -81,8 +122,13 @@ const SignupPage = () => {
                   id="lastName"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  required
+                  
                 />
+                {fieldErrors.lastName && (
+                  <div className="text-red-500 text-sm mt-1 p-2 bg-red-50 border border-red-200 rounded">
+                    {fieldErrors.lastName}
+                  </div>
+                )}
               </div>
             </div>
             <div className="space-y-1">
@@ -92,18 +138,41 @@ const SignupPage = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
+               
               />
+              {fieldErrors.email && (
+                <div className="text-red-500 text-sm mt-1 p-2 bg-red-50 border border-red-200 rounded">
+                  {fieldErrors.email}
+                </div>
+              )}
             </div>
             <div className="space-y-1">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <Eye className="h-5 w-5" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+              {fieldErrors.password && (
+                <div className="text-red-500 text-sm mt-1 p-2 bg-red-50 border border-red-200 rounded">
+                  {fieldErrors.password}
+                </div>
+              )}
             </div>
             <div className="space-y-1">
               <Label htmlFor="address">Address</Label>
@@ -111,9 +180,14 @@ const SignupPage = () => {
                 id="address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                required
-                className="min-h-[80px]"
+               
+               
               />
+              {fieldErrors.address && (
+                <div className="text-red-500 text-sm mt-1 p-2 bg-red-50 border border-red-200 rounded">
+                  {fieldErrors.address}
+                </div>
+              )}
             </div>
             <div className="space-y-1">
               <Label htmlFor="phoneNumber">Phone Number</Label>
@@ -122,8 +196,13 @@ const SignupPage = () => {
                 type="tel"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                required
+               
               />
+              {fieldErrors.phoneNumber && (
+                <div className="text-red-500 text-sm mt-1 p-2 bg-red-50 border border-red-200 rounded">
+                  {fieldErrors.phoneNumber}
+                </div>
+              )}
             </div>
 
             {loading ? (
@@ -136,9 +215,15 @@ const SignupPage = () => {
               </Button>
             )}
           </form>
-          {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
+          {errorMessage && (
+            <div className="text-red-500 mt-2 p-2 bg-red-50 border border-red-200 rounded">
+              {errorMessage}
+            </div>
+          )}
           {successMessage && (
-            <p className="text-green-500 mt-2">{successMessage}</p>
+            <div className="text-green-500 mt-2 p-2 bg-green-50 border border-green-200 rounded">
+              {successMessage}
+            </div>
           )}
         </CardContent>
         <CardFooter className="flex justify-center pb-6">
@@ -151,7 +236,7 @@ const SignupPage = () => {
         </CardFooter>
       </Card>
     </div>
-  );
-};
+  )
+}
 
-export default SignupPage;
+export default SignupPage

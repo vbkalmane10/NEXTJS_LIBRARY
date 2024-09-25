@@ -27,6 +27,7 @@ const MyRequestsPage = () => {
   );
   const { toast } = useToast();
   const router = useRouter();
+  const t = useTranslations("myrequests");
   useEffect(() => {
     const fetchRequests = async () => {
       if (status === "authenticated" && session?.user?.id) {
@@ -80,23 +81,26 @@ const MyRequestsPage = () => {
     }
     return true;
   });
- 
-    if (loading) {
-      return (
-        <div className="h-full w-full flex justify-center items-center">
-          <Loader2 className="animate-spin" />
-          <p className="ml-2">Loading...</p>
-        </div>
-      );
-    }
 
+  if (loading) {
+    return (
+      <div className="h-full w-full flex justify-center items-center">
+        <Loader2 className="animate-spin" />
+        <p className="ml-2">Loading...</p>
+      </div>
+    );
+  }
 
   if (requests.length === 0) {
-    return <p className="h-full w-full flex justify-center items-center">No transactions found for your account.</p>;
+    return (
+      <p className="h-full w-full flex justify-center items-center">
+        {t("No transactions found for your account")}
+      </p>
+    );
   }
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">My Book Transactions</h1>
+      <h1 className="text-2xl font-bold mb-4">{t("My Book Transactions")}</h1>
 
       {/* Switch/Toggle for Approved or Pending Requests */}
       <div className="mb-6">
@@ -104,7 +108,7 @@ const MyRequestsPage = () => {
           htmlFor="request-filter"
           className="text-sm font-medium text-gray-700"
         >
-          Filter transactions by status:
+          {t("Filter transactions by status:")}
         </label>
         <select
           id="request-filter"
@@ -114,9 +118,9 @@ const MyRequestsPage = () => {
           }
           className="ml-2 px-3 py-2 border border-gray-300 rounded-md"
         >
-          <option value="Pending">Pending</option>
-          <option value="Approved">Approved</option>
-          <option value="Returned">Returned</option>
+          <option value="Pending">{t("Pending")}</option>
+          <option value="Approved">{t("Approved")}</option>
+          <option value="Returned">{t("Returned")}</option>
         </select>
       </div>
 
@@ -131,7 +135,7 @@ const MyRequestsPage = () => {
             />
           ))
         ) : (
-          <p>No {filter} transactions found.</p>
+          <p>{t("No transactions found.")}</p>
         )}
       </div>
     </div>

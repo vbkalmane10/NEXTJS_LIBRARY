@@ -12,13 +12,14 @@ import { useState, useEffect } from "react";
 import { PulseLoader } from "react-spinners";
 import { FaGoogle } from "react-icons/fa";
 import { useTranslations } from "next-intl";
-
+import { Eye, EyeOff } from "lucide-react";
 const LoginPage = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const t = useTranslations("Login");
+  const [showPassword, setShowPassword] = useState(false);
   useEffect(() => {
     if (status === "authenticated") {
       const role = session?.user?.role;
@@ -69,7 +70,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       const result = await signIn("google", { redirect: false });
-     
+
       if (result) {
         router.push("/books");
       } else {
@@ -81,7 +82,9 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
-
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <main className="flex-1 flex items-center justify-center px-4 md:px-6 bg-gray-100">
@@ -105,24 +108,29 @@ const LoginPage = () => {
                 required
               />
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">{t("passwordLabel")}</Label>
-                {/* <Link
-                href="#"
-                className="text-sm text-muted-foreground hover:underline"
-                prefetch={false}
-              >
-                Forgot password?
-              </Link> */}
+            <div className="space-y-1">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder={t("passwordPlaceholder")}
+                  name="password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <Eye className="h-5 w-5" aria-hidden="true" />
+                  )}
+                </button>
               </div>
-              <Input
-                id="password"
-                type="password"
-                placeholder={t("passwordPlaceholder")}
-                name="password"
-                required
-              />
             </div>
 
             {errorMessage && (

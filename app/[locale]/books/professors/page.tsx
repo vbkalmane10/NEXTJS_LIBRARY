@@ -14,12 +14,14 @@ import {
 } from "@/components/ui/table";
 import { Loader2, Router } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function ProfessorsPage() {
   const [professors, setProfessors] = useState<Professor[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const t = useTranslations("Professors");
   useEffect(() => {
     async function fetchData() {
       try {
@@ -39,10 +41,11 @@ export default function ProfessorsPage() {
     professorName: string,
     calendlyLink: string
   ) => {
-   
-    router.push(`/books/professors/${professorName}?calendlyUrl=${encodeURIComponent(
+    router.push(
+      `/books/professors/${professorName}?calendlyUrl=${encodeURIComponent(
         calendlyLink
-      )}`);
+      )}`
+    );
   };
 
   if (isLoading) {
@@ -60,7 +63,7 @@ export default function ProfessorsPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-6">
-      <h1 className="text-3xl font-bold mb-6">Professors</h1>
+      <h1 className="text-3xl font-bold mb-6">{t("Professors")}</h1>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>

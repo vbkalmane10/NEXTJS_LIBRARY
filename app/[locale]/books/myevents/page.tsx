@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getUserById } from "@/lib/MemberRepository/repository";
+import { getTranslations } from "next-intl/server";
 
 interface Event {
   uri: string;
@@ -82,13 +83,10 @@ async function ScheduledMeetingsList() {
   );
 }
 
-export default function ScheduledMeetingsPage() {
+export default async function ScheduledMeetingsPage() {
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">
-        {" "}
-        Scheduled Meetings
-      </h1>
+      <h1 className="text-3xl font-bold mb-6">Scheduled Meetings</h1>
       <Suspense
         fallback={
           <div className="text-center">Loading scheduled meetings...</div>

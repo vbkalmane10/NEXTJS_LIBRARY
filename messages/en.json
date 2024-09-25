@@ -95,5 +95,41 @@
     "price": "Price",
     "borrow": "Borrow",
     "processing": "Processing..."
-  }
+  },
+  "Header": {
+    "Books": "Books",
+    "My Transactions": "My Transactions",
+    "My Books": "My Books",
+    "Professors": "Professors",
+    "My Events": "My Events",
+    "My Profile": "My Profile",
+    "Language": "Language",
+    "Active": "Active",
+    "Expired": "Expired",
+    "User Menu": "User Menu",
+    "Open main menu": "Open main menu"
+  },
+  "myrequests": {
+    "My Book Transactions": "My Book Transactions",
+    "Filter transactions by status:": "Filter transactions by status:",
+    "Pending": "Pending",
+    "Approved": "Approved",
+    "Returned": "Returned",
+    "No transactions found.": "No {filter} transactions found.",
+    "No transactions found for your account": "No transactions found for your account"
+  },
+  "myBooks": {
+    "My Books": "My Books",
+    "You havent borrowed any books": "You havent borrowed any books"
+  },
+  "Professors": {
+    "Professors": "Professors",
+    "Scheduled Meetings": "Scheduled Meetings"
+  },
+
+  "error_loading": "Error loading scheduled meetings. Please try again later.",
+  "no_scheduled_meetings": "No scheduled meetings found.",
+  "scheduled_meetings": "Scheduled Meetings",
+  "loading": "Loading scheduled meetings...",
+  "join_meeting": "Join Meeting"
 }

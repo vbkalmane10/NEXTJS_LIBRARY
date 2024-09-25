@@ -8,41 +8,41 @@ import { usePathname, useRouter } from "next/navigation";
 
 export default function LandingPage() {
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const t = useTranslations('LandingPage');
+  const t = useTranslations("LandingPage");
   const router = useRouter();
   const pathname = usePathname();
   const currentLocale = pathname.startsWith("/kn") ? "kn" : "en";
 
- 
   const switchLocale = () => {
     const newLocale = currentLocale === "en" ? "kn" : "en";
-    
+
     router.replace(`/${newLocale}`);
   };
   return (
     <div className="flex flex-col min-h-[100dvh]">
-       <div className="mt-8">
-          <div className="flex justify-center items-center">
-            <span className="text-gray-700 p-2">English</span>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={currentLocale === "kn"}
-                onChange={switchLocale}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-colors"></div>
-              <div
-                className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                  currentLocale === "kn"
-                    ? "transform translate-x-6"
-                    : "transform translate-x-0"
-                }`}
-              ></div>
-            </label>
-            <span className="ml-2 text-gray-700">Kannada</span>
-          </div>
-        </div>
+      <Header navItems={[]} userName={undefined} />
+      <div className="mt-8">
+        {/* <div className="flex justify-center items-center">
+          <span className="text-gray-700 p-2">English</span>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={currentLocale === "kn"}
+              onChange={switchLocale}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-blue-600 transition-colors"></div>
+            <div
+              className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                currentLocale === "kn"
+                  ? "transform translate-x-6"
+                  : "transform translate-x-0"
+              }`}
+            ></div>
+          </label>
+          <span className="ml-2 text-gray-700">Kannada</span>
+        </div> */}
+      </div>
       <section className="flex-1 flex flex-col items-center justify-center text-center px-6 mt-12 text-black">
         <h1 className="text-4xl md:text-6xl font-bold mb-4">{t("title")}</h1>
         <p className="text-lg md:text-xl mb-6">{t("subtitle")}</p>
@@ -52,9 +52,6 @@ export default function LandingPage() {
         >
           {t("exploreBooks")}
         </Link>
-
-     
-     
       </section>
 
       <section className="py-20 bg-white">
@@ -85,4 +82,3 @@ export default function LandingPage() {
     </div>
   );
 }
-

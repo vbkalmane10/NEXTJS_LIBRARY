@@ -95,5 +95,40 @@
     "price": "ಬೆಲೆ",
     "borrow": "ಪಡೆಯಿರಿ",
     "processing": "ಪ್ರಕ್ರಿಯೆ..."
-  }
+  },
+  "Header": {
+    "Books": "ಪುಸ್ತಕಗಳು",
+    "My Transactions": "ನನ್ನ ವ್ಯವಹಾರಗಳು",
+    "My Books": "ನನ್ನ ಪುಸ್ತಕಗಳು",
+    "Professors": "ಪ್ರೊಫೆಸರ್‌ಗಳು",
+    "My Events": "ನನ್ನ ಕಾರ್ಯಕ್ರಮಗಳು",
+    "My Profile": "ನನ್ನ ಪ್ರೊಫೈಲ್",
+    "Language": "ಭಾಷೆ",
+    "Active": "ಸಕ್ರಿಯ",
+    "Expired": "ಅವಧಿ ಮುಗಿದಿದೆ",
+    "User Menu": "ಬಳಕೆದಾರ ಮೆನು",
+    "Open main menu": "ಮುಖ್ಯ ಮೆನು ತೆರೆಯಿರಿ"
+  },
+  "myrequests": {
+    "My Book Transactions": "ನನ್ನ ಪುಸ್ತಕ ವಹಿವಾಟುಗಳು",
+    "Filter transactions by status:": "ಸ್ಥಿತಿಯ ಮೂಲಕ ಫಿಲ್ಟರ್ ಮಾಡಿ",
+    "Pending": "ಬಾಕಿ",
+    "Approved": "ಅನುಮೋದಿಸಲಾಗಿದೆ",
+    "Returned": "ಮರುಕಳಿಸಲಾಗಿದೆ",
+    "No transactions found.": "ಯಾವುದೇ {filter} ವಹಿವಾಟುಗಳು ಸಿಕ್ಕಿಲ್ಲ.",
+    "No transactions found for your account": "ನಿಮ್ಮ ಖಾತೆಗೆ ಯಾವುದೇ ವಹಿವಾಟುಗಳು ಸಿಕ್ಕಿಲ್ಲ"
+  },
+  "myBooks": {
+    "My Books": "ನನ್ನ ಪುಸ್ತಕಗಳು",
+    "You havent borrowed any books": "ನೀವು ಯಾವುದೇ ಪುಸ್ತಕಗಳನ್ನು ತೆಗೆದುಕೊಂಡಿಲ್ಲ"
+  },
+  "Professors": {
+    "Professors": "ಪ್ರೊಫೆಸರ್‌ಗಳು",
+    "Scheduled Meetings": "ನಿಯೋಜಿತ ಸಭೆಗಳು"
+  },
+  "error_loading": "ನಿಯೋಜಿತ ಸಭೆಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಾಗ ದೋಷವಾಯಿತು. ದಯವಿಟ್ಟು ನಂತರದಿಂದ ಪ್ರಯತ್ನಿಸಿ.",
+  "no_scheduled_meetings": "ಯಾವುದೇ ನಿಯೋಜಿತ ಸಭೆಗಳು ದೊರಕಲಿಲ್ಲ.",
+  "scheduled_meetings": "ನಿಯೋಜಿತ ಸಭೆಗಳು",
+  "loading": "ನಿಯೋಜಿತ ಸಭೆಗಳನ್ನು ಲೋಡ್ ಮಾಡುತ್ತಿದೆ...",
+  "join_meeting": "ಸಭೆಗೆ ಸೇರಿ"
 }

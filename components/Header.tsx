@@ -1,25 +1,26 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
-import { Avatar, AvatarFallback } from "./ui/avatar"
-import { usePathname, useRouter } from "next/navigation"
-import { Menu, X, User, ChevronDown } from "lucide-react"
-import Link from "next/link"
+import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, X, User, ChevronDown } from "lucide-react";
+import Link from "next/link";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select"
+} from "./ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
-import { Button } from "./ui/button"
+} from "./ui/dropdown-menu";
+import { Button } from "./ui/button";
+import { useTranslations } from "next-intl";
 
 interface NavItem {
   href: string;
@@ -32,34 +33,46 @@ interface HeaderProps {
   membershipStatus?: string | undefined;
 }
 
-export default function Header({ navItems, userName, membershipStatus }: HeaderProps) {
-  const { data: session } = useSession()
-  const [currentLanguage, setCurrentLanguage] = useState("en")
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const router = useRouter()
-  const pathname = usePathname()
+export default function Header({
+  navItems,
+  userName,
+  membershipStatus,
+}: HeaderProps) {
+  const { data: session } = useSession();
+  const [currentLanguage, setCurrentLanguage] = useState("en");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const t = useTranslations("Header");
 
   useEffect(() => {
-    const lang = pathname.startsWith("/kn") ? "kn" : "en"
-    setCurrentLanguage(lang)
-  }, [pathname])
+    const lang = pathname.startsWith("/kn") ? "kn" : "en";
+    setCurrentLanguage(lang);
+  }, [pathname]);
 
   const switchLocale = (locale: "en" | "kn") => {
-    const currentPath = window.location.pathname
-    const currentSearch = window.location.search
-    const storedPath = currentPath.substring(3)
-    const newPath = `/${locale}${storedPath}${currentSearch}`
-    setCurrentLanguage(locale)
-    router.replace(newPath)
-  }
+    const currentPath = window.location.pathname;
+    const currentSearch = window.location.search;
+    const storedPath = currentPath.substring(3);
+    const newPath = `/${locale}${storedPath}${currentSearch}`;
+    setCurrentLanguage(locale);
+    router.replace(newPath);
+  };
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
-  const membershipColor = membershipStatus === "active" ? "bg-green-500" : "bg-red-500"
-  const membershipLabel = membershipStatus === "active" ? "Active" : "Expired"
-
+  const membershipColor =
+    membershipStatus === "active" ? "bg-green-500" : "bg-red-500";
+  const membershipLabel = membershipStatus === "active" ? "Active" : "Expired";
+  const getProfileLink = () => {
+    if (session?.user?.role === "admin") {
+      return "/admin/profile";
+    } else {
+      return "/books/profile";
+    }
+  };
   return (
     <header className="bg-white shadow-md">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,37 +108,28 @@ export default function Header({ navItems, userName, membershipStatus }: HeaderP
               </SelectContent>
             </Select>
             {session && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="ml-3 flex items-center gap-2" aria-label="User menu">
-                    <Avatar className="h-8 w-8 border border-black">
-                      <AvatarFallback>
-                        <User className="h-5 w-5" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem className="flex flex-col items-start">
-                    <span className="font-medium">{userName}</span>
-                    {membershipStatus && (
-                      <span className={`mt-1 px-2 py-0.5 text-xs font-semibold text-white rounded-full ${membershipColor}`}>
-                        {membershipLabel}
-                      </span>
-                    )}
-                  </DropdownMenuItem>
-                  {navItems.map((item) => (
-                    <DropdownMenuItem key={item.href} asChild>
-                      <Link href={item.href}>{item.text}</Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Link href={getProfileLink()}>
+                <Button
+                  variant="ghost"
+                  className="ml-3 flex items-center gap-2"
+                  aria-label="User menu"
+                >
+                  <Avatar className="h-8 w-8 border border-black">
+                    <AvatarFallback>
+                      <User className="h-5 w-5" />
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </Link>
             )}
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
-            <Button variant="ghost" onClick={toggleMobileMenu} className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-expanded="false">
+            <Button
+              variant="ghost"
+              onClick={toggleMobileMenu}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+              aria-expanded="false"
+            >
               <span className="sr-only">Open main menu</span>
               {isMobileMenuOpen ? (
                 <X className="block h-6 w-6" aria-hidden="true" />
@@ -165,9 +169,13 @@ export default function Header({ navItems, userName, membershipStatus }: HeaderP
                 </Avatar>
               </div>
               <div className="ml-3">
-                <div className="text-base font-medium text-gray-800">{userName}</div>
+                <div className="text-base font-medium text-gray-800">
+                  {userName}
+                </div>
                 {membershipStatus && (
-                  <div className={`text-sm font-medium ${membershipColor} text-white px-2 py-0.5 rounded-full mt-1`}>
+                  <div
+                    className={`text-sm font-medium ${membershipColor} text-white px-2 py-0.5 rounded-full mt-1`}
+                  >
                     {membershipLabel}
                   </div>
                 )}
@@ -188,5 +196,5 @@ export default function Header({ navItems, userName, membershipStatus }: HeaderP
         </div>
       )}
     </header>
-  )
+  );
 }
