@@ -97,8 +97,8 @@ export default function Page({
     );
   }
   return (
-    <div className="flex flex-col w-full min-h-screen">
-      <div className="p-8 flex-grow">
+    <div className="flex flex-col w-full">
+      <div className="p-8">
         <h1 className="text-3xl font-bold">{t("welcomeAdmin")}</h1>
 
         <div className="flex w-full items-center justify-between mt-4">

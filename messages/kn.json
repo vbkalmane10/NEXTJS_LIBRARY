@@ -124,7 +124,8 @@
   },
   "Professors": {
     "Professors": "ಪ್ರೊಫೆಸರ್‌ಗಳು",
-    "Scheduled Meetings": "ನಿಯೋಜಿತ ಸಭೆಗಳು"
+    "Scheduled Meetings": "ನಿಯೋಜಿತ ಸಭೆಗಳು",
+    "Book Appointment": "ನೊಂದಾಯಿಸಿ"
   },
   "error_loading": "ನಿಯೋಜಿತ ಸಭೆಗಳನ್ನು ಲೋಡ್ ಮಾಡುವಾಗ ದೋಷವಾಯಿತು. ದಯವಿಟ್ಟು ನಂತರದಿಂದ ಪ್ರಯತ್ನಿಸಿ.",
   "no_scheduled_meetings": "ಯಾವುದೇ ನಿಯೋಜಿತ ಸಭೆಗಳು ದೊರಕಲಿಲ್ಲ.",

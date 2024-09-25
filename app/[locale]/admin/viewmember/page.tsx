@@ -79,14 +79,37 @@ export default function Page({
     );
   }
   return (
-    <div className="flex flex-col w-full min-h-screen">
-      <div className="w-full p-8">
-        <h1 className="text-2xl font-bold">Users</h1>
+    // <div className="flex flex-col w-full">
+    //   <div className="p-8">
+    //     <h1 className="text-2xl font-bold">Users</h1>
+
+    //     <div className="mt-4 flex gap-4 items-center">
+    //       <Search placeholder="Search Users..." />
+    //       <AddUser />
+    //     </div>
+    //     <div className="mt-6">
+    //       <AdminUserTable
+    //         users={users}
+    //         onEdit={handleEdit}
+    //         onDelete={handleDelete}
+    //       />
+    //     </div>
+    //     <div className="mt-8 flex justify-center">
+    //       <Pagination currentPage={currentPage} totalPages={totalPages} />
+    //     </div>
+    //   </div>
+    // </div>
+    <div className="flex flex-col w-full">
+      <div className="p-8">
+        <div className="flex w-full items-center justify-between mt-4">
+          <h1 className="text-2xl font-bold">Users</h1>
+        </div>
 
         <div className="mt-4 flex gap-4 items-center">
-          <Search placeholder="Search Users..." />
+          <Search placeholder="Search Users.." />
           <AddUser />
         </div>
+
         <div className="mt-6">
           <AdminUserTable
             users={users}
@@ -94,6 +117,7 @@ export default function Page({
             onDelete={handleDelete}
           />
         </div>
+
         <div className="mt-8 flex justify-center">
           <Pagination currentPage={currentPage} totalPages={totalPages} />
         </div>

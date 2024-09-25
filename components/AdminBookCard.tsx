@@ -64,7 +64,7 @@ const AdminBookTable: React.FC<AdminBookTableProps> = ({
   }
 
   return (
-    <div className="mt-6 flow-root">
+    <div className="mt-6 bg-green-500">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden space-y-4">

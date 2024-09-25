@@ -12,9 +12,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Loader2, Router } from "lucide-react";
+import { GraduationCap, Info, Loader2, Router, User,BookText,University } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProfessorsPage() {
   const [professors, setProfessors] = useState<Professor[]>([]);
@@ -64,40 +65,43 @@ export default function ProfessorsPage() {
   return (
     <div className="container mx-auto p-4 md:p-6">
       <h1 className="text-3xl font-bold mb-6">{t("Professors")}</h1>
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-1/4">Name</TableHead>
-              <TableHead className="w-1/4">Department</TableHead>
-              <TableHead className="w-1/3">About</TableHead>
-              <TableHead className="w-1/6">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {professors.map((professor) => (
-              <TableRow key={professor.id}>
-                <TableCell className="font-medium">{professor.name}</TableCell>
-                <TableCell>{professor.department}</TableCell>
-                <TableCell className="max-w-xs truncate">
-                  {professor.shortBio}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    onClick={() =>
-                      handleBookAppointment(
-                        professor.name,
-                        professor.calendlyLink
-                      )
-                    }
-                  >
-                    Book Appointment
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {professors.map((professor) => (
+          <Card key={professor.id} className="hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold">
+                <div className="flex items-center space-x-2">
+                  <User className="h-5 w-5 text-primary" />
+                  <span>{professor.name}</span>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <BookText className="h-5 w-5" />
+                  <span className="text-sm font-medium">
+                    {professor.department}
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <University className="h-5 w-5" />
+                  <span className="text-sm font-medium">
+                    {professor.shortBio}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button
+                onClick={() => handleBookAppointment(professor.name, professor.calendlyLink)}
+                className="w-full"
+              >
+                Book Appointment
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </div>
   );

@@ -124,7 +124,8 @@
   },
   "Professors": {
     "Professors": "Professors",
-    "Scheduled Meetings": "Scheduled Meetings"
+    "Scheduled Meetings": "Scheduled Meetings",
+    "Book Appointment": "Book Appointment"
   },
 
   "error_loading": "Error loading scheduled meetings. Please try again later.",
