@@ -137,8 +137,8 @@ export type CloudinaryUploadResponse = {
   original_filename: string;
 };
 export interface Professor {
-  id: number | null;
-  name: string ;
+  id?: number | null;
+  name: string;
   department: string | null;
   shortBio: string | null;
   calendlyLink: string;

@@ -5,8 +5,14 @@ import {
   iMember,
   iMemberBase,
   iTransaction,
+  Professor,
 } from "./types";
-import { booksTable, membersTable, transactionsTable,professorsTable } from "@/drizzle/schema";
+import {
+  booksTable,
+  membersTable,
+  transactionsTable,
+  professorsTable,
+} from "@/drizzle/schema";
 import { z } from "zod";
 import { db } from "@/db";
 import { eq, like, and, count } from "drizzle-orm";
@@ -180,10 +186,10 @@ export async function rejectRequest(
   req: Request
 ): Promise<{ message: string; transaction: iTransaction | undefined }> {
   const issueDate = new Date();
- 
+
   const dueDate = new Date(issueDate);
   dueDate.setDate(issueDate.getDate() + 14);
- 
+
   try {
     let newTransaction: iTransaction | undefined;
     await db.transaction(async (trx) => {
@@ -265,18 +271,21 @@ export async function getBooksByIsbn(isbnNo: string): Promise<iBook | null> {
   }
 }
 
-export async function getUserRequests(userId: number,status?:string) {
+export async function getUserRequests(userId: number, status?: string) {
   try {
-    const conditions = status 
-    ? and(eq(transactionsTable.memberId, userId), eq(transactionsTable.status, status))
-    : eq(transactionsTable.memberId, userId);
+    const conditions = status
+      ? and(
+          eq(transactionsTable.memberId, userId),
+          eq(transactionsTable.status, status)
+        )
+      : eq(transactionsTable.memberId, userId);
 
-  const requests = await db
-    .select()
-    .from(transactionsTable)
-    .where(conditions);
+    const requests = await db
+      .select()
+      .from(transactionsTable)
+      .where(conditions);
 
-  return requests;
+    return requests;
   } catch (error) {
     throw new Error("Error while fetching the requests");
   }
@@ -448,14 +457,83 @@ export async function dueToday(date: Date) {
     throw new Error("Error while fetching due today transactions");
   }
 }
-export async function fetchProfessors(){
+export async function fetchProfessors() {
   try {
-    const professors = await db
-      .select()
-      .from(professorsTable);
+    const professors = await db.select().from(professorsTable);
     return professors;
   } catch (error) {
     console.error("Error fetching professors:", error);
     throw new Error("Unable to fetch professors");
+  }
+}
+export async function fetchAdminProfessors(
+  searchTerm: string,
+  currentPage: number,
+  usersPerPage: number
+) {
+  const limit = usersPerPage;
+  const offset = (currentPage - 1) * limit;
+
+  const professorQuery = db
+    .select()
+    .from(professorsTable)
+    .where(
+      searchTerm
+        ? and(like(professorsTable.name, `%${searchTerm}%`))
+        : undefined
+    )
+    .limit(limit)
+    .offset(offset)
+    .execute();
+
+  const totalProfessorsQuery = db
+    .select()
+    .from(professorsTable)
+    .where(
+      searchTerm
+        ? and(like(professorsTable.name, `%${searchTerm}%`))
+        : undefined
+    )
+    .execute();
+
+  const totalProfessors = await totalProfessorsQuery;
+
+  return {
+    professors: await professorQuery,
+    totalPages: Math.ceil(totalProfessors.length / limit),
+  };
+}
+export async function createProfessors(
+  professor: Professor
+): Promise<{ message: string; professor?: Professor }> {
+  try {
+    const existingProfessor = await db
+      .select()
+      .from(professorsTable)
+      .where(eq(professorsTable.name, professor.name));
+
+    if (existingProfessor.length > 0) {
+      return {
+        message: "Member Already exists",
+        professor: undefined,
+      };
+    } else {
+      const newProfessorData: Omit<Professor, "id"> = {
+        ...professor,
+      };
+
+      const insertedProfessor = await db
+        .insert(professorsTable)
+        .values(newProfessorData)
+        .returning();
+
+      const newMember = insertedProfessor[0];
+      return {
+        message: "Professor added successfully",
+        professor: newMember,
+      };
+    }
+  } catch (error) {
+    throw new Error("Error while creating professor");
   }
 }

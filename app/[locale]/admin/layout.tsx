@@ -19,17 +19,15 @@ export default async function Layout({
     { href: "/admin/viewrequests", text: "Book Requests" },
     { href: "/admin/dueToday", text: "Due Today" },
     { href: "/admin/viewmember", text: "View Members" },
+    { href: "/admin/viewprofessor", text: "View Professors" },
 
     { href: "/admin/myevents", text: "Events" },
     { href: "/admin/profile", text: "View Profile" },
   ];
   return (
     <div className="flex h-screen w-full">
-     
-
       <div className="flex flex-col flex-1">
-        <Header  navItems={navItems}
-        userName={userName?.firstName}/>
+        <Header navItems={navItems} userName={userName?.firstName} />
         <div className="flex-grow overflow-y-auto md:overflow-y-auto">
           {children}
         </div>

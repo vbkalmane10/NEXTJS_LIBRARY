@@ -3,8 +3,11 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { iBook } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { uploadImageToCloudinary } from "@/lib/Cloudinary";
+import { Loader2 } from "lucide-react";
 
 interface EditBookFormProps {
   book: iBook;
@@ -20,20 +23,47 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
   isPending,
 }) => {
   const [formData, setFormData] = useState<iBook>({ ...book });
-  const router = useRouter();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
+  };
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setImageFile(e.target.files[0]);
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setErrorMessage("");
+    setIsUploading(true);
 
-    onSubmit(formData);
+    try {
+      let imageUrl = formData.imageUrl;
+
+      if (imageFile) {
+        imageUrl = await uploadImageToCloudinary(imageFile);
+      }
+
+      if (!imageUrl) {
+        throw new Error("Failed to upload image");
+      }
+      
+      onSubmit({ ...formData, imageUrl });
+    } catch (error) {
+      console.error("Error during form submission:", error);
+      setErrorMessage("Failed to update book. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -45,6 +75,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
             <Label htmlFor="title">Title</Label>
             <Input
               type="text"
+              id="title"
               name="title"
               value={formData.title}
               onChange={handleChange}
@@ -56,6 +87,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
             <Label htmlFor="author">Author</Label>
             <Input
               type="text"
+              id="author"
               name="author"
               value={formData.author}
               onChange={handleChange}
@@ -67,6 +99,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
             <Label htmlFor="publisher">Publisher</Label>
             <Input
               type="text"
+              id="publisher"
               name="publisher"
               value={formData.publisher}
               onChange={handleChange}
@@ -78,6 +111,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
             <Label htmlFor="genre">Genre</Label>
             <Input
               type="text"
+              id="genre"
               name="genre"
               value={formData.genre}
               onChange={handleChange}
@@ -88,6 +122,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
             <Label htmlFor="isbnNo">ISBN</Label>
             <Input
               type="text"
+              id="isbnNo"
               name="isbnNo"
               value={formData.isbnNo}
               onChange={handleChange}
@@ -99,6 +134,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
             <Label htmlFor="pages">Pages</Label>
             <Input
               type="number"
+              id="pages"
               name="pages"
               value={formData.pages}
               onChange={handleChange}
@@ -109,6 +145,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
             <Label htmlFor="totalCopies">Total Copies</Label>
             <Input
               type="number"
+              id="totalCopies"
               name="totalCopies"
               value={formData.totalCopies}
               onChange={handleChange}
@@ -119,28 +156,50 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
             <Label htmlFor="availableCopies">Available Copies</Label>
             <Input
               type="number"
+              id="availableCopies"
               name="availableCopies"
               value={formData.availableCopies}
               onChange={handleChange}
               placeholder="Available Copies"
             />
           </div>
+          <div className="space-y-2">
+            <Label htmlFor="book-image">Book Image</Label>
+            <Input
+              type="file"
+              id="book-image"
+              name="image"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </div>
         </div>
+        {errorMessage && (
+          <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+        )}
         <div className="flex justify-end gap-4 mt-6">
-          <button
+          <Button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-black bg-transparent rounded hover:bg-red-600"
+            variant="outline"
+            className="px-4 py-2"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            disabled={isPending}
-            className="px-4 py-2 text-white bg-black rounded"
+            disabled={isPending || isUploading}
+            className="px-4 py-2"
           >
-            {isPending ? "Saving..." : "Save Changes"}
-          </button>
+            {isPending || isUploading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {isUploading ? "Uploading..." : "Saving..."}
+              </>
+            ) : (
+              "Save Changes"
+            )}
+          </Button>
         </div>
       </form>
     </div>

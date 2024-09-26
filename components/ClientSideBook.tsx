@@ -65,12 +65,12 @@ export default function ClientSideBooks({
   };
 
   return (
-    <div className="p-3 pl-7">
+    <div className="pl-10">
       <div className="flex w-full items-center justify-between">
         <h1 className="text-2xl font-bold">{t("Books")}</h1>
       </div>
 
-      <div className="mt-4 flex gap-3 items-center mr-12">
+      <div className="mt-4 flex gap-3 items-center mr-10">
         <Search placeholder="Search books..." />
         <select
           className="p-2 border border-gray-300 rounded"

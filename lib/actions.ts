@@ -7,6 +7,7 @@ import {
   iBookBase,
   iMember,
   iMemberBase,
+  Professor,
   Request,
   RequestStatistics,
 } from "./types";
@@ -24,6 +25,8 @@ import {
   dueToday,
   returnBook,
   fetchProfessors,
+  fetchAdminProfessors,
+  createProfessors,
 } from "./repository";
 
 export async function getUserId(email: string): Promise<number | null> {
@@ -209,5 +212,30 @@ export async function handleFetchProfessors() {
     return result;
   } catch (error) {
     throw new Error("Error while fething professors");
+  }
+}
+export async function getProfessors(
+  searchTerm: string,
+  currentPage: number,
+  usersPerPage: number
+) {
+  const { professors, totalPages } = await fetchAdminProfessors(
+    searchTerm,
+    currentPage,
+    usersPerPage
+  );
+  if (professors) {
+    return { professors, totalPages };
+  } else {
+    throw new Error("Error while fetching users");
+  }
+}
+export async function createProfessor(professor: Professor) {
+  try {
+    const newProfessor = await createProfessors(professor);
+    return newProfessor;
+  } catch (error) {
+    console.error("Error creating professor:", error);
+    throw new Error("Failed to create professor");
   }
 }
