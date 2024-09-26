@@ -2,15 +2,15 @@ import { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import ClientLayout from "./ClientLayout";
 import "../globals.css";
-
+import { SpeedInsights } from "@vercel/speed-insights/next";
 export default async function RootLayout({
   children,
-  params: { locale }
+  params: { locale },
 }: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  if (locale !== 'en' && locale !== 'kn') {
+  if (locale !== "en" && locale !== "kn") {
     notFound();
   }
 
@@ -24,6 +24,7 @@ export default async function RootLayout({
   return (
     <ClientLayout locale={locale} messages={messages}>
       {children}
+      <SpeedInsights />
     </ClientLayout>
   );
 }

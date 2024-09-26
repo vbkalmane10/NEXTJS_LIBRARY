@@ -29,6 +29,7 @@
     "@radix-ui/react-toast": "^1.2.1",
     "@react-icons/all-files": "^4.1.0",
     "@vercel/postgres": "^0.10.0",
+    "@vercel/speed-insights": "^1.0.12",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "cloudinary": "^2.5.0",
