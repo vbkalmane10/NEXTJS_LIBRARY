@@ -14,6 +14,7 @@ export default async function Layout({
 }) {
   const session = await getServerSession(authOptions);
   const userName = await getUserById(session.user?.id);
+
   const t = await getTranslations("Header");
   const navItems = [
     { href: "/books", text: t("Books") },

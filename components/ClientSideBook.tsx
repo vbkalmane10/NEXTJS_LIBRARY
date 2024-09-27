@@ -6,6 +6,7 @@ import Pagination from "./Pagination";
 import Search from "./search";
 import { iBook } from "@/lib/types";
 import { useTranslations } from "next-intl";
+import Chatbot from "./ChatBot";
 
 interface BookProps {
   books: iBook[];
@@ -36,7 +37,11 @@ export default function ClientSideBooks({
   const [sortBy, setSortBy] = useState<string>("");
   const [sortedBooks, setSortedBooks] = useState<iBook[]>(books);
   const [currency, setCurrency] = useState<string>("INR");
+  const [isChatOpen, setChatOpen] = useState(false);
   const t = useTranslations("BooksPage");
+  const toggleChat = () => {
+    setChatOpen((prev) => !prev); // Toggle chatbot visibility
+  };
   useEffect(() => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     // const timeZone = "Europe/London";
@@ -100,6 +105,13 @@ export default function ClientSideBooks({
       <div className="mt-8 flex justify-center">
         <Pagination currentPage={currentPage} totalPages={totalPages} />
       </div>
+      <button
+              onClick={toggleChat}
+              className="fixed bottom-4 right-4 bg-blue-600 text-white rounded-full p-3 shadow-lg hover:bg-blue-700 transition"
+            >
+              💬 {/* Chat button */}
+            </button>
+            <Chatbot isOpen={isChatOpen} onClose={() => setChatOpen(false)} />
     </div>
   );
 }

@@ -125,7 +125,7 @@ export default function BookCard({
         )}
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-95" />
-      <CardContent className="relative z-10 flex flex-col justify-end h-full pb-14 text-white">
+      <CardContent className="relative flex flex-col justify-end h-full pb-14 text-white">
         <h3 className="text-2xl font-bold line-clamp-2 mb-2">{book.title}</h3>
         <p className="text-sm mb-1 line-clamp-1">by {book.author}</p>
         <p className="text-sm mb-1 line-clamp-1">{book.publisher}</p>
