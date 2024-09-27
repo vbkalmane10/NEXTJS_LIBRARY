@@ -35,7 +35,7 @@ const Chatbot = ({
     );
 
     const data = await response.json();
-    const botMessage: Message = { text: data.fulfillmentText, sender: "bot" };
+    const botMessage: Message = { text: data.fulfillmentText || 'Sorry, I did not understand that.', sender: 'bot' };
     setMessages((prev) => [...prev, botMessage]);
     setInput("");
   };
