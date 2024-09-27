@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { usePathname } from "next/navigation";
+import Chatbot from "@/components/ChatBot"
 export default function ClientLayout({
   children,
   locale,
@@ -18,7 +19,7 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const [loading, setLoading] = useState(false);
-
+ 
   useEffect(() => {
     setLoading(true); 
 
@@ -29,6 +30,7 @@ export default function ClientLayout({
 
     return () => clearTimeout(timer); 
   }, [pathname]);
+ 
   return (
     <html lang={locale}>
       <body>
@@ -37,6 +39,7 @@ export default function ClientLayout({
           <NextIntlClientProvider locale={locale} messages={messages}>
             {children}
             <Toaster />
+            
           </NextIntlClientProvider>
         </SessionProvider>
       </body>

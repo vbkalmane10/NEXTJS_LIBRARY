@@ -13,12 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+
 import { Button } from "./ui/button";
 import { useTranslations } from "next-intl";
 
@@ -41,6 +36,7 @@ export default function Header({
   const { data: session } = useSession();
   const [currentLanguage, setCurrentLanguage] = useState("en");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("Header");
