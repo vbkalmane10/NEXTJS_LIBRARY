@@ -15,7 +15,11 @@ import AdminUserTable from "@/components/ViewMember";
 import AddUser from "@/components/AddUser";
 import Header from "@/components/Header";
 import { Loader2 } from "lucide-react";
-import { getProfessors, refreshInvitationStatus } from "@/lib/actions";
+import {
+  getProfessors,
+  handleProfessorDelete,
+  refreshInvitationStatus,
+} from "@/lib/actions";
 import AdminProfessorTable from "@/components/AdminProfessorTable";
 import AddProfessor from "@/components/AddProfessor";
 export default function Page({
@@ -53,30 +57,31 @@ export default function Page({
     loadProfessors();
     setLoading(false);
   }, [query, currentPage]);
-  //   const handleDelete = async (id: number) => {
-  //     try {
-  //       const result = await handleUserDelete(id);
-  //       if (result) {
-  //         toast({
-  //           title: "Success",
-  //           description: result.message,
-  //           className: "bg-green-400 text-white",
-  //           duration: 1000,
-  //         });
-  //         loadUsers();
-  //       }
-  //     } catch (error) {
-  //       toast({
-  //         title: "Error",
-  //         description: "Failed to delete book. Please try again.",
-  //         className: "bg-red-600 text-white",
-  //         duration: 1000,
-  //       });
-  //     }
-  //   };
-  //   const handleEdit = (id: number) => {
-  //     router.push(`/admin/editmember/${id}/edit`);
-  //   };
+
+  const handleDelete = async (id: number | undefined) => {
+    try {
+      const result = await handleProfessorDelete(id);
+      if (result) {
+        toast({
+          title: "Success",
+          description: result.message,
+          className: "bg-green-400 text-white",
+          duration: 1000,
+        });
+        loadProfessors();
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete professor. Please try again.",
+        className: "bg-red-600 text-white",
+        duration: 1000,
+      });
+    }
+  };
+  const handleEdit = (id: number | undefined) => {
+    router.push(`/admin/editprofessor/${id}/edit`);
+  };
 
   if (loading) {
     return (
@@ -88,16 +93,17 @@ export default function Page({
   }
   async function handleRefresh(email: string) {
     try {
-      const result = await refreshInvitationStatus(email);  
-  
+      const result = await refreshInvitationStatus(email);
+
       if (result.accepted) {
         toast({
           title: "Invitation Accepted",
-          description: "Professor accepted the invitation and Calendly link is updated.",
+          description:
+            "Professor accepted the invitation and Calendly link is updated.",
           className: "bg-green-600 text-white",
           duration: 1000,
         });
-        loadProfessors();  // Reload the professor list to reflect changes
+        loadProfessors(); 
       } else {
         toast({
           title: "No Update",
@@ -132,8 +138,8 @@ export default function Page({
           <AdminProfessorTable
             users={professors}
             onRefresh={handleRefresh}
-            // onEdit={handleEdit}
-            // onDelete={handleDelete}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
           />
         </div>
 

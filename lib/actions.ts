@@ -28,6 +28,9 @@ import {
   fetchAdminProfessors,
   createProfessors,
   updateProfessorCalendlyLink,
+  getProfessorById,
+  updateProfessor,
+  deleteProfessor,
 } from "./repository";
 import {
   checkInvitationStatus,
@@ -295,7 +298,6 @@ export async function refreshInvitationStatus(email: string) {
       const userDetails = await fetchUserDetails(statusResponse.userUri);
       const calendlyLink = userDetails.scheduling_url;
 
-
       await updateProfessorCalendlyLink(email, calendlyLink);
       return { accepted: true };
     } else {
@@ -306,3 +308,30 @@ export async function refreshInvitationStatus(email: string) {
     throw new Error("Failed to refresh invitation");
   }
 }
+export const fetchProfessorDetails = async (
+  id: number
+): Promise<Professor | null> => {
+  return await getProfessorById(id);
+};
+export const handleProfessorUpdate = async (
+  id: number,
+  updatedUser: Professor
+) => {
+  try {
+    await updateProfessor(id, updatedUser);
+    return { success: true, message: "Professor updated successfully!" };
+  } catch (error) {
+    console.error("Error updating professor:", error);
+    return { success: false, message: "Failed to update the user." };
+  }
+};
+export const handleProfessorDelete = async (id: number | undefined) => {
+  try {
+    await deleteProfessor(id);
+
+    return { success: true, message: "Professor deleted successfully!" };
+  } catch (error) {
+    console.error("Error deleting professor:", error);
+    return { success: false, message: "Failed to delete the professor." };
+  }
+};

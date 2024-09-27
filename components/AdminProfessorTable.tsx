@@ -26,15 +26,15 @@ import { useTranslations } from "next-intl";
 interface AdminProfessorTableProps {
   users: Professor[];
   onRefresh: (email: string) => void;
-  //  onEdit: (id: number) => void;
-  // onDelete: (id: number) => void;
+  onEdit: (id: number | undefined) => void;
+  onDelete: (id: number | undefined) => void;
 }
 
 const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
   users,
   onRefresh,
-  // onEdit,
-  // onDelete,
+  onEdit,
+  onDelete,
 }) => {
   const t = useTranslations("UserTable");
   return (
@@ -65,13 +65,13 @@ const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
                   </div>
                   <div className="flex gap-2">
                     <button
-                      // onClick={() => onEdit(user.id)}
+                      onClick={() => onEdit(user.id)}
                       className="hover:bg-green-700 p-2 rounded transition-colors duration-200"
                     >
                       <Edit />
                     </button>
                     <button
-                      // onClick={() => onDelete(user.id)}
+                      onClick={() => onDelete(user.id)}
                       className="hover:bg-red-600 p-2 rounded transition-colors duration-200"
                     >
                       <Trash2 />
@@ -137,7 +137,7 @@ const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
                     <TableCell className="whitespace-nowrap py-3 pr-3">
                       <div className="flex justify-start gap-2">
                         <button
-                          // onClick={() => onEdit(user.id)}
+                          onClick={() => onEdit(user.id)}
                           className="hover:bg-green-500 p-2 rounded transition-colors duration-200"
                         >
                           <Edit size={16} />
@@ -161,7 +161,7 @@ const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
-                                //   onClick={() => onDelete(user.id)}
+                                onClick={() => onDelete(user.id)}
                                 className="bg-red-500 text-white hover:bg-red-600 transition-colors duration-200"
                               >
                                 Delete
@@ -171,7 +171,7 @@ const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
                         </AlertDialog>
                         {!user.calendlyLink && (
                           <button
-                             onClick={() => onRefresh(user.email)}
+                            onClick={() => onRefresh(user.email)}
                             className="hover:bg-green-500 p-2 rounded transition-colors duration-200"
                           >
                             <RefreshCcw size={16} />

@@ -537,12 +537,15 @@ export async function createProfessors(
     throw new Error("Error while creating professor");
   }
 }
-export async function updateProfessorCalendlyLink(email: string, calendlyLink: string) {
+export async function updateProfessorCalendlyLink(
+  email: string,
+  calendlyLink: string
+) {
   try {
     const result = await db
       .update(professorsTable)
-      .set({ calendlyLink }) 
-      .where(eq(professorsTable.email, email)); 
+      .set({ calendlyLink })
+      .where(eq(professorsTable.email, email));
 
     if (result.rowCount === 0) {
       throw new Error(`No professor found with email: ${email}`);
@@ -550,7 +553,74 @@ export async function updateProfessorCalendlyLink(email: string, calendlyLink: s
 
     return result;
   } catch (error) {
-    console.error(`Failed to update Calendly link for professor with email: ${email}`, error);
-    throw new Error('Could not update professor Calendly link.');
+    console.error(
+      `Failed to update Calendly link for professor with email: ${email}`,
+      error
+    );
+    throw new Error("Could not update professor Calendly link.");
+  }
+}
+export async function getProfessorById(id: number): Promise<Professor | null> {
+  try {
+    const [professor] = await db
+      .select()
+      .from(professorsTable)
+      .where(eq(professorsTable.id, id));
+    return professor || null;
+  } catch (error) {
+    throw new Error("Error while getting user by id");
+  }
+}
+export async function updateProfessor(
+  id: number,
+  data: Professor
+): Promise<Professor | null> {
+  const existingMembers = await db
+    .select()
+    .from(professorsTable)
+    .where(eq(professorsTable.id, id))
+    .execute();
+
+  if (existingMembers.length === 0) {
+    console.log("NO PROFESSORS  FOUND");
+    return null;
+  }
+
+  const existingMember = existingMembers[0];
+  const updatedMember = {
+    ...existingMember,
+    ...data,
+  };
+
+  await db
+    .update(professorsTable)
+    .set(updatedMember)
+    .where(eq(professorsTable.id, id))
+    .execute();
+
+  return updatedMember as Professor;
+}
+export async function deleteProfessor(
+  id: number
+): Promise<Professor | undefined> {
+  try {
+    const existingMembers = await db
+      .select()
+      .from(professorsTable)
+      .where(eq(professorsTable.id, id))
+      .execute();
+
+    if (existingMembers.length > 0) {
+      const memberToDelete = existingMembers[0];
+
+      await db
+        .delete(professorsTable)
+        .where(eq(professorsTable.id, id))
+        .execute();
+
+      return memberToDelete as Professor;
+    }
+  } catch (error) {
+    throw new Error("Professor not found");
   }
 }

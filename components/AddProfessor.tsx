@@ -51,6 +51,16 @@ export default function AddProfessor() {
     setLoading(true);
 
     try {
+      const urlRegex =
+        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+
+      if (formData.calendlyLink && !urlRegex.test(formData.calendlyLink)) {
+        setErrorMessage(
+          "Please enter a valid Calendly link or leave it blank."
+        );
+        setLoading(false);
+        return;
+      }
       const userOrganizationUrl = await handleFetchOrganization();
       const userOrganization = userOrganizationUrl.split("/").pop();
 
@@ -150,7 +160,7 @@ export default function AddProfessor() {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="email">Department</Label>
+                  <Label htmlFor="department">Department</Label>
                   <Input
                     type="text"
                     name="department"
@@ -173,13 +183,20 @@ export default function AddProfessor() {
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="calendlyLink">Calendly Link</Label>
+
                   <Input
                     type="text"
                     name="calendlyLink"
-                    placeholder="Calendly Link"
+                    placeholder="Calendly link"
                     value={formData.calendlyLink}
                     onChange={handleChange}
                   />
+                  <p className="text-sm text-gray-500">
+                    Leave blank if you don’t have one.
+                  </p>
+                  {errorMessage && (
+                    <div className="text-red-500 text-sm">{errorMessage}</div>
+                  )}
                 </div>
 
                 <div className="flex gap-3">
