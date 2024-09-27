@@ -325,7 +325,7 @@ export const handleProfessorUpdate = async (
     return { success: false, message: "Failed to update the user." };
   }
 };
-export const handleProfessorDelete = async (id: number | undefined) => {
+export const handleProfessorDelete = async (id: number) => {
   try {
     await deleteProfessor(id);
 

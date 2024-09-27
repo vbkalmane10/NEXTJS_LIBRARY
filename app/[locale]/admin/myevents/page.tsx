@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getUserById } from "@/lib/MemberRepository/repository";
 import { fetchScheduledEventsForAdmin } from "@/lib/Calendly";
-import ScheduledMeetingListForAdmin from "@/components/ScheduledMeetings";
+import ScheduledMeetingsListForAdmin from "@/components/ScheduleMeetingListForAdmin";
 
 export default async function ScheduledMeetingsPage() {
   const session = await getServerSession(authOptions);
@@ -23,7 +23,7 @@ export default async function ScheduledMeetingsPage() {
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Scheduled Meetings</h1>
       {scheduledEvents.length > 0 ? (
-        <ScheduledMeetingListForAdmin events={scheduledEvents} />
+        <ScheduledMeetingsListForAdmin events={scheduledEvents} />
       ) : (
         <div className="text-center">No scheduled meetings found.</div>
       )}
