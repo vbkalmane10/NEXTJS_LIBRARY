@@ -47,7 +47,7 @@ const LoginPage = () => {
       });
 
       if (result?.ok) {
-        router.push("/books");
+         router.push("/books");
         window.location.reload();
       } else if (result?.error) {
         switch (result.error) {

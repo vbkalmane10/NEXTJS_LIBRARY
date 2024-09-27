@@ -10,10 +10,9 @@ import AddBook from "@/components/AddBook";
 import { toast } from "@/hooks/use-toast";
 import { iBook } from "@/lib/types";
 import { useRouter } from "next/navigation";
-import SideNav from "@/components/SideNav";
-import Header from "@/components/Header";
+
 import { useTranslations } from "next-intl";
-import { Loader2 } from "lucide-react";
+
 
 export default function Page({
   searchParams,
@@ -88,14 +87,7 @@ export default function Page({
     signOut({ callbackUrl: "/" });
   };
 
-  if (loading) {
-    return (
-      <div className="h-full w-full flex justify-center items-center">
-        <Loader2 className="animate-spin" />
-        <p className="ml-2">Loading...</p>
-      </div>
-    );
-  }
+ 
   return (
     <div className="flex flex-col w-full">
       <div className="p-8">

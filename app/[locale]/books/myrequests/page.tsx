@@ -102,7 +102,7 @@ const MyRequestsPage = () => {
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">{t("My Book Transactions")}</h1>
 
-      {/* Switch/Toggle for Approved or Pending Requests */}
+      
       <div className="mb-6">
         <label
           htmlFor="request-filter"
@@ -135,7 +135,7 @@ const MyRequestsPage = () => {
             />
           ))
         ) : (
-          <p>{t("No transactions found.")}</p>
+          <p>{t("No transactions found")}</p>
         )}
       </div>
     </div>

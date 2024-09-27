@@ -115,7 +115,7 @@
     "Pending": "Pending",
     "Approved": "Approved",
     "Returned": "Returned",
-    "No transactions found.": "No {filter} transactions found.",
+    "No transactions found": "No transactions found",
     "No transactions found for your account": "No transactions found for your account"
   },
   "myBooks": {

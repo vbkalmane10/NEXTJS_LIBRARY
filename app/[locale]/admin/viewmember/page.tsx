@@ -61,7 +61,7 @@ export default function Page({
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to delete book. Please try again.",
+        description: "Failed to delete member. Please try again.",
         className: "bg-red-600 text-white",
         duration: 1000,
       });
@@ -73,7 +73,7 @@ export default function Page({
   if (loading) {
     return (
       <div className="h-full w-full flex justify-center items-center">
-        <Loader2 className="animate-spin" /> {/* Loading spinner */}
+        <Loader2 className="animate-spin" /> 
         <p className="ml-2">Loading...</p>
       </div>
     );

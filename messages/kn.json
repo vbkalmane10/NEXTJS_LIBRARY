@@ -115,7 +115,7 @@
     "Pending": "ಬಾಕಿ",
     "Approved": "ಅನುಮೋದಿಸಲಾಗಿದೆ",
     "Returned": "ಮರುಕಳಿಸಲಾಗಿದೆ",
-    "No transactions found.": "ಯಾವುದೇ {filter} ವಹಿವಾಟುಗಳು ಸಿಕ್ಕಿಲ್ಲ.",
+    "No transactions found": "ಯಾವುದೇ ವಹಿವಾಟುಗಳು ಸಿಕ್ಕಿಲ್ಲ.",
     "No transactions found for your account": "ನಿಮ್ಮ ಖಾತೆಗೆ ಯಾವುದೇ ವಹಿವಾಟುಗಳು ಸಿಕ್ಕಿಲ್ಲ"
   },
   "myBooks": {

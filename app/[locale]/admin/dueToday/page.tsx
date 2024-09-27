@@ -19,7 +19,7 @@ import { useTranslations } from "next-intl";
 export default function DueTodayPage() {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loadingId, setLoadingId] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+
   const t = useTranslations("dueToday");
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -34,9 +34,7 @@ export default function DueTodayPage() {
           variant: "destructive",
           className: "bg-red-500",
         });
-      } finally {
-        setLoading(false); // Set loading to false after data is fetched
-      }
+      } 
     };
 
     fetchTransactions();
@@ -68,19 +66,10 @@ export default function DueTodayPage() {
       }
     } catch (error) {
       throw new Error("Error while sending notiifcation");
-    } finally {
-      setLoadingId(null);
-    }
+    } 
   };
 
-  if (loading) {
-    return (
-      <div className="h-full w-full flex justify-center items-center">
-        <Loader2 className="animate-spin" />
-        <p className="ml-2">Loading...</p>
-      </div>
-    );
-  }
+  
   if (transactions.length === 0) {
     return (
       <div className="h-full w-full flex justify-center items-center">
