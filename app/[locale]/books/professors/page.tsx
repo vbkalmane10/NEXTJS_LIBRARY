@@ -12,10 +12,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { GraduationCap, Info, Loader2, Router, User,BookText,University } from "lucide-react";
+import {
+  GraduationCap,
+  Info,
+  Loader2,
+  Router,
+  User,
+  BookText,
+  University,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function ProfessorsPage() {
   const [professors, setProfessors] = useState<Professor[]>([]);
@@ -40,11 +55,11 @@ export default function ProfessorsPage() {
   }, []);
   const handleBookAppointment = (
     professorName: string,
-    calendlyLink: string
+    calendlyLink: string | null
   ) => {
     router.push(
       `/books/professors/${professorName}?calendlyUrl=${encodeURIComponent(
-        calendlyLink
+        calendlyLink!
       )}`
     );
   };
@@ -67,7 +82,10 @@ export default function ProfessorsPage() {
       <h1 className="text-3xl font-bold mb-6">{t("Professors")}</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {professors.map((professor) => (
-          <Card key={professor.id} className="hover:shadow-lg transition-shadow">
+          <Card
+            key={professor.id}
+            className="hover:shadow-lg transition-shadow"
+          >
             <CardHeader>
               <CardTitle className="text-xl font-semibold">
                 <div className="flex items-center space-x-2">
@@ -94,7 +112,9 @@ export default function ProfessorsPage() {
             </CardContent>
             <CardFooter>
               <Button
-                onClick={() => handleBookAppointment(professor.name, professor.calendlyLink)}
+                onClick={() =>
+                  handleBookAppointment(professor.name, professor.calendlyLink)
+                }
                 className="w-full"
               >
                 Book Appointment
