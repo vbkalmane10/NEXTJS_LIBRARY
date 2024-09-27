@@ -15,7 +15,7 @@ import AdminUserTable from "@/components/ViewMember";
 import AddUser from "@/components/AddUser";
 import Header from "@/components/Header";
 import { Loader2 } from "lucide-react";
-import { getProfessors } from "@/lib/actions";
+import { getProfessors, refreshInvitationStatus } from "@/lib/actions";
 import AdminProfessorTable from "@/components/AdminProfessorTable";
 import AddProfessor from "@/components/AddProfessor";
 export default function Page({
@@ -77,14 +77,45 @@ export default function Page({
   //   const handleEdit = (id: number) => {
   //     router.push(`/admin/editmember/${id}/edit`);
   //   };
+
   if (loading) {
     return (
       <div className="h-full w-full flex justify-center items-center">
-        <Loader2 className="animate-spin" /> {/* Loading spinner */}
+        <Loader2 className="animate-spin" />
         <p className="ml-2">Loading...</p>
       </div>
     );
   }
+  async function handleRefresh(email: string) {
+    try {
+      const result = await refreshInvitationStatus(email);  
+  
+      if (result.accepted) {
+        toast({
+          title: "Invitation Accepted",
+          description: "Professor accepted the invitation and Calendly link is updated.",
+          className: "bg-green-600 text-white",
+          duration: 1000,
+        });
+        loadProfessors();  // Reload the professor list to reflect changes
+      } else {
+        toast({
+          title: "No Update",
+          description: "Professor has not yet accepted the invite.",
+          className: "bg-yellow-600 text-white",
+          duration: 1000,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to refresh invitation status.",
+        className: "bg-red-600 text-white",
+        duration: 1000,
+      });
+    }
+  }
+
   return (
     <div className="flex flex-col w-full">
       <div className="p-8">
@@ -100,6 +131,7 @@ export default function Page({
         <div className="mt-6">
           <AdminProfessorTable
             users={professors}
+            onRefresh={handleRefresh}
             // onEdit={handleEdit}
             // onDelete={handleDelete}
           />

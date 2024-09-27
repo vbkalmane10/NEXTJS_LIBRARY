@@ -514,7 +514,7 @@ export async function createProfessors(
 
     if (existingProfessor.length > 0) {
       return {
-        message: "Member Already exists",
+        message: "Professor Already exists",
         professor: undefined,
       };
     } else {
@@ -535,5 +535,22 @@ export async function createProfessors(
     }
   } catch (error) {
     throw new Error("Error while creating professor");
+  }
+}
+export async function updateProfessorCalendlyLink(email: string, calendlyLink: string) {
+  try {
+    const result = await db
+      .update(professorsTable)
+      .set({ calendlyLink }) 
+      .where(eq(professorsTable.email, email)); 
+
+    if (result.rowCount === 0) {
+      throw new Error(`No professor found with email: ${email}`);
+    }
+
+    return result;
+  } catch (error) {
+    console.error(`Failed to update Calendly link for professor with email: ${email}`, error);
+    throw new Error('Could not update professor Calendly link.');
   }
 }

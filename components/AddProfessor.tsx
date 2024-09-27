@@ -15,12 +15,18 @@ import { Input } from "@/components/ui/input";
 import { PulseLoader } from "react-spinners";
 import { createMember } from "@/lib/MemberRepository/actions";
 import { useToast } from "@/hooks/use-toast";
-import { createProfessor } from "@/lib/actions";
+import {
+  createProfessor,
+  handleFetchOrganization,
+  handleSendInvitations,
+} from "@/lib/actions";
+import { fetchUserOrganization, sendInvitations } from "@/lib/Calendly";
 
 export default function AddProfessor() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     department: "",
     shortBio: "",
     calendlyLink: "",
@@ -43,35 +49,57 @@ export default function AddProfessor() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setErrorMessage(null);
 
     try {
+      const userOrganizationUrl = await handleFetchOrganization();
+      const userOrganization = userOrganizationUrl.split("/").pop();
+
+      let calendlyLink = formData.calendlyLink;
+
+      if (!calendlyLink) {
+        const inviteResponse = await handleSendInvitations(
+          formData.email,
+          userOrganization
+        );
+
+        if (inviteResponse) {
+          toast({
+            title: "Calendly Invitation Sent",
+            description: `An invite has been sent to ${formData.email}`,
+            className: "bg-green-400 text-white",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description: `Error while sending invitation`,
+            className: "bg-red-400 text-white",
+          });
+        }
+      }
+
       const result = await createProfessor(formData);
+
       if (result) {
         toast({
           title: "Success",
-          description: result.message,
-          variant: "destructive",
+          description: "Professor added successfully.",
           className: "bg-green-400 text-white",
-          duration: 1000,
         });
         setIsModalOpen(false);
         setFormData({
           name: "",
+          email: "",
           department: "",
           shortBio: "",
           calendlyLink: "",
         });
-        
       }
     } catch (error) {
       console.error("Error adding professor:", error);
-      setErrorMessage("Failed to add professor. Please try again.");
       toast({
         title: "Error",
         description: "Failed to add professor. Please try again.",
         variant: "destructive",
-        duration: 1000,
       });
     } finally {
       setLoading(false);
@@ -110,18 +138,28 @@ export default function AddProfessor() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <Label htmlFor="email">Department</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
-                      type="text"
-                      name="department"
-                      placeholder="Deaprtment"
-                      value={formData.department}
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      value={formData.email}
                       onChange={handleChange}
                       required
                     />
                   </div>
                 </div>
-
+                <div className="space-y-1">
+                  <Label htmlFor="email">Department</Label>
+                  <Input
+                    type="text"
+                    name="department"
+                    placeholder="Deaprtment"
+                    value={formData.department}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
                 <div className="space-y-1">
                   <Label htmlFor="shortBio">Short Bio</Label>
                   <Input
@@ -141,7 +179,6 @@ export default function AddProfessor() {
                     placeholder="Calendly Link"
                     value={formData.calendlyLink}
                     onChange={handleChange}
-                    required
                   />
                 </div>
 

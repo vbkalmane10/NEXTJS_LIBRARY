@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, RefreshCcw, Trash2 } from "lucide-react";
 import { iMember, Professor } from "@/lib/types";
 import {
   Table,
@@ -25,12 +25,14 @@ import { useTranslations } from "next-intl";
 
 interface AdminProfessorTableProps {
   users: Professor[];
+  onRefresh: (email: string) => void;
   //  onEdit: (id: number) => void;
   // onDelete: (id: number) => void;
 }
 
 const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
   users,
+  onRefresh,
   // onEdit,
   // onDelete,
 }) => {
@@ -91,14 +93,15 @@ const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
                   <TableHead className="px-4 py-5 font-medium">
                     {t("name")}
                   </TableHead>
+                  <TableHead className="px-4 py-5 font-medium">Email</TableHead>
                   <TableHead className="px-4 py-5 font-medium">
-                    {t("email")}
+                    Department
                   </TableHead>
                   <TableHead className="px-4 py-5 font-medium">
-                    {t("phoneNumber")}
+                    Short Bio
                   </TableHead>
                   <TableHead className="px-4 py-5 font-medium">
-                    {t("address")}
+                    Calendly Link
                   </TableHead>
 
                   <TableHead className="px-4 py-5 font-medium">
@@ -117,6 +120,9 @@ const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-3 text-gray-700">
                       {user.name}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap px-3 py-3 text-gray-700">
+                      {user.email}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-3 py-3 text-gray-700">
                       {user.department}
@@ -163,6 +169,14 @@ const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
+                        {!user.calendlyLink && (
+                          <button
+                             onClick={() => onRefresh(user.email)}
+                            className="hover:bg-green-500 p-2 rounded transition-colors duration-200"
+                          >
+                            <RefreshCcw size={16} />
+                          </button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

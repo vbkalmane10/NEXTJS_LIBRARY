@@ -13,6 +13,7 @@ export default async function ScheduledMeetingsPage() {
   try {
     if (userEmail?.email) {
       scheduledEvents = await fetchScheduledEvents(userEmail.email);
+      
     }
   } catch (error) {
     console.error("Error fetching scheduled events:", error);

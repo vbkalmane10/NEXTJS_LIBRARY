@@ -27,7 +27,14 @@ import {
   fetchProfessors,
   fetchAdminProfessors,
   createProfessors,
+  updateProfessorCalendlyLink,
 } from "./repository";
+import {
+  checkInvitationStatus,
+  fetchUserDetails,
+  fetchUserOrganization,
+  sendInvitations,
+} from "./Calendly";
 
 export async function getUserId(email: string): Promise<number | null> {
   try {
@@ -237,5 +244,65 @@ export async function createProfessor(professor: Professor) {
   } catch (error) {
     console.error("Error creating professor:", error);
     throw new Error("Failed to create professor");
+  }
+}
+export async function handleFetchOrganization() {
+  try {
+    const result = await fetchUserOrganization();
+    return result;
+  } catch (error) {
+    throw new Error("Error in action");
+  }
+}
+export async function handleSendInvitations(
+  email: string,
+  userOrganization: string
+) {
+  try {
+    const result = await sendInvitations(email, userOrganization);
+    return result;
+  } catch (error) {
+    throw new Error("Error in handle send Invitation");
+  }
+}
+// export async function handleCheckInvitationStatus(
+//   email: string,
+//   userOrganization: string
+// ) {
+//   try {
+//     const result = await checkInvitationStatus(email, userOrganization);
+//     return result;
+//   } catch (error) {
+//     throw new Error("Error in checking invitation");
+//   }
+// }
+// export async function handleFetchUserDetails(url: string) {
+//   try {
+//     const result = await fetchUserDetails(url);
+//     return result;
+//   } catch (error) {
+//     throw new Error("Error while fetching details");
+//   }
+// }
+export async function refreshInvitationStatus(email: string) {
+  try {
+    const userOrganization = await handleFetchOrganization();
+    const organizationId = userOrganization.split("/").pop();
+
+    const statusResponse = await checkInvitationStatus(email, organizationId);
+
+    if (statusResponse.accepted) {
+      const userDetails = await fetchUserDetails(statusResponse.userUri);
+      const calendlyLink = userDetails.scheduling_url;
+
+
+      await updateProfessorCalendlyLink(email, calendlyLink);
+      return { accepted: true };
+    } else {
+      return { accepted: false };
+    }
+  } catch (error) {
+    console.error("Error refreshing invitation status:", error);
+    throw new Error("Failed to refresh invitation");
   }
 }

@@ -43,9 +43,10 @@ export const transactionsTable = pgTable("transactions", {
 export const professorsTable = pgTable("professors", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 100 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull(),
   department: varchar("department", { length: 100 }),
   shortBio: text("shortBio"),
-  calendlyLink: varchar("calendly_link", { length: 255 }).notNull(),
+  calendlyLink: varchar("calendly_link", { length: 255 }),
 });
 // export const requestsTable = mysqlTable("requests", {
 //   id: int("id").primaryKey().autoincrement(),

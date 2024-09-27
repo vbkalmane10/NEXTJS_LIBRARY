@@ -90,7 +90,7 @@ export default function ScheduledMeetingsList({
                     className="p-0 h-auto flex items-center"
                     onClick={() =>
                       router.push(
-                        `/books/myevents/${encodeURIComponent(
+                        `/admin/myevents/${encodeURIComponent(
                           event.name
                         )}?cancel_url=${encodeURIComponent(event.cancel_url)}`
                       )
@@ -104,7 +104,7 @@ export default function ScheduledMeetingsList({
                     className="p-0 h-auto flex items-center"
                     onClick={() =>
                       router.push(
-                        `/books/myevents/${encodeURIComponent(
+                        `/admin/myevents/${encodeURIComponent(
                           event.name
                         )}?reschedule_url=${encodeURIComponent(
                           event.reschedule_url
