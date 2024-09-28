@@ -54,13 +54,13 @@ const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
                       {index + 1}. {user.name}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {t("email")}: {user.department}
+                     Dept: {user.department}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {t("phoneNumber")}: {user.shortBio}
+                    Short Bio: {user.shortBio}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {t("membershipStatus")}: {user.calendlyLink}
+                    Calenly Link: {user.calendlyLink}
                     </p>
                   </div>
                   <div className="flex gap-2">

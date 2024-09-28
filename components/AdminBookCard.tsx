@@ -64,185 +64,162 @@ const AdminBookTable: React.FC<AdminBookTableProps> = ({
   }
 
   return (
-    <div className="mt-6 bg-green-500">
-      <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-          <div className="md:hidden space-y-4">
-            {sortedBooks.map((book, index) => (
-              <div
-                key={book.id}
-                className="w-full rounded-md bg-white p-4 shadow"
-              >
-                <div className="flex flex-col space-y-2 border-b pb-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-medium text-sm sm:text-base">
-                        {index + 1}. {book.title}
-                      </p>
-                      <p className="text-xs sm:text-sm text-gray-500">
-                      {t('author')}: {book.author}
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => onEdit(book.isbnNo)}
-                        variant="ghost"
-                        size="sm"
-                        className="hover:bg-green-400"
-                      >
-                        <Edit className="h-4 w-4" />
-                        <span className="sr-only">Edit</span>
-                      </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="hover:bg-red-400"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                            <span className="sr-only">Delete</span>
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Are you absolutely sure?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              {book.title} will be deleted from our database
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => onDelete(book.isbnNo)}
-                              className="bg-black"
-                            >
-                              Continue
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </div>
-                  <p className="text-xs sm:text-sm text-gray-500">ISBN: {book.isbnNo}</p>
-                  <p className="text-xs sm:text-sm text-gray-500">
-                    Available Copies: {book.availableCopies}
-                  </p>
-                </div>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="p-2 md:p-0">
+      {/* Card View for Mobile Screens */}
+      <div className="md:hidden space-y-4">
+        {sortedBooks.map((book, index) => (
+          <div key={book.id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <p className="font-medium text-sm sm:text-base">
+                  {index + 1}. {book.title}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-500">
+                  {t('author')}: {book.author}
+                </p>
               </div>
-            ))}
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => onEdit(book.isbnNo)}
+                  variant="ghost"
+                  size="sm"
+                  className="hover:bg-green-300 bg-green-600"
+                >
+                  <Edit className="h-4 w-4" />
+                  <span className="sr-only">Edit</span>
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hover:bg-red-300 bg-red-600"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      <span className="sr-only">Delete</span>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        {book.title} will be deleted from our database
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => onDelete(book.isbnNo)}
+                        className="bg-red-600 text-white hover:bg-red-700"
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </div>
+            <p className="text-xs sm:text-sm text-gray-500">ISBN: {book.isbnNo}</p>
+            <p className="text-xs sm:text-sm text-gray-500">
+              Available Copies: {book.availableCopies}
+            </p>
           </div>
+        ))}
+      </div>
 
-          <div className="hidden md:block overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="px-4 py-5 font-medium">{t('serialNo')}</TableHead>
-                  <TableHead className="px-4 py-5 font-medium">
+      {/* Table View for Larger Screens */}
+      <div className="hidden md:block overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[50px]">{t('serialNo')}</TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => toggleSort('title')}
+                  className="hover:bg-transparent font-medium"
+                >
+                  {t('title')}
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>{t('author')}</TableHead>
+              <TableHead>{t('isbnNo')}</TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => toggleSort('availableCopies')}
+                  className="hover:bg-transparent font-medium"
+                >
+                  {t('availableCopies')}
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead className="text-right">{t('actions')}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sortedBooks.map((book, index) => (
+              <TableRow key={book.id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell className="font-medium">{book.title}</TableCell>
+                <TableCell>{book.author}</TableCell>
+                <TableCell>{book.isbnNo}</TableCell>
+                <TableCell className="text-center">{book.availableCopies}</TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
                     <Button
+                      onClick={() => onEdit(book.isbnNo)}
                       variant="ghost"
-                      onClick={() => toggleSort('title')}
-                      className="hover:bg-transparent"
+                      size="sm"
+                      className="hover:bg-green-300 bg-green-600"
                     >
-                      {t('title')}
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                      <span className="sr-only">
-                        Sort by title {sortOrder === 'asc' ? 'descending' : 'ascending'}
-                      </span>
+                      <Edit className="h-4 w-4" />
+                      <span className="sr-only">Edit</span>
                     </Button>
-                  </TableHead>
-                  <TableHead className="px-4 py-5 font-medium">{t('author')}</TableHead>
-                  <TableHead className="px-4 py-5 font-medium">
-                  {t('isbnNo')}
-                  </TableHead>
-                  <TableHead className="px-4 py-5 font-medium">
-                    <Button
-                      variant="ghost"
-                      onClick={() => toggleSort('availableCopies')}
-                      className="hover:bg-transparent"
-                    >
-                     {t('availableCopies')}
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                      <span className="sr-only">
-                        Sort by available copies {sortOrder === 'asc' ? 'descending' : 'ascending'}
-                      </span>
-                    </Button>
-                  </TableHead>
-                  <TableHead className="px-4 py-5 font-medium">{t('actions')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sortedBooks.map((book, index) => (
-                  <TableRow key={book.id}>
-                    <TableCell className="whitespace-nowrap py-3 pl-6 pr-3">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-3">
-                      {book.title}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-3">
-                      {book.author}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-3">
-                      {book.isbnNo}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap px-3 py-3 text-center">
-                      {book.availableCopies}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap py-3 pr-3">
-                      <div className="flex justify-start gap-2">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
                         <Button
-                          onClick={() => onEdit(book.isbnNo)}
                           variant="ghost"
-                          size="icon"
-                          className="hover:bg-green-400"
+                          size="sm"
+                          className="hover:bg-red-300 bg-red-600"
                         >
-                          <Edit className="h-4 w-4" />
-                          <span className="sr-only">Edit</span>
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">Delete</span>
                         </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="hover:bg-red-400"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                              <span className="sr-only">Delete</span>
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Are you absolutely sure?
-                              </AlertDialogTitle>
-                              <AlertDialogDescription>
-                                {book.title} will be deleted from our database
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => onDelete(book.isbnNo)}
-                                className="bg-black"
-                              >
-                                Continue
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {book.title} will be deleted from our database
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => onDelete(book.isbnNo)}
+                            className="bg-red-600 text-white hover:bg-red-700"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
+  </div>
   )
 }
 

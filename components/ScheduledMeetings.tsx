@@ -42,7 +42,7 @@ export default function ScheduledMeetingsList({
     const eventDate = new Date(event.start_time);
     return eventDate >= today && event.status === "active";
   });
-
+ 
   if (filteredEvents.length === 0) {
     return (
       <div className="flex justify-center items-center">

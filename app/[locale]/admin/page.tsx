@@ -13,7 +13,6 @@ import { useRouter } from "next/navigation";
 
 import { useTranslations } from "next-intl";
 
-
 export default function Page({
   searchParams,
 }: {
@@ -53,7 +52,6 @@ export default function Page({
     }
   }, [query, currentPage]);
 
- 
   const handleDelete = async (isbnNo: string) => {
     try {
       const result = await handleDeleteBook(isbnNo);
@@ -87,33 +85,32 @@ export default function Page({
     signOut({ callbackUrl: "/" });
   };
 
- 
   return (
-    <div className="flex flex-col w-full">
-      <div className="p-8">
-        <h1 className="text-3xl font-bold">{t("welcomeAdmin")}</h1>
+    <div className="flex flex-col w-full max-w-full overflow-x-hidden">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6">{t("welcomeAdmin")}</h1>
 
-        <div className="flex w-full items-center justify-between mt-4">
-          <h1 className="text-2xl font-bold">{t("booksHeading")}</h1>
-        </div>
-
-        <div className="mt-4 flex gap-4 items-center">
+      <div className="flex flex-col sm:flex-row w-full items-center justify-between mt-4 gap-4">
+        <h2 className="text-xl sm:text-2xl font-bold">{t("booksHeading")}</h2>
+        <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto">
           <Search placeholder={t("searchPlaceholder")} />
           <AddBook />
         </div>
+      </div>
 
-        <div className="mt-6">
-          <AdminBookTable
-            books={books}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        </div>
+      <div className="mt-6 overflow-x-auto">
+        <AdminBookTable
+          books={books}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
 
-        <div className="mt-8 flex justify-center">
-          <Pagination currentPage={currentPage} totalPages={totalPages} />
-        </div>
+      <div className="mt-8 flex justify-center">
+        <Pagination currentPage={currentPage} totalPages={totalPages} />
       </div>
     </div>
+  </div>
+ 
   );
 }

@@ -1,5 +1,3 @@
-import { error } from "console";
-
 const ACCESS_TOKEN = process.env.PERSONAL_ACCESS_TOKEN;
 
 export async function fetchScheduledEvents(email: string | undefined) {
@@ -40,9 +38,13 @@ export async function fetchScheduledEvents(email: string | undefined) {
 }
 export async function fetchScheduledEventsForAdmin(email: string | undefined) {
   const userOrganization = await fetchUserOrganization();
+  const currentDate = new Date().toISOString(); // Today's date
+  const nextWeekDate = new Date();
+  nextWeekDate.setDate(nextWeekDate.getDate() + 7); // One week from today
+  const nextWeek = nextWeekDate.toISOString();
   console.log(userOrganization);
   const res = await fetch(
-    `https://api.calendly.com/scheduled_events?organization=${userOrganization}`,
+    `https://api.calendly.com/scheduled_events?organization=${userOrganization}&min_start_time=${currentDate}&max_start_time=${nextWeek}`,
     {
       method: "GET",
       headers: {
@@ -57,22 +59,22 @@ export async function fetchScheduledEventsForAdmin(email: string | undefined) {
   }
   const data = await res.json();
 
-  const updatedEvents = await Promise.all(
-    data.collection.map(async (event: any) => {
-      const [inviteeDetails] = await fetchInviteeDetails(
-        event.uri.split("/").pop()!,
-        email
-      );
+  // const updatedEvents = await Promise.all(
+  //   data.collection.map(async (event: any) => {
+  //     const [inviteeDetails] = await fetchInviteeDetails(
+  //       event.uri.split("/").pop()!,
+  //       email
+  //     );
 
-      return {
-        ...event,
-        cancel_url: inviteeDetails.cancel_url,
-        reschedule_url: inviteeDetails.reschedule_url,
-      };
-    })
-  );
+  //     return {
+  //       ...event,
+  //       cancel_url: inviteeDetails.cancel_url,
+  //       reschedule_url: inviteeDetails.reschedule_url,
+  //     };
+  //   })
+  // );
 
-  return updatedEvents;
+  return data.collection;
 }
 export const fetchUserOrganization = async () => {
   const response = await fetch("https://api.calendly.com/users/me", {
