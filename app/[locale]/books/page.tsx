@@ -9,6 +9,7 @@ import { authOptions } from "@/lib/auth";
 import { useState } from "react";
 import ClientSideBooks from "@/components/ClientSideBook";
 import SortByDropdown from "@/components/SortBy";
+import { getUserById } from "@/lib/MemberRepository/repository";
 const sortBooks = (books: any[], sortBy: string) => {
   return [...books].sort((a, b) => {
     if (sortBy === "price") {
@@ -32,7 +33,8 @@ export default async function Page({
   }
 
   const userId = session.user?.id;
-  const userName = session.user?.name;
+  const user = await getUserById(userId);
+const userName=user?.firstName;
  
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
@@ -48,7 +50,7 @@ export default async function Page({
     <ClientSideBooks
       books={books}
       userId={userId}
-      userName={userName}
+      userName={userName!}
       currentPage={currentPage}
       totalPages={totalPages}
       query={query}

@@ -138,7 +138,7 @@ export default function BookCard({
       <CardFooter className="absolute bottom-0 left-0 right-0 p-4 flex justify-between items-center bg-black bg-opacity-5 z-20">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button className="w-3/4 bg-blue-300 text-black" variant="default">
+            <Button className="w-3/4 bg-blue-300 text-black hover:text-white">
               {t("borrow")}
             </Button>
           </AlertDialogTrigger>

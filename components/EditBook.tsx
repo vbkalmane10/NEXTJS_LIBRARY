@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { uploadImageToCloudinary } from "@/lib/Cloudinary";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
+import Image from "next/image";
 
 interface EditBookFormProps {
   book: iBook;
@@ -23,10 +24,12 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
   isPending,
 }) => {
   const [formData, setFormData] = useState<iBook>({ ...book });
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-
+  const [imageError, setImageError] = useState(false);
+  console.log(book);
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -35,9 +38,15 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
     }));
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setImageFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -56,7 +65,7 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
       if (!imageUrl) {
         throw new Error("Failed to upload image");
       }
-      
+
       onSubmit({ ...formData, imageUrl });
     } catch (error) {
       console.error("Error during form submission:", error);
@@ -172,6 +181,32 @@ const EditBookForm: React.FC<EditBookFormProps> = ({
               accept="image/*"
               onChange={handleImageChange}
             />
+          </div>
+        </div>
+        <div className="mt-4">
+          <h3 className="text-lg font-semibold mb-2">Book Cover</h3>
+          <div className="relative w-32 h-48 overflow-hidden rounded-md">
+            {imagePreview ? (
+              <Image
+                src={imagePreview}
+                alt="New book cover preview"
+                layout="fill"
+                objectFit="cover"
+              />
+            ) : (
+              <Image
+                src={book.imageUrl!}
+                alt="Current book cover"
+                layout="fill"
+                objectFit="cover"
+                onError={() => setImageError(true)}
+              />
+            )}
+            {imageError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                <AlertCircle className="w-8 h-8 text-gray-400" />
+              </div>
+            )}
           </div>
         </div>
         {errorMessage && (

@@ -114,7 +114,7 @@ function ProfileContent({
         <div className="mt-auto">
           <Button
             onClick={() => signOut({ callbackUrl: "/" })}
-            className="flex items-center w-full px-4 py-2 text-white bg-red-500 rounded-md transition-colors duration-200 hover:bg-red-700"
+            className="flex items-center w-full px-4 py-2 text-white bg-red-500 rounded-md transition-colors duration-200 hover:bg-red-700 mt-3"
           >
             <LogOut size={20} className="mr-3" />
             Logout

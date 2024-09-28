@@ -1,5 +1,6 @@
-import React from "react";
-import { Check, X } from "lucide-react";
+"use client"
+import React, { useState } from "react";
+import { Badge, Check, ChevronDown, ChevronUp, Loader2, X } from "lucide-react";
 import { Request } from "@/lib/types";
 import { handleApproveRequest } from "@/lib/actions";
 import { revalidatePath } from "next/cache";
@@ -12,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "./ui/button";
 interface RequestTableProps {
   requests: Request[];
   onApprove: (request: Request) => void;
@@ -23,115 +25,178 @@ const RequestTable: React.FC<RequestTableProps> = ({
   onApprove,
   onReject,
 }) => {
+  const [sortColumn, setSortColumn] = useState<keyof Request>('bookTitle')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({})
+  const sortedRequests = [...requests].sort((a, b) => {
+    if (a[sortColumn]! < b[sortColumn]!) return sortDirection === 'asc' ? -1 : 1
+    if (a[sortColumn]! > b[sortColumn]!) return sortDirection === 'asc' ? 1 : -1
+    return 0
+  })
+
+  const handleSort = (column: keyof Request) => {
+    if (column === sortColumn) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortColumn(column)
+      setSortDirection('asc')
+    }
+  }
+
+  const renderSortIcon = (column: keyof Request) => {
+    if (column !== sortColumn) return null
+    return sortDirection === 'asc' ? <ChevronUp className="ml-1 h-4 w-4" /> : <ChevronDown className="ml-1 h-4 w-4" />
+  }
+  const handleAction = async (request: Request, action: 'approve' | 'reject') => {
+    setLoadingStates(prev => ({ ...prev, [request.id]: true }))
+    try {
+      if (action === 'approve') {
+        await onApprove(request)
+      } else {
+        await onReject(request)
+      }
+    } finally {
+      setLoadingStates(prev => ({ ...prev, [request.id]: false }))
+    }
+  }
+  const getStatusColor = (status: Request['status']) => {
+    switch (status) {
+      case 'Pending':
+        return 'bg-yellow-300 text-yellow-800'
+      case 'Approved':
+        return 'bg-green-300 text-green-800'
+      case 'Rejected':
+        return 'bg-red-300 text-red-800'
+    }
+  }
   return (
-    <div className="mt-6 flow-root">
-    <div className="inline-block min-w-full align-middle">
-      <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-        <div className="md:hidden">
-          {requests?.map((request, index) => (
-            <div
-              key={request.id}
-              className="mb-2 w-full rounded-md bg-white p-4"
-            >
-              <div className="flex items-center justify-between border-b pb-4">
-                <div>
-                  <p className="font-medium">
-                    {index + 1}. {request.bookTitle}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    User: {request.firstName}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Book ID: {request.bookId}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    ISBN: {request.isbnNo}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Status: {request.status}
-                  </p>
+    <div className="w-full overflow-hidden rounded-lg bg-white shadow-md">
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-gray-100">
+            <TableHead onClick={() => handleSort('bookTitle')} className="cursor-pointer py-4 px-6 text-base font-semibold">
+              <div className="flex items-center">
+                Book Title
+                {renderSortIcon('bookTitle')}
+              </div>
+            </TableHead>
+            <TableHead className="hidden md:table-cell py-4 px-6 text-base font-semibold">User</TableHead>
+            <TableHead className="hidden lg:table-cell py-4 px-6 text-base font-semibold">Book ID</TableHead>
+            <TableHead className="hidden xl:table-cell py-4 px-6 text-base font-semibold">ISBN Number</TableHead>
+            <TableHead className="py-4 px-6 text-base font-semibold">Status</TableHead>
+            <TableHead className="py-4 px-6 text-base font-semibold">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {sortedRequests.map((request) => (
+            <TableRow key={request.id} className="hover:bg-gray-50">
+              <TableCell className="py-4 px-6 text-base font-medium">{request.bookTitle}</TableCell>
+              <TableCell className="hidden md:table-cell py-4 px-6 text-base">{request.firstName}</TableCell>
+              <TableCell className="hidden lg:table-cell py-4 px-6 text-base">{request.bookId}</TableCell>
+              <TableCell className="hidden xl:table-cell py-4 px-6 text-base">{request.isbnNo}</TableCell>
+              <TableCell className="py-4 px-6">
+                <div className={`px-3 py-2 rounded-full text-sm font-medium ${getStatusColor(request.status)} w-fit`}>
+                  {request.status}
                 </div>
+              </TableCell>
+              <TableCell className="py-4 px-6">
                 {request.status === "Pending" && (
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => onApprove(request)}
-                      className="hover:bg-green-400 p-2 rounded"
+                  <div className="flex space-x-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleAction(request, 'approve')}
+                      disabled={loadingStates[request.id]}
+                      className="bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 px-4 py-2 text-sm"
                     >
-                      <Check />
-                    </button>
-                    <button
-                      onClick={() => onReject(request)}
-                      className="hover:bg-red-400 p-2 rounded"
+                      {loadingStates[request.id] ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <>
+                          <Check className="h-5 w-5 mr-1" />
+                          Approve
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleAction(request, 'reject')}
+                      disabled={loadingStates[request.id]}
+                      className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-4 py-2 text-sm"
                     >
-                      <X />
-                    </button>
+                      {loadingStates[request.id] ? (
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                      ) : (
+                        <>
+                          <X className="h-5 w-5 mr-1" />
+                          Reject
+                        </>
+                      )}
+                    </Button>
                   </div>
                 )}
-              </div>
-            </div>
+              </TableCell>
+            </TableRow>
           ))}
-        </div>
+        </TableBody>
+      </Table>
+    </div>
 
-        {/* Table layout for larger screens */}
-        <table className="hidden min-w-full text-gray-900 md:table">
-          <thead className="rounded-lg text-left text-sm font-normal bg-gray-200">
-            <tr>
-              <th className="px-4 py-5 font-medium">S.No</th>
-              <th className="px-4 py-5 font-medium">User</th>
-              <th className="px-4 py-5 font-medium">Book ID</th>
-              <th className="px-4 py-5 font-medium">Book Title</th>
-              <th className="px-4 py-5 font-medium">ISBN Number</th>
-              <th className="px-4 py-5 font-medium">Status</th>
-              <th className="px-4 py-5 font-medium">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white">
-            {requests?.map((request, index) => (
-              <tr
-                key={request.id}
-                className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+    {/* Mobile view */}
+    <div className="md:hidden">
+      {sortedRequests.map((request) => (
+        <div key={request.id} className="border-b border-gray-200 p-6 last:border-b-0">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h3 className="text-lg font-medium mb-2">{request.bookTitle}</h3>
+              <p className="text-base text-gray-600">User: {request.firstName}</p>
+            </div>
+            <div className={`px-3 py-2 rounded-full text-sm font-medium ${getStatusColor(request.status)}`}>
+              {request.status}
+            </div>
+          </div>
+          <p className="text-base text-gray-600 mb-2">Book ID: {request.bookId}</p>
+          <p className="text-base text-gray-600 mb-4">ISBN: {request.isbnNo}</p>
+          {request.status === "Pending" && (
+            <div className="flex space-x-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleAction(request, 'approve')}
+                disabled={loadingStates[request.id]}
+                className="bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 px-4 py-2 text-sm flex-1"
               >
-                <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                  {index + 1}
-                </td>
-                <td className="whitespace-nowrap px-3 py-3">
-                  {request.firstName}
-                </td>
-                <td className="whitespace-nowrap px-3 py-3">
-                  {request.bookId}
-                </td>
-                <td className="whitespace-nowrap px-3 py-3">
-                  {request.bookTitle}
-                </td>
-                <td className="whitespace-nowrap px-3 py-3">
-                  {request.isbnNo}
-                </td>
-                <td className="whitespace-nowrap px-3 py-3">
-                  {request.status}
-                </td>
-                <td className="whitespace-nowrap py-3  pr-3">
-                  {request.status === "Pending" && (
-                    <div className="flex justify-start gap-2">
-                      <button
-                        onClick={() => onApprove(request)}
-                        className="hover:bg-green-400 p-2 rounded"
-                      >
-                        <Check />
-                      </button>
-                      <button
-                        onClick={() => onReject(request)}
-                        className="hover:bg-red-400 p-2 rounded"
-                      >
-                        <X />
-                      </button>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                {loadingStates[request.id] ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <>
+                    <Check className="h-5 w-5 mr-1" />
+                    Approve
+                  </>
+                )}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => handleAction(request, 'reject')}
+                disabled={loadingStates[request.id]}
+                className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 px-4 py-2 text-sm flex-1"
+              >
+                {loadingStates[request.id] ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <>
+                    <X className="h-5 w-5 mr-1" />
+                    Reject
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   </div>
   );

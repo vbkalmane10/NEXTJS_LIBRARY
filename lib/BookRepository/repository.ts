@@ -90,6 +90,7 @@ export async function getBooksByIsbn(isbnNo: string): Promise<iBook | null> {
         totalCopies: booksTable.totalCopies,
         availableCopies: booksTable.availableCopies,
         price: booksTable.price,
+        imageuRL:booksTable.imageUrl
       })
       .from(booksTable)
       .where(eq(booksTable.isbnNo, isbnNo))

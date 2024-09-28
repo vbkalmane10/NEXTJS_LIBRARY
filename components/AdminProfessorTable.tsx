@@ -27,14 +27,14 @@ interface AdminProfessorTableProps {
   users: Professor[];
   onRefresh: (email: string) => void;
   onEdit: (id: number | undefined) => void;
-  onDelete: (id: number | undefined) => void;
+  //onDelete: (id: number | undefined) => void;
 }
 
 const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
   users,
   onRefresh,
   onEdit,
-  onDelete,
+  //onDelete,
 }) => {
   const t = useTranslations("UserTable");
   return (
@@ -71,7 +71,7 @@ const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
                       <Edit />
                     </button>
                     <button
-                      onClick={() => onDelete(user.id)}
+                     // onClick={() => onDelete(user.id)}
                       className="hover:bg-red-600 p-2 rounded transition-colors duration-200"
                     >
                       <Trash2 />
@@ -161,7 +161,7 @@ const AdminProfessorTable: React.FC<AdminProfessorTableProps> = ({
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
-                                onClick={() => onDelete(user.id)}
+                               // onClick={() => onDelete(user.id)}
                                 className="bg-red-500 text-white hover:bg-red-600 transition-colors duration-200"
                               >
                                 Delete

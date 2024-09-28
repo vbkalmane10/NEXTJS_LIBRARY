@@ -61,6 +61,7 @@ export default function ScheduledMeetingsListForAdmin({
       >
         <CardHeader className="flex flex-col space-y-2 bg-gradient-to-r from-primary to-primary-foreground p-4 rounded-t-lg">
           <CardTitle className="text-xl font-bold text-white">{event.name}</CardTitle>
+         
           <div className="flex items-center text-white/80">
             <User className="mr-2 h-4 w-4" />
             <span className="text-sm">{event.event_memberships[0].user_name}</span>

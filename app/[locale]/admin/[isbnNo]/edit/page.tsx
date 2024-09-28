@@ -4,7 +4,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { iBook } from "@/lib/types";
 import EditBookForm from "@/components/EditBook";
-import { fetchBookDetails, handleBookUpdate } from "@/lib/BookRepository/actions";
+import {
+  fetchBookDetails,
+  handleBookUpdate,
+} from "@/lib/BookRepository/actions";
 import { toast } from "@/hooks/use-toast";
 
 const EditBookPage = ({ params }: { params: { isbnNo: string } }) => {
@@ -72,8 +75,8 @@ const EditBookPage = ({ params }: { params: { isbnNo: string } }) => {
     router.push("/admin");
   };
 
-  if (!book) return <p>Loading book details...</p>;
-
+  if (!book) return <p className="h-full w-full flex justify-center items-center">Loading book details...</p>;
+  
   return (
     <div>
       <EditBookForm

@@ -70,7 +70,7 @@ export default function ClientSideBooks({
   };
 
   return (
-    <div className="pl-10">
+    <div className="p-2">
       <div className="flex w-full items-center justify-between">
         <h1 className="text-2xl font-bold">{t("Books")}</h1>
       </div>
@@ -90,7 +90,7 @@ export default function ClientSideBooks({
         </select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pr-1">
         {sortedBooks.map((book) => (
           <BookCard
             key={book.id}

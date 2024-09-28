@@ -58,27 +58,27 @@ export default function Page({
     setLoading(false);
   }, [query, currentPage]);
 
-  const handleDelete = async (id: number | undefined) => {
-    try {
-      const result = await handleProfessorDelete(id);
-      if (result) {
-        toast({
-          title: "Success",
-          description: result.message,
-          className: "bg-green-400 text-white",
-          duration: 1000,
-        });
-        loadProfessors();
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete professor. Please try again.",
-        className: "bg-red-600 text-white",
-        duration: 1000,
-      });
-    }
-  };
+  // const handleDelete = async (id: number | undefined) => {
+  //   try {
+  //     const result = await handleProfessorDelete(id);
+  //     if (result) {
+  //       toast({
+  //         title: "Success",
+  //         description: result.message,
+  //         className: "bg-green-400 text-white",
+  //         duration: 1000,
+  //       });
+  //       loadProfessors();
+  //     }
+  //   } catch (error) {
+  //     toast({
+  //       title: "Error",
+  //       description: "Failed to delete professor. Please try again.",
+  //       className: "bg-red-600 text-white",
+  //       duration: 1000,
+  //     });
+  //   }
+  // };
   const handleEdit = (id: number | undefined) => {
     router.push(`/admin/editprofessor/${id}/edit`);
   };
@@ -123,7 +123,7 @@ export default function Page({
   }
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full h-full">
       <div className="p-8">
         <div className="flex w-full items-center justify-between mt-4">
           <h1 className="text-2xl font-bold">Professors</h1>
@@ -139,7 +139,7 @@ export default function Page({
             users={professors}
             onRefresh={handleRefresh}
             onEdit={handleEdit}
-            onDelete={handleDelete}
+            //onDelete={handleDelete}
           />
         </div>
 

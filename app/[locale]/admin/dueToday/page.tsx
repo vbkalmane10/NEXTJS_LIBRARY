@@ -66,7 +66,9 @@ export default function DueTodayPage() {
       }
     } catch (error) {
       throw new Error("Error while sending notiifcation");
-    } 
+    } finally {
+      setLoadingId(null); 
+    }
   };
 
   
@@ -117,6 +119,7 @@ export default function DueTodayPage() {
                 <Button
                   variant="secondary"
                   className="min-w-[120px] bg-green-400"
+                  
                 >
                   {t("markAsReturned")}
                 </Button>
