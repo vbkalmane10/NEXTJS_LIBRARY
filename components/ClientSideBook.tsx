@@ -70,15 +70,13 @@ export default function ClientSideBooks({
   };
 
   return (
-    <div className="p-2">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="text-2xl font-bold">{t("Books")}</h1>
-      </div>
-
-      <div className="mt-4 flex gap-3 items-center mr-10">
+    <div className="p-2 md:p-4">
+    <div className="flex flex-col sm:flex-row w-full items-start sm:items-center justify-between mb-4">
+      <h1 className="text-2xl font-bold mb-2 sm:mb-0">{t("Books")}</h1>
+      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center w-full sm:w-auto">
         <Search placeholder="Search books..." />
         <select
-          className="p-2 border border-gray-300 rounded"
+          className="p-2 border border-gray-300 rounded w-full sm:w-auto"
           value={sortBy}
           onChange={handleSortChange}
         >
@@ -89,30 +87,24 @@ export default function ClientSideBooks({
           <option value="price">{t("price")}</option>
         </select>
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pr-1">
-        {sortedBooks.map((book) => (
-          <BookCard
-            key={book.id}
-            book={{ ...book, price: formatPrice(book.price) }}
-            userId={userId}
-            username={userName}
-            currency={currency}
-          />
-        ))}
-      </div>
-
-      <div className="mt-8 flex justify-center">
-        <Pagination currentPage={currentPage} totalPages={totalPages} />
-      </div>
-      <button
-              onClick={toggleChat}
-              className="fixed bottom-4 right-4 bg-blue-600 text-white rounded-full p-3 shadow-lg hover:bg-blue-700 transition"
-            >
-              💬 {/* Chat button */}
-            </button>
-            <Chatbot isOpen={isChatOpen} onClose={() => setChatOpen(false)} />
     </div>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {sortedBooks.map((book) => (
+        <BookCard
+          key={book.id}
+          book={{ ...book, price: formatPrice(book.price) }}
+          userId={userId}
+          username={userName}
+          currency={currency}
+        />
+      ))}
+    </div>
+
+    <div className="mt-8 flex justify-center">
+      <Pagination currentPage={currentPage} totalPages={totalPages} />
+    </div>
+  </div>
   );
 }
 

@@ -103,7 +103,7 @@ export default function Page({
           className: "bg-green-600 text-white",
           duration: 1000,
         });
-        loadProfessors(); 
+        loadProfessors();
       } else {
         toast({
           title: "No Update",
@@ -123,18 +123,42 @@ export default function Page({
   }
 
   return (
-    <div className="flex flex-col w-full h-full">
-      <div className="p-8">
-        <div className="flex w-full items-center justify-between mt-4">
-          <h1 className="text-2xl font-bold">Professors</h1>
+    // <div className="flex flex-col w-full h-full">
+    //   <div className="p-8">
+    //     <div className="flex w-full items-center justify-between mt-4">
+    //       <h1 className="text-2xl font-bold">Professors</h1>
+    //     </div>
+
+    //     <div className="mt-4 flex gap-4 items-center">
+    //       <Search placeholder="Search Professors.." />
+    //       <AddProfessor />
+    //     </div>
+
+    //     <div className="mt-6">
+    //       <AdminProfessorTable
+    //         users={professors}
+    //         onRefresh={handleRefresh}
+    //         onEdit={handleEdit}
+    //         //onDelete={handleDelete}
+    //       />
+    //     </div>
+
+    //     <div className="mt-8 flex justify-center">
+    //       <Pagination currentPage={currentPage} totalPages={totalPages} />
+    //     </div>
+    //   </div>
+    // </div>
+    <div className="flex flex-col w-full max-w-full overflow-x-hidden">
+      <div className="p-4 sm:p-6 lg:p-8">
+        <div className="flex flex-col sm:flex-row w-full items-center justify-between mt-4 gap-4">
+          <h1 className="text-xl sm:text-2xl font-bold">Professors</h1>
+          <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto">
+            <Search placeholder="Search Professors.." />
+            <AddProfessor />
+          </div>
         </div>
 
-        <div className="mt-4 flex gap-4 items-center">
-          <Search placeholder="Search Professors.." />
-          <AddProfessor />
-        </div>
-
-        <div className="mt-6">
+        <div className="mt-6 overflow-x-auto">
           <AdminProfessorTable
             users={professors}
             onRefresh={handleRefresh}

@@ -20,11 +20,20 @@ import {
   handleFetchOrganization,
   handleSendInvitations,
 } from "@/lib/actions";
+import { z } from "zod"
 import { fetchUserOrganization, sendInvitations } from "@/lib/Calendly";
+const professorSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  department: z.string().min(1, { message: "Department is required" }),
+  shortBio: z.string().min(1, { message: "Short bio is required" }),
+  calendlyLink: z.string().url({ message: "Invalid URL" }).or(z.literal("")),
+})
 
+type ProfessorFormData = z.infer<typeof professorSchema>
 export default function AddProfessor() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ProfessorFormData>({
     name: "",
     email: "",
     department: "",
@@ -36,7 +45,7 @@ export default function AddProfessor() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [responseMessage, setResponseMessage] = useState<string | null>(null);
   const { toast } = useToast();
-
+  const [errors, setErrors] = useState<Partial<ProfessorFormData>>({})
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -61,6 +70,7 @@ export default function AddProfessor() {
         setLoading(false);
         return;
       }
+      const validatedData = professorSchema.parse(formData)
       const userOrganizationUrl = await handleFetchOrganization();
       const userOrganization = userOrganizationUrl.split("/").pop();
 
@@ -87,7 +97,7 @@ export default function AddProfessor() {
         }
       }
 
-      const result = await createProfessor(formData);
+      const result = await createProfessor(validatedData);
 
       if (result) {
         toast({
@@ -105,6 +115,9 @@ export default function AddProfessor() {
         });
       }
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        setErrors(error.flatten().fieldErrors as Partial<ProfessorFormData>)
+      }
       console.error("Error adding professor:", error);
       toast({
         title: "Error",
@@ -144,8 +157,9 @@ export default function AddProfessor() {
                       placeholder="Full Name"
                       value={formData.name}
                       onChange={handleChange}
-                      required
+                     
                     />
+                    {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
                   </div>
                   <div className="space-y-1">
                     <Label htmlFor="email">Email</Label>
@@ -155,8 +169,9 @@ export default function AddProfessor() {
                       placeholder="Email"
                       value={formData.email}
                       onChange={handleChange}
-                      required
+                   
                     />
+                    {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                   </div>
                 </div>
                 <div className="space-y-1">
@@ -167,8 +182,9 @@ export default function AddProfessor() {
                     placeholder="Deaprtment"
                     value={formData.department}
                     onChange={handleChange}
-                    required
+                  
                   />
+                  {errors.department && <p className="text-red-500 text-sm">{errors.department}</p>}
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="shortBio">Short Bio</Label>
@@ -178,8 +194,9 @@ export default function AddProfessor() {
                     placeholder="Short Bio"
                     value={formData.shortBio}
                     onChange={handleChange}
-                    required
+                    
                   />
+                  {errors.shortBio && <p className="text-red-500 text-sm">{errors.shortBio}</p>}
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="calendlyLink">Calendly Link</Label>
