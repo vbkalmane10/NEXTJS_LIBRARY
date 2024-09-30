@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { handleCheckBookingStatus, handleFetchProfessors } from "@/lib/actions";
+import {
+  handleCheckBookingStatus,
+  handleCreatePaymentRecord,
+  handleFetchProfessors,
+} from "@/lib/actions";
 import { Professor } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +44,6 @@ export default function ProfessorsPage() {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
-  const t = useTranslations("Professors");
 
   useEffect(() => {
     async function fetchData() {
@@ -50,16 +53,7 @@ export default function ProfessorsPage() {
           setProfessors(result);
           setIsLoading(false);
         }
-        if (session?.user?.id) {
-          for (const professor of result) {
-            const status = await handleCheckBookingStatus(
-              session.user.id,
-              professor.id
-            );
-            console.log(status);
-            setBookingStatus((prev) => ({ ...prev, [professor.id]: status }));
-          }
-        }
+       
       } catch (error) {
         setError("Failed to load professors.");
         setIsLoading(false);
@@ -69,28 +63,38 @@ export default function ProfessorsPage() {
   }, [session?.user?.id]);
 
   const handleBookAppointment = async (professor: Professor) => {
-    setSelectedProfessor(professor);
-
-    const hasPaid = bookingStatus[professor.id!];
-
-    if (hasPaid) {
+    const paymentStatus = await handleCheckBookingStatus(
+      session?.user.id!,
+      professor.id!
+    );
+  
+    if (paymentStatus === "Success") {
       router.push(
         `/books/professors/${professor.name}?calendlyUrl=${encodeURIComponent(
           professor.calendlyLink || ""
         )}`
       );
     } else {
+      setSelectedProfessor(professor);
       setIsModalOpen(true);
     }
   };
 
-  const handlePaymentSuccess = () => {
-    setIsModalOpen(false);
-    if (selectedProfessor && selectedProfessor.calendlyLink) {
+  const handlePaymentSuccess = async (paymentId: string) => {
+    if (selectedProfessor && session?.user?.id) {
+      console.log(session.user.id);
+      console.log(selectedProfessor.id!);
+      console.log(paymentId);
+      await handleCreatePaymentRecord(
+        session.user.id,
+        selectedProfessor.id!,
+        paymentId
+      );
+      setIsModalOpen(false);
       router.push(
         `/books/professors/${
           selectedProfessor.name
-        }?calendlyUrl=${encodeURIComponent(selectedProfessor.calendlyLink)}`
+        }?calendlyUrl=${encodeURIComponent(selectedProfessor.calendlyLink!)}`
       );
     }
   };
@@ -114,7 +118,7 @@ export default function ProfessorsPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-6">
-      <h1 className="text-3xl font-bold mb-6">{t("Professors")}</h1>
+      <h1 className="text-3xl font-bold mb-6">Professors</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {professors.map((professor) => (
           <Card

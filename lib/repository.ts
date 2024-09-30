@@ -625,28 +625,39 @@ export async function deleteProfessor(
     throw new Error("Professor not found");
   }
 }
-export async function createPaymentRecord(userId: number, professorId: number, paymentId: string) {
+export async function createPaymentRecord(
+  userId: number,
+  professorId: number,
+  paymentId: string
+) {
   try {
     const newRecord = {
-      userId,       
-      professorId,   
-      paymentId,     
+      userId,
+      professorId,
+      paymentId,
       payment_status: "Success",
     };
 
     const result = await db.insert(paymentsTable).values(newRecord);
 
-    return result; 
+    return result;
   } catch (error) {
     console.error("Error creating payment record:", error);
     throw new Error("Failed to create payment record");
   }
 }
-export async function getBookingStatus(userId: number, professorId: number): Promise<boolean> {
+export async function getBookingStatus(userId: number, professorId: number) {
+
   const result = await db
     .select()
     .from(paymentsTable)
-    .where(and(eq(paymentsTable.userId, userId), eq(paymentsTable.professorId, professorId)))
+    .where(
+      and(
+        eq(paymentsTable.userId, userId),
+        eq(paymentsTable.professorId, professorId)
+      )
+    )
     .limit(1);
-  return result.length > 0;
+
+  return result.length > 0 ? "Success" : "Not Found";
 }

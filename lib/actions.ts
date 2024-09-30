@@ -344,6 +344,9 @@ export async function handleCreatePaymentRecord(
 ) {
   return createPaymentRecord(userId, professorId, paymentId);
 }
-export async function handleCheckBookingStatus(userId: number, professorId: number): Promise<boolean> {
-  return await getBookingStatus(userId, professorId)
+export async function handleCheckBookingStatus(
+  userId: number,
+  professorId: number
+) {
+  return await getBookingStatus(userId, professorId);
 }

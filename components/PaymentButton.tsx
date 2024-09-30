@@ -10,7 +10,7 @@ import { handleCreatePaymentRecord } from "@/lib/actions";
 
 interface RazorpayPaymentProps {
   amount: number;
-  onSuccess: () => void;
+  onSuccess: (paymentId: string) => void;
   onFailure: () => void;
   professorId: number;
 }
@@ -57,12 +57,8 @@ export default function RazorpayPayment({
         order_id: order.id,
         handler: async function (response: any) {
           if (response.razorpay_payment_id) {
-            await handleCreatePaymentRecord(
-              session?.user.id!,
-             professorId,
-              response.razorpay_payment_id
-            );
-            onSuccess();
+           
+            onSuccess(response.razorpay_payment_id);
           }
         },
         modal: {
