@@ -31,6 +31,8 @@ import {
   getProfessorById,
   updateProfessor,
   deleteProfessor,
+  createPaymentRecord,
+  getBookingStatus,
 } from "./repository";
 import {
   checkInvitationStatus,
@@ -335,3 +337,13 @@ export const handleProfessorDelete = async (id: number) => {
     return { success: false, message: "Failed to delete the professor." };
   }
 };
+export async function handleCreatePaymentRecord(
+  userId: number,
+  professorId: number,
+  paymentId: string
+) {
+  return createPaymentRecord(userId, professorId, paymentId);
+}
+export async function handleCheckBookingStatus(userId: number, professorId: number): Promise<boolean> {
+  return await getBookingStatus(userId, professorId)
+}

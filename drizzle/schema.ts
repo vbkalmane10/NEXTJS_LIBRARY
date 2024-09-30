@@ -48,6 +48,13 @@ export const professorsTable = pgTable("professors", {
   shortBio: text("shortBio"),
   calendlyLink: varchar("calendly_link", { length: 255 }),
 });
+export const paymentsTable = pgTable("payments", {
+  id: serial("id").primaryKey(),
+  userId:integer("userId").notNull(),
+  professorId: integer("professorId").notNull(),
+  paymentId: varchar("paymentId", { length: 100 }).notNull(),
+  payment_status: varchar("payment_status", { length: 255 }).notNull(),
+});
 // export const requestsTable = mysqlTable("requests", {
 //   id: int("id").primaryKey().autoincrement(),
 //   memberId: int("memberId")

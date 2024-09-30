@@ -28,9 +28,11 @@ const MyRequestsPage = () => {
   const { toast } = useToast();
   const router = useRouter();
   const t = useTranslations("myrequests");
+
   useEffect(() => {
     const fetchRequests = async () => {
       if (status === "authenticated" && session?.user?.id) {
+     
         try {
           const userRequests = await fetchUserRequest(session.user.id);
           setRequests(userRequests);
@@ -102,7 +104,6 @@ const MyRequestsPage = () => {
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">{t("My Book Transactions")}</h1>
 
-      
       <div className="mb-6">
         <label
           htmlFor="request-filter"

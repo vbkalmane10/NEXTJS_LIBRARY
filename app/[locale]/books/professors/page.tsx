@@ -1,28 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { handleFetchProfessors } from "@/lib/actions";
+import { handleCheckBookingStatus, handleFetchProfessors } from "@/lib/actions";
 import { Professor } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  GraduationCap,
-  Info,
-  Loader2,
-  Router,
-  User,
-  BookText,
-  University,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
 import {
   Card,
   CardContent,
@@ -31,13 +12,36 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Loader2, User, BookText, University } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import RazorpayPayment from "@/components/PaymentButton";
+import { useSession } from "next-auth/react";
 
 export default function ProfessorsPage() {
+  const { data: session } = useSession();
   const [professors, setProfessors] = useState<Professor[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedProfessor, setSelectedProfessor] = useState<Professor | null>(
+    null
+  );
+  const [bookingStatus, setBookingStatus] = useState<Record<number, boolean>>(
+    {}
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const t = useTranslations("Professors");
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -46,22 +50,53 @@ export default function ProfessorsPage() {
           setProfessors(result);
           setIsLoading(false);
         }
+        if (session?.user?.id) {
+          for (const professor of result) {
+            const status = await handleCheckBookingStatus(
+              session.user.id,
+              professor.id
+            );
+            console.log(status);
+            setBookingStatus((prev) => ({ ...prev, [professor.id]: status }));
+          }
+        }
       } catch (error) {
         setError("Failed to load professors.");
         setIsLoading(false);
       }
     }
     fetchData();
-  }, []);
-  const handleBookAppointment = (
-    professorName: string,
-    calendlyLink: string | null
-  ) => {
-    router.push(
-      `/books/professors/${professorName}?calendlyUrl=${encodeURIComponent(
-        calendlyLink!
-      )}`
-    );
+  }, [session?.user?.id]);
+
+  const handleBookAppointment = async (professor: Professor) => {
+    setSelectedProfessor(professor);
+
+    const hasPaid = bookingStatus[professor.id!];
+
+    if (hasPaid) {
+      router.push(
+        `/books/professors/${professor.name}?calendlyUrl=${encodeURIComponent(
+          professor.calendlyLink || ""
+        )}`
+      );
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handlePaymentSuccess = () => {
+    setIsModalOpen(false);
+    if (selectedProfessor && selectedProfessor.calendlyLink) {
+      router.push(
+        `/books/professors/${
+          selectedProfessor.name
+        }?calendlyUrl=${encodeURIComponent(selectedProfessor.calendlyLink)}`
+      );
+    }
+  };
+
+  const handlePaymentFailure = () => {
+    console.error("Payment failed");
   };
 
   if (isLoading) {
@@ -112,9 +147,7 @@ export default function ProfessorsPage() {
             </CardContent>
             <CardFooter>
               <Button
-                onClick={() =>
-                  handleBookAppointment(professor.name, professor.calendlyLink)
-                }
+                onClick={() => handleBookAppointment(professor)}
                 className="w-full"
               >
                 Book Appointment
@@ -123,6 +156,32 @@ export default function ProfessorsPage() {
           </Card>
         ))}
       </div>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Book Appointment</DialogTitle>
+            <DialogDescription>
+              Book an appointment with {selectedProfessor?.name}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-lg font-semibold"></p>
+            <p className="text-lg font-semibold">Price: ₹500</p>
+            <p className="text-sm text-gray-500">
+              This fee covers a 30-minute consultation.
+            </p>
+          </div>
+          <DialogFooter>
+            <RazorpayPayment
+              amount={500}
+              onSuccess={handlePaymentSuccess}
+              onFailure={handlePaymentFailure}
+              professor={selectedProfessor}
+            />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
