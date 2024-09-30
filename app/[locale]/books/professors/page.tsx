@@ -177,7 +177,7 @@ export default function ProfessorsPage() {
               amount={500}
               onSuccess={handlePaymentSuccess}
               onFailure={handlePaymentFailure}
-              professor={selectedProfessor}
+              professorId={selectedProfessor?.id ?? 0}
             />
           </DialogFooter>
         </DialogContent>

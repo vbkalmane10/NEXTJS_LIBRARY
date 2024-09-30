@@ -12,7 +12,7 @@ interface RazorpayPaymentProps {
   amount: number;
   onSuccess: () => void;
   onFailure: () => void;
-  professor: Professor | null;
+  professorId: number;
 }
 
 declare global {
@@ -25,7 +25,7 @@ export default function RazorpayPayment({
   amount,
   onSuccess,
   onFailure,
-  professor,
+  professorId,
 }: RazorpayPaymentProps) {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
@@ -56,12 +56,14 @@ export default function RazorpayPayment({
         description: "Payment for scheduling a meeting",
         order_id: order.id,
         handler: async function (response: any) {
-         
           if (response.razorpay_payment_id) {
-           await handleCreatePaymentRecord(session?.user.id!,professor!.id!,response.razorpay_payment_id);
-           onSuccess();
+            await handleCreatePaymentRecord(
+              session?.user.id!,
+             professorId,
+              response.razorpay_payment_id
+            );
+            onSuccess();
           }
-       
         },
         modal: {
           ondismiss: function () {
