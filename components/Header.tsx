@@ -25,14 +25,10 @@ interface NavItem {
 interface HeaderProps {
   navItems: any[];
   userName: string | undefined;
-  membershipStatus?: string | undefined;
+  credits?: number | undefined;
 }
 
-export default function Header({
-  navItems,
-  userName,
-  membershipStatus,
-}: HeaderProps) {
+export default function Header({ navItems, userName, credits }: HeaderProps) {
   const { data: session } = useSession();
   const [currentLanguage, setCurrentLanguage] = useState("en");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -59,9 +55,7 @@ export default function Header({
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const membershipColor =
-    membershipStatus === "active" ? "bg-green-500" : "bg-red-500";
-  const membershipLabel = membershipStatus === "active" ? "Active" : "Expired";
+
   const getProfileLink = () => {
     if (session?.user?.role === "admin") {
       return "/admin/profile";
@@ -93,7 +87,7 @@ export default function Header({
               </Link>
             ))}
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
+          <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
             <Select onValueChange={switchLocale} value={currentLanguage}>
               <SelectTrigger className="w-[100px]">
                 <SelectValue placeholder="Language" />
@@ -104,19 +98,24 @@ export default function Header({
               </SelectContent>
             </Select>
             {session && (
-              <Link href={getProfileLink()}>
-                <Button
-                  variant="ghost"
-                  className="ml-3 flex items-center gap-2"
-                  aria-label="User menu"
-                >
-                  <Avatar className="h-8 w-8 border border-black">
-                    <AvatarFallback>
-                      <User className="h-5 w-5" />
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </Link>
+              <>
+                <div className="text-sm font-medium text-gray-700">
+                  Credits: {credits}
+                </div>
+                <Link href={getProfileLink()}>
+                  <Button
+                    variant="ghost"
+                    className="flex items-center gap-2"
+                    aria-label="User menu"
+                  >
+                    <Avatar className="h-8 w-8 border border-black">
+                      <AvatarFallback>
+                        <User className="h-5 w-5" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </Link>
+              </>
             )}
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
@@ -168,13 +167,10 @@ export default function Header({
                 <div className="text-base font-medium text-gray-800">
                   {userName}
                 </div>
-                {membershipStatus && (
-                  <div
-                    className={`text-sm font-medium ${membershipColor} text-white px-2 py-0.5 rounded-full mt-1`}
-                  >
-                    {membershipLabel}
-                  </div>
-                )}
+              
+              </div>
+              <div className="ml-auto text-sm font-medium text-gray-700">
+                Credits: {credits}
               </div>
             </div>
             <div className="mt-3 space-y-1">

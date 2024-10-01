@@ -625,6 +625,44 @@ export async function deleteProfessor(
     throw new Error("Professor not found");
   }
 }
+// export async function createPaymentRecord(
+//   userId: number,
+//   professorId: number,
+//   paymentId: string
+// ) {
+//   try {
+//     const newRecord = {
+//       userId,
+//       professorId,
+//       paymentId,
+//       payment_status: "Success",
+//     };
+
+//     const result = await db.insert(paymentsTable).values(newRecord);
+
+//     return result;
+//   } catch (error) {
+//     console.error("Error creating payment record:", error);
+//     throw new Error("Failed to create payment record");
+//   }
+// }
+export async function getBookingStatus(userId: number, professorId: number) {
+  try {
+    const result = await db
+      .select()
+      .from(paymentsTable)
+      .where(
+        and(
+          eq(paymentsTable.userId, userId),
+          eq(paymentsTable.professorId, professorId)
+        )
+      );
+
+    return result;
+  } catch (error) {
+    throw new Error("Error in database");
+  }
+}
 export async function createPaymentRecord(
   userId: number,
   professorId: number,
@@ -638,26 +676,14 @@ export async function createPaymentRecord(
       payment_status: "Success",
     };
 
-    const result = await db.insert(paymentsTable).values(newRecord);
+    await db.insert(paymentsTable).values(newRecord);
 
-    return result;
+    return {
+      success: true,
+      message: "Payment record created successfully"
+    };
   } catch (error) {
     console.error("Error creating payment record:", error);
     throw new Error("Failed to create payment record");
   }
-}
-export async function getBookingStatus(userId: number, professorId: number) {
-
-  const result = await db
-    .select()
-    .from(paymentsTable)
-    .where(
-      and(
-        eq(paymentsTable.userId, userId),
-        eq(paymentsTable.professorId, professorId)
-      )
-    )
-    .limit(1);
-
-  return result.length > 0 ? "Success" : "Not Found";
 }

@@ -9,6 +9,7 @@ export const membersTable = pgTable("members", {
   address: varchar("address", { length: 255 }),
   membershipStatus: varchar("membershipStatus", { length: 255 }).notNull(),
   role: varchar("role", { length: 255 }).notNull(),
+  credits: integer("credits"),
 });
 export const booksTable = pgTable("books", {
   id: serial("id").primaryKey(),
@@ -47,10 +48,11 @@ export const professorsTable = pgTable("professors", {
   department: varchar("department", { length: 100 }),
   shortBio: text("shortBio"),
   calendlyLink: varchar("calendly_link", { length: 255 }),
+  credits: integer("credits"),
 });
 export const paymentsTable = pgTable("payments", {
   id: serial("id").primaryKey(),
-  userId:integer("userId").notNull(),
+  userId: integer("userId").notNull(),
   professorId: integer("professorId").notNull(),
   paymentId: varchar("paymentId", { length: 100 }).notNull(),
   payment_status: varchar("payment_status", { length: 255 }).notNull(),

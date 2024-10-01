@@ -27,7 +27,11 @@ export default async function Layout({
   return (
     <div className="flex h-screen w-full  ">
       <div className="flex flex-col flex-1">
-        <Header navItems={navItems} userName={userName?.firstName} />
+        <Header
+          navItems={navItems}
+          userName={userName?.firstName}
+          credits={userName?.credits!}
+        />
 
         <div className="flex-grow overflow-y-auto md:overflow-y-auto p-4">
           {children}

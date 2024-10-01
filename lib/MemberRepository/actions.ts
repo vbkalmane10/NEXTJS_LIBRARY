@@ -12,6 +12,7 @@ import {
 } from "../types";
 import {
   create,
+  deductCredits,
   deleteMember,
   fetchUsers,
   getUserById,
@@ -65,4 +66,23 @@ export const handleUserDelete = async (id: number) => {
 };
 export const fetchUserDetails = async (id: number): Promise<iMember | null> => {
   return await getUserById(id);
+};
+// export const handleDeductCredits = async (userId: number, credits: number) => {
+//   try {
+//     const result = await deductCredits(userId, credits);
+//     return result;
+//   } catch (error) {
+//     throw new Error("Error while deducting credits");
+//   }
+// };
+export const handleDeductCredits = async (userId: number, credits: number) => {
+  try {
+    const result = await deductCredits(userId, credits);
+    return {
+      success: result.success,
+      message: result.message
+    };
+  } catch (error) {
+    throw new Error("Error while deducting credits");
+  }
 };

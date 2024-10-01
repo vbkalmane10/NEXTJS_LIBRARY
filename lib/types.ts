@@ -13,6 +13,7 @@ export interface iMember extends iMemberBase {
   id: number;
   membershipStatus: string;
   role: string;
+  credits?: number|null;
 }
 export interface Token {
   user?: iMember;

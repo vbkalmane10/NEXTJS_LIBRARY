@@ -35,6 +35,7 @@ export async function create(
       membershipStatus: "active",
 
       role: "user",
+      credits: 20,
     };
 
     const insertedMembers = await db
@@ -171,4 +172,41 @@ export async function getUserId(email: string): Promise<number | null> {
     console.error("Error fetching user ID:", error);
     return null;
   }
+}
+export async function deductCredits(userId: number, creditsToDeduct: number) {
+  // Fetch current credits of the user
+  const user = await db
+    .select({
+      credits: membersTable.credits,
+    })
+    .from(membersTable)
+    .where(eq(membersTable.id, userId))
+    .limit(1);
+
+  if (user.length === 0) {
+    throw new Error("User not found");
+  }
+
+  const currentCredits = user[0].credits;
+
+  
+  if (currentCredits! < creditsToDeduct) {
+    throw new Error("Insufficient credits");
+  }
+
+  
+  const updatedCredits = currentCredits! - creditsToDeduct;
+
+  
+  await db
+    .update(membersTable)
+    .set({
+      credits: updatedCredits,
+    })
+    .where(eq(membersTable.id, userId));
+
+    return {
+      success: true,
+      message: `${creditsToDeduct} credits deducted from user ${userId}. Remaining credits: ${updatedCredits}`,
+    }
 }

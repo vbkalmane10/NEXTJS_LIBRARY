@@ -74,6 +74,7 @@ const SignupPage = () => {
         password,
         phoneNumber,
         address,
+        
       });
 
       if (newMember !== undefined) {

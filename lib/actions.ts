@@ -337,16 +337,41 @@ export const handleProfessorDelete = async (id: number) => {
     return { success: false, message: "Failed to delete the professor." };
   }
 };
+// export async function handleCreatePaymentRecord(
+//   userId: number,
+//   professorId: number,
+//   paymentId: string
+// ) {
+//   try {
+//     const result = await createPaymentRecord(userId, professorId, paymentId);
+//     return result;
+//   } catch (error) {
+//     throw new Error("Error while creating payment");
+//   }
+// }
+export async function handleCheckBookingStatus(
+  userId: number,
+  professorId: number
+) {
+  try {
+    const result = await getBookingStatus(userId, professorId);
+    return result;
+  } catch (error) {
+    throw new Error("Error while getting book status");
+  }
+}
 export async function handleCreatePaymentRecord(
   userId: number,
   professorId: number,
   paymentId: string
 ) {
-  return createPaymentRecord(userId, professorId, paymentId);
-}
-export async function handleCheckBookingStatus(
-  userId: number,
-  professorId: number
-) {
-  return await getBookingStatus(userId, professorId);
+  try {
+    const result = await createPaymentRecord(userId, professorId, paymentId);
+    return {
+      success: true,
+      message: "Payment record created successfully"
+    };
+  } catch (error) {
+    throw new Error("Error while creating payment");
+  }
 }
